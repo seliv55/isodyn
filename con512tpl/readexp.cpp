@@ -6,8 +6,8 @@
 #include "modlab.h"
 using namespace std;
 double Vi, xribi, xasp=1.,mu;
-double Ldistr::readExp (string fn) {
-string aaa;  ifstream fi(fn.c_str()); double Ti,ts1;  mu=0.; dt=0.6;  Vi=0.014; tex[0]=0.;  
+double Ldistr::readExp (char fn[]) {
+string aaa;  ifstream fi(fn); double Ti,ts1;  mu=0.; dt=0.6;  Vi=0.014; tex[0]=0.;  
       for(ntime=1;;ntime++) {fi>>tex[ntime]; tex[ntime] *= 60.; if(tex[ntime]<0) break;}//time points
  double Nc[ntime]; for(int i=0;i<ntime;i++) fi>>Nc[i]; getline(fi,aaa);//cells number
  

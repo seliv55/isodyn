@@ -403,7 +403,7 @@ public:
        void distr(double *py,double *pdydt);
        double label();
        void showmi(std::ostringstream& fo,int nt);
-        double readExp(std::string fn);
+        double readExp(char *fn);
         int diff(const double da,double st[], double *palpha) ;
         void show(std::ostringstream& fo,double xfin);
 //        void showval(std::ostringstream& fo,double xfin);

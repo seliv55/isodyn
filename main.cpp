@@ -14,7 +14,7 @@ using namespace std;
   int  ifn=0; const int Nn= horse.getN(), neq=870;
    double dlt, dif, suxx, mader;
 //   const double flf=60.*1000.*5./7.;
-    time_t ts,tf; string fex1="../edata", fex2="../edata";
+    time_t ts,tf; char *fex1="edata", *fex2="edata";
   extern string foc, kin0, kin, kinflx;
     
 double solve(){
@@ -56,11 +56,11 @@ int main( int argc, char *argv[] ){
 	 Problem.stat(ifn); return 0; }
      else if ((argc>1)&&(argv[1][0]=='c'))  {
 	 chekxi(); return 0; }
-	 else{
+	 else{ 
      cout.precision(3);
      xi0=Problem.read(itmp,tmp,"1");    //read parameters
 //      horse.setfige();                // set experimental data for figure
-        horse.readExp(fex1);            // read experimental data 
+        horse.readExp(argv[1]);            // read experimental data 
      for(int i=0;i<nmet;i++) xinit1[i]=xx[i]; //copy initial values
 	try{   ts=clock();
     tsolve(37000.);                     //solve ODEs for total concentrations
