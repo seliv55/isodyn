@@ -91,7 +91,7 @@ int main( int argc, char *argv[] ){
 //		Analis analis;
 //		analis.setx00(xi0);
 //           for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
-//                int ifn0=250002; Problem.write(tf,ifn0,xi0,suxx,0);
+                int ifn0=250002; Problem.write(tf,ifn0,xi0,suxx,0);
 //	Problem.cont(121,0.0001, 0.015);
 //chekxi(1,33);
 //          int sys=system("gnuplot xplt.p");//gnuplot -e 'var=value' script.gp
