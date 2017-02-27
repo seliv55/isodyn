@@ -14,7 +14,7 @@ using namespace std;
   int  ifn=0; const int Nn= horse.getN(), neq=870;
    double dlt, dif, suxx, mader;
 //   const double flf=60.*1000.*5./7.;
-    time_t ts,tf; char *fex1="edata", *fex2="edata";
+    time_t ts,tf; char *fex1, *fex2;
   extern string foc, kin0, kin, kinflx;
     
 double solve(){
@@ -47,6 +47,7 @@ int main( int argc, char *argv[] ){
    double tmp,xi0;ofstream kkin("kinxx"); 
 //   int a[][3]={{1,2,3},{4,5,6}}}; cout<<"a11="<<a[1][1]<<endl;
    int itmp; bool check;
+    fex1=argv[1]; fex2=fex1;
    for(int i=1;;i++) { sprintf(fn,"%i",i);
 	   ifstream checkfi(fn);
 	   if(!checkfi.good()) { ifn=i-1; break;}
@@ -56,7 +57,7 @@ int main( int argc, char *argv[] ){
 	 Problem.stat(ifn); return 0; }
      else if ((argc>1)&&(argv[1][0]=='c'))  {
 	 chekxi(); return 0; }
-	 else{ 
+	 else{
      cout.precision(3);
      xi0=Problem.read(itmp,tmp,"1");    //read parameters
 //      horse.setfige();                // set experimental data for figure
@@ -91,7 +92,7 @@ int main( int argc, char *argv[] ){
 //		Analis analis;
 //		analis.setx00(xi0);
 //           for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
-                int ifn0=250002; Problem.write(tf,ifn0,xi0,suxx,0);
+//                int ifn0=250002; Problem.write(tf,ifn0,xi0,suxx,0);
 //	Problem.cont(121,0.0001, 0.015);
 //chekxi(1,33);
 //          int sys=system("gnuplot xplt.p");//gnuplot -e 'var=value' script.gp

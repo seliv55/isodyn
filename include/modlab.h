@@ -5,7 +5,32 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <vector>
+#include <cmath>
 const int tt=5;
+
+class Iso {
+  int niso;  std::string name; double *mid;
+public:
+  double *sd;
+    void showmid(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i]<<" "; std::cout<<name+s<<std::endl;}
+    void showsd(std::string s=""){for(int i=0;i<niso;i++) std::cout<<sd[i]<<" "; std::cout<<name+s<<std::endl;}
+    void calmesd(std::vector<Iso>& linj){
+       int len=linj.size();  sd=new double[niso];
+         for(int ic=0;ic<niso;ic++) {mid[ic]=0.; for(int i=0;i<len;i++) mid[ic]+=linj[i].mid[ic]; mid[ic]/=(double)len;}
+         for(int ic=0;ic<niso;ic++){ sd[ic]=0.; 
+        for(int i=0;i<len;i++){double a=mid[ic]-linj[i].mid[ic]; sd[ic]+=a*a;} sd[ic]/=(double)(len-1); sd[ic]=sqrt(sd[ic]);}}
+    void setname(std::string s){name=s;}
+    void setmid(int mi, double d){mid[mi]=d;}
+    void delmid(){delete[] mid;}
+    std::string* getname(){return &name;}
+    int getniso(){return niso;}
+    double* getmid(){return mid;}
+   double* getsd(){return sd;}
+    
+  Iso(int n): niso(n){mid=new double[n]; for(int i=0;i<niso;i++) mid[i]=0.;}
+  virtual ~Iso(){}
+};
 
 class data {
 public:
@@ -166,6 +191,10 @@ void setrav(int nt1,int nt2){
       for(int i=0;i<=N;i++){ exper[nt1][i].mean=exper[nt2][i].mean; exper[nt1][i].sd=exper[nt2][i].sd;  }
                          }
    
+void sex(int mi, double mid[],double std[],int nt){
+   for(int i=0;i<mi;i++) exper[nt][i].mean=mid[i]*0.01;
+   for(int i=0;i<mi;i++) {exper[nt][i].sd=std[i]*0.01; if(exper[nt][i].sd<0.01) exper[nt][i].sd=0.01;}
+	}
 void read(std::ifstream& fi,int nt){
 	unsigned i; std::string aaa;//i: isotopomer; j: time
        fi >> mi;
@@ -368,7 +397,8 @@ class Ldistr {
 Metab_data gl, lac, glu, glu25, gln, pro, arg, rna, asp, asn, ala, ser, cys, agl, pyrm, coa, coac, gly, oa, oac, cit, akg, fum, mal;
 Metab fbp, t3, pep, pyr, cthf, citc, akgc, e4;
 ketose h6, s7, p5;
-double tex[9],lacout,coaefl,tca,fpdh;
+double lacout,coaefl,tca,fpdh;
+std::vector<double> tex;
       void symm (double *s);
 void csyn(double *coai,double *dcoai,double *oai,double *doai,double *dciti,const double v);
 void split(double *h6,double *dh6,double *t1,double *dt1,const double vf,const double vr);
@@ -403,7 +433,10 @@ public:
        void distr(double *py,double *pdydt);
        double label();
        void showmi(std::ostringstream& fo,int nt);
-        double readExp(char *fn);
+      double readExp(char *fn);
+      std::vector<std::string> spli(std::stringstream& test,char a);
+      void defcol(int nucol[],std::vector<std::string> vstr);
+      void rcsv(std::ifstream& fi,std::vector<Iso>& result );
         int diff(const double da,double st[], double *palpha) ;
         void show(std::ostringstream& fo,double xfin);
 //        void showval(std::ostringstream& fo,double xfin);
