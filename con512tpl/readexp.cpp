@@ -12,7 +12,6 @@ double Ldistr::readExp (char fn[]) {
   ifstream fi(fn); double Ti,ts1;  mu=0.; dt=0.6;  Vi=0.014; 
    vector<Iso> result;
      rcsv(fi, result );  int lres=result.size();
-   cout<<lres<<*result[0].getname()<<endl; // iso.delmid(); delete[] iso.sd;
 
  double Nc[ntime]; for(int i=0;i<ntime;i++) Nc[i]=(double)i+1.;//cells number
  
@@ -88,7 +87,7 @@ void Ldistr::defcol(int nucol[],vector<string> vstr){
 void Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
    string aaa;
    int cols[nepar];
-    vector<string> titl, strok;
+    vector<string> titl, strok;  result.clear();
 //   ifstream fi("midcorout.csv");
 //     ifstream fi("exchangeformat.csv");
 // List of column Titles
@@ -130,7 +129,7 @@ void Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
    }
     cout<<"titles - data: "<< titl.size()<<" - "<<segline[5].size()<<"\n";
     
-     tex.push_back(0.);  
+    tex.clear(); tex.push_back(0.);  
   for(int i=0;i<nstrok;i++) if(segline[0][cols[etime]]!="") {
    string s=segline[i][cols[etime]]; int j(0); ntime=tex.size(); double d=strtod(s.c_str(), NULL)*60.;
     for(j=0;j<ntime;j++) if(d==tex[j]) break; if(j==ntime) tex.push_back(d); }

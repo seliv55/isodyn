@@ -154,7 +154,7 @@ tk.st1fl(&flx[tkfl], y[nt3]/ft3, y[np5], y[ne4], y[nh6]/fh6, y[np5], y[ns7]);
 //					dydx[nnad]=0.;dydx[natp]=0.;
 }
 
-void Parray::init(){ft3=10.; fh6=7.;
+void Parray::init(){ft3=10.; fh6=7.; cout<<"proin="<<proin<<endl;
 	tk.setk(rea[rtk].getpar() );
 	ta.setk(rea[rta].getpar());
 	aldolase.setk(rea[rald].getpar());}
@@ -230,6 +230,7 @@ fluxes[aldf+2] /= y[nfbp];
 }
 
 void Fit::cont(const int chpar,const double pmin,const double pint){
+// get a set of solutions increasing or decreasing a parameter in an interval
  const int nss(50);
    double dif,fact(1.0),f1(1.02),mx(0.),ss[2][nss],df[33], pdf[33], a=rea[chpar].v();
    const double dp=pint/(double)nss;

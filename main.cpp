@@ -89,23 +89,23 @@ int main( int argc, char *argv[] ){
 	} catch( char const* str ){cout << "exception: "<< str <<endl;}
 //     cout<<foc; kkin.open("kinetics"); kkin<<kin<<endl; kkin.close();
 //      suxx=horse.label(); 
-//		Analis analis;
-//		analis.setx00(xi0);
-//           for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
-//                int ifn0=250002; Problem.write(tf,ifn0,xi0,suxx,0);
+		Analis analis;
+		analis.setx00(xi0);
+           for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
+                int ifn0=250002; Problem.write(tf,ifn0,xi0,suxx,0);
 //	Problem.cont(121,0.0001, 0.015);
 //chekxi(1,33);
 //          int sys=system("gnuplot xplt.p");//gnuplot -e 'var=value' script.gp
-//		srand(time(NULL));
-// if (argc>1) { int ia=(int)argv[1][0]-(int)'0'; if(ia>9) analis.coord(0.03,1.03);
+		srand(time(NULL));
+ if (argc>2) { int ia=(int)argv[1][0]-(int)'0'; if(ia>9) analis.coord(0.03,1.03);
 ////   
 // 	cout<<"parameter set="<<ia<<endl;
-//          for(;;){
-//               analis.confidence(1.15,1.07);
-//	         Problem.stat(ifn);
-//                  xi0=Problem.read(itmp,tmp,"1");
-//                   for(int i=0;i<numx;i++) xinit1[i]=xx[i];
-//                  }}
+          for(;;){
+               analis.confidence(1.15,1.07);
+	         Problem.stat(ifn);
+                  xi0=Problem.read(itmp,tmp,"1");
+                   for(int i=0;i<numx;i++) xinit1[i]=xx[i];
+                  }}
 //               analis.sensitiv(tmax);
 //               analis.swarm(tmax,111);
 //               analis.grad(tmax);

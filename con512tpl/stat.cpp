@@ -24,7 +24,7 @@ double Fit::read(int &t,double &c, string fn){
 	for (i=0;i<numx;i++) {fi>>aaa>>namex[i]>>xx[i];}
         for (i=0;i<nflx;i++) fi>>aaa>>namef[i]>>flx[i]; if(flx[pfk]<1e-7) cout<<fn<<"!!!: hk=0"<<endl; 
 		fi >> xi >> t >> c;// if((flx[0]<0.1)||(flx[0]>0.2)) xi += 100.;
-	fi.close(); flg++;
+	fi.close(); flg++; //cout<<fn<<"; xi="<<xi<<endl;
 return xi;}
 
 void Fit::write (time_t tf,int& ifn,const double xi0,const double xm,bool flg) const {
