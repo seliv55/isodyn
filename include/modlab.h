@@ -9,29 +9,6 @@
 #include <cmath>
 const int tt=5;
 
-class Iso {
-  int niso;  std::string name; double *mid;
-public:
-  double *sd;
-    void showmid(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i]<<" "; std::cout<<name+s<<std::endl;}
-    void showsd(std::string s=""){for(int i=0;i<niso;i++) std::cout<<sd[i]<<" "; std::cout<<name+s<<std::endl;}
-    void calmesd(std::vector<Iso>& linj){
-       int len=linj.size();  sd=new double[niso];
-         for(int ic=0;ic<niso;ic++) {mid[ic]=0.; for(int i=0;i<len;i++) mid[ic]+=linj[i].mid[ic]; mid[ic]/=(double)len;}
-         for(int ic=0;ic<niso;ic++){ sd[ic]=0.; 
-        for(int i=0;i<len;i++){double a=mid[ic]-linj[i].mid[ic]; sd[ic]+=a*a;} sd[ic]/=(double)(len-1); sd[ic]=sqrt(sd[ic]);}}
-    void setname(std::string s){name=s;}
-    void setmid(int mi, double d){mid[mi]=d;}
-    void delmid(){delete[] mid;}
-    std::string* getname(){return &name;}
-    int getniso(){return niso;}
-    double* getmid(){return mid;}
-   double* getsd(){return sd;}
-    
-  Iso(int n): niso(n){mid=new double[n]; for(int i=0;i<niso;i++) mid[i]=0.;}
-  virtual ~Iso(){}
-};
-
 class data {
 public:
 	 double mean, sd;
@@ -39,13 +16,50 @@ public:
         ~data(){}
 };
 
+class Iso {
+ protected:
+  int niso;  std::string name; data *mid;
+ public:
+    void showmid(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].mean<<" "; std::cout<<name+s<<std::endl;}
+    void showsd(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].sd<<" "; std::cout<<name+s<<std::endl;}
+    void calmesd(std::vector<Iso>& linj){
+       int len=linj.size();
+         for(int ic=0;ic<niso;ic++) { mid[ic].mean=0.;
+          for(int i=0;i<len;i++) mid[ic].mean+=linj[i].mid[ic].mean; mid[ic].mean/=(double)len; }
+         for(int ic=0;ic<niso;ic++){ 
+        for(int i=0;i<len;i++){ double a=mid[ic].mean-linj[i].mid[ic].mean; mid[ic].sd+=a*a; }
+        mid[ic].sd/=(double)(len-1); mid[ic].sd=sqrt(mid[ic].sd); }
+           }
+    void setname(std::string s){name=s;}
+    void setmid(int mi, double d){mid[mi].mean=d;}
+    void delmid(){delete[] mid;}
+    std::string* getname(){return &name;}
+    int getniso(){return niso;}
+    data* getmid(){return mid;}
+    
+  Iso(int n, std::string s){niso=n; name=s;
+   mid=new data[n]; for(int i=0;i<niso;i++){ mid[i].mean=0.; mid[i].sd=0.1; }}
+  virtual ~Iso(){}
+};
+
+class Tracer:public Iso {
+ protected:
+  int nmark,nmi;
+ public:
+  double fract;
+  void setrac(){mid[0].mean=(100.-fract); mid[nmi].mean=fract;}
+ Tracer(int n,std::string s,int nc,double abun,int nlab):Iso(n,s){nmark=nc; fract=abun;
+   nmi=nlab;}
+ ~Tracer(){}
+};
+
 class Metab{
-protected:
+ protected:
       const int N, len;
       bool flag;
       double fc,tcon, *calc, kinc[tt],kinm0[tt];
   std::string descr;
-public:
+ public:
 	double *iso, *diso;
 	int ny;
  double* getcalc(){return &calc[0];}
@@ -68,42 +82,42 @@ public:
  
  void skladm0(int itime){ kinm0[itime]=calc[0]/calc[N+1]; }
  
-double sumt(){
+ double sumt(){
 		double sum=0.; unsigned i;
 		for (i=0;i<len;i++) sum += iso[i];
 		return calc[N+1]=sum;
 	}
-double input(Metab& s2,const double& vi,const double& vo){
+ double input(Metab& s2,const double& vi,const double& vo){
 		double x, sum=0.;
 		for(int i=0;i<len;i++) {
 			x=(vi*(iso[i])-vo*(s2.iso[i]));
 			diso[i] -= x; s2.diso[i] += x; sum += x;
 		}
 	return sum;}
-void output(const double& vi){
+ void output(const double& vi){
 		double x, sum=0.;
 		for(int i=0;i<len;i++) {
 			x=vi*iso[i];	diso[i] -= x;}
 	}
-void set0(const double& s0){
+ void set0(const double& s0){
 		iso[0]=s0;
 		for(int i=1;i<len;i++) iso[i]=0.;
 	}
-int getlen() const {return len;	}
-double* getisot() {return iso;	}
+ int getlen() const {return len;	}
+ double* getisot() {return iso;	}
 
-void showsum(Metab& s2,std::ostringstream& fo){
+ void showsum(Metab& s2,std::ostringstream& fo){
    fo<<" "<<std::setw(7)<<(this->calc[0]+s2.calc[0])/(this->calc[N+1]+s2.calc[N+1]);
-}
-void showm0(std::ostringstream& fo){
+ }
+ void showm0(std::ostringstream& fo){
    fo<<" "<<std::setw(7)<<(this->calc[0]/this->calc[N+1]);
-}
+ }
 
-void showcon(std::ostringstream& fo){
+ void showcon(std::ostringstream& fo){
   fo<<" "<<std::setw(7)<<this->calc[N+1];
-}
+ }
 
-void coriso(const double xkin,const double xiso){
+ void coriso(const double xkin,const double xiso){
  double ff=xkin/xiso;
   for(int i=0;i<len;i++) iso[i] *= ff;
   }
@@ -115,7 +129,7 @@ void coriso(const double xkin,const double xiso){
        if((N+1)-k) fi<<"m"<<k<<" "<<calc[k]/calc[N+1]<<std::endl;
          else fi<<"conc: "<<calc[k]/calc[N+1]<<std::endl; 
 			}
-double cutfirst(Metab& p,const double& v) {
+ double cutfirst(Metab& p,const double& v) {
 		double dx, sum=0.;
 		int i=0,i1;
 		int lenp=((len>>1)-1);
@@ -182,62 +196,62 @@ class Metab_data:public Metab {
   double xicon[tt], xi[tt];
   int mi;
 	public:
-void setex0(){
+ void setex0(){
      exper[0][0].mean=1.; exper[0][0].sd=0.01;
       for(int i=1;i<=mi;i++){ exper[0][i].mean=0.; exper[0][i].sd=0.01;  }
                          }
    
-void setrav(int nt1,int nt2){
+ void setrav(int nt1,int nt2){
       for(int i=0;i<=N;i++){ exper[nt1][i].mean=exper[nt2][i].mean; exper[nt1][i].sd=exper[nt2][i].sd;  }
                          }
    
-void sex(int mi, double mid[],double std[],int nt){
-   for(int i=0;i<mi;i++) exper[nt][i].mean=mid[i]*0.01;
-   for(int i=0;i<mi;i++) {exper[nt][i].sd=std[i]*0.01; if(exper[nt][i].sd<0.01) exper[nt][i].sd=0.01;}
+ void sex(int niso, data mid[],int nt){ exper[nt]=mid;
+   for(int i=0;i<niso;i++) exper[nt][i].mean=mid[i].mean*0.01;
+   for(int i=0;i<niso;i++) {exper[nt][i].sd=mid[i].sd*0.01; if(exper[nt][i].sd<0.01) exper[nt][i].sd=0.01;}
 	}
-void read(std::ifstream& fi,int nt){
+ void read(std::ifstream& fi,int nt){
 	unsigned i; std::string aaa;//i: isotopomer; j: time
        fi >> mi;
    for(i=0;i<=mi;i++) { fi>>exper[nt][i].mean;} fi>>aaa; fi>>aaa;
    for(i=0;i<=mi;i++) {fi>>exper[nt][i].sd; if(exper[nt][i].sd<0.01) exper[nt][i].sd=0.01;}
 	}
-void readc(std::ifstream& fi,  int nt){ std::string aaa;
+ void readc(std::ifstream& fi,  int nt){ std::string aaa;
      fi>>aaa;
      for(int i=0;i<nt;i++) fi>>conc[i].mean;
      for(int i=0;i<nt;i++) {fi>>conc[i].sd; if(conc[i].sd<0.01) conc[i].sd=0.01;}
 	}
 
-data * getconc(){return conc;}
-int getmi(){return mi;}
-void setconc(double a){ conc[0].mean=a;}
-data * getexper(int nt){return &exper[nt][0];}
+ data * getconc(){return conc;}
+ int getmi(){return mi;}
+ void setconc(double a){ conc[0].mean=a;}
+ data * getexper(int nt){return &exper[nt][0];}
 
-void showmi(std::ostringstream& fo,int nt){
+ void showmi(std::ostringstream& fo,int nt){
    for (int k=0;k<=N;k++) fo<<" "<<std::setw(7)<<(this->calc[k]/this->calc[N+1]); fo<<"\n";
    fo<<"Data";for (int k=0;k<=N;k++) fo<<" "<<std::setw(7)<<exper[nt][k].mean; fo<<"\n";
-}
+ }
 
-double chisq(int nt,int nl, double add=0.,double a0=0.) {
+ double chisq(int nt,int nl, double add=0.,double a0=0.) {
 	double a, b=this->calc[N+1]+add, b0=this->calc[0]+a0;
 	 xi[nt]=0; 
 	if(exper[nt][0].sd>1.e-5){
      a=(exper[nt][0].mean-b0/b)/(exper[nt][0].sd); xi[nt] += a*a;
-for(int k=1;k<nl;k++) {
+  for(int k=1;k<nl;k++) {
      a=(exper[nt][k].mean-this->calc[k]/b)/(exper[nt][k].sd); xi[nt] += a*a;
      } }
-return xi[nt];}
-double chisqsum(Metab& s2,int nt,int nl) {
+  return xi[nt];}
+ double chisqsum(Metab& s2,int nt,int nl) {
 	double a, b=this->calc[N+1]+s2.getcalc()[N+1];
 	 xi[nt]=0; 
   if(exper[nt][0].sd>1.e-5) for(int k=0;k<nl;k++) {
      a=(exper[nt][k].mean-(this->calc[k]+s2.getcalc()[k])/b)/(exper[nt][k].sd); xi[nt] += a*a;
      }
-return xi[nt];}
+  return xi[nt];}
 
-double chicon(int nt) {
+ double chicon(int nt) {
 	double a;
      a=(conc[nt].mean-this->calc[N+1])/(conc[nt].sd);
-return (xicon[nt]=a*a);}
+  return (xicon[nt]=a*a);}
 
  void wrikinc(std::string descr, std::ostringstream& so, int nt) {
     so<<descr<<"_c: ";  for(int i=0;i<nt;i++) so<<std::setw(9)<<this->kinc[i]; so<<"** "<<conc[nt-1].mean<<" -> "<<xicon[nt-1]<<std::endl;
@@ -255,7 +269,7 @@ return (xicon[nt]=a*a);}
 class ketose:public Metab_data {
  public:
         double ta123[8],tk12[4];
-double dilut(double& dlt,data exper[],const int riht=0,const int left=0) {
+ double dilut(double& dlt,data exper[],const int riht=0,const int left=0) {
 	     unsigned i; double xi(0.0),a(0.0);
 	   this->percent( riht, left);
 	dlt = (exper[0].mean-this->calc[0])/(1.-exper[0].mean);
@@ -281,7 +295,7 @@ double dilut(double& dlt,data exper[],const int riht=0,const int left=0) {
 		for (i=0;i<8;i++) ta123[i] /= this->tcon;
 		for (i=0;i<4;i++) tk12[i] /= this->tcon;
 	}
-void invistk(Metab& ald,const double v) {   
+ void invistk(Metab& ald,const double v) {   
   int i,ii,j, ik,ib,lena=this->len>>2;
    double x,vk, va,sumx=0;
     const double *pak;
@@ -302,8 +316,8 @@ void invistk(Metab& ald,const double v) {
              ik=(j + i*lena);
                 this->diso[ik] += x*pak[i];}
        }
-}
-void invista(Metab& ald,const double v) {   
+ }
+ void invista(Metab& ald,const double v) {   
   int i,ii,j, ik,ib,lena=this->len>>3;
    double x,vk, va,sumx=0;
     const double *pak;
@@ -324,12 +338,12 @@ void invista(Metab& ald,const double v) {
              ik=(j + i*lena);
                 this->diso[ik] += x*pak[i];}
        }
-}
-void tkk(Metab& ald1, Metab& ald2, ketose& ket2,const double v) {
+ }
+ void tkk(Metab& ald1, Metab& ald2, ketose& ket2,const double v) {
      int i,ii,j,ik,ib,lena1=this->len>>2, lena2=ald2.getlen();
      double x,vk, va,sumx=0.;
      const double *pak;
-pak=&this->tk12[0]; ib=4; 
+   pak=&this->tk12[0]; ib=4; 
      vk=v/this->getcon();//kss; //vk /= (1+vk);
      ik=this->len; j=lena1-1;
          for (i=0;i<ik;i++) {ii=(i&j);
@@ -344,9 +358,9 @@ pak=&this->tk12[0]; ib=4;
             ket2.diso[ik] += x*pak[i];    
             }
     }
-}
+ }
 
-void tka(Metab& ald1, Metab& ald2, ketose& ket2,const double v) {
+ void tka(Metab& ald1, Metab& ald2, ketose& ket2,const double v) {
      int i,ii,j,ik,ib,lena1=this->len>>3, lena2=ald2.getlen();
      double x,vk, va,sumx=0.;
      const double *pak;
@@ -365,23 +379,23 @@ void tka(Metab& ald1, Metab& ald2, ketose& ket2,const double v) {
             ket2.diso[ik] += x*pak[i];    
             }
     }
-}
+ }
         ketose(int n,std::string simya=""):Metab_data(n,simya){}
         ~ketose(){}
         };
         
-class twofrag:public Metab_data{
+ class twofrag:public Metab_data{
    double *calc1;
    data *exper1[tt];
   int mi1;
  public:
    
-void setex10(){
+ void setex10(){
      exper1[0][0].mean=1.; exper1[0][0].sd=0.01;
       for(int i=1;i<=N;i++){ exper1[0][i].mean=0.; exper1[0][i].sd=0.01;  }
                          }
                          
-void read1(std::ifstream& fi,int nt){
+ void read1(std::ifstream& fi,int nt){
 	unsigned i; std::string aaa;//i: isotopomer; j: time
        fi >> mi1;
    for(i=0;i<=mi1;i++) { fi>>exper1[nt][i].mean;} fi>>aaa; fi>>aaa;
@@ -394,35 +408,36 @@ void read1(std::ifstream& fi,int nt){
 
 class Ldistr {
 	int ntime,lmet;
-Metab_data gl, lac, glu, glu25, gln, pro, arg, rna, asp, asn, ala, ser, cys, agl, pyrm, coa, coac, gly, oa, oac, cit, akg, fum, mal;
-Metab fbp, t3, pep, pyr, cthf, citc, akgc, e4;
-ketose h6, s7, p5;
-double lacout,coaefl,tca,fpdh;
-std::vector<double> tex;
+  Metab_data gl, glycog, lac, glu, glu25, gln, pro, arg, rna, asp, asn, ala, ser, cys, agl, pyrm, coa, coac, gly, oa, oac, cit, akg, fum, mal;
+  Metab fbp, t3, pep, pyr, cthf, citc, akgc, e4;
+  ketose h6, s7, p5;
+  double lacout,coaefl,tca,fpdh;
+  std::vector<double> tex;
+  std::vector<Iso> result;
       void symm (double *s);
-void csyn(double *coai,double *dcoai,double *oai,double *doai,double *dciti,const double v);
-void split(double *h6,double *dh6,double *t1,double *dt1,const double vf,const double vr);
-void spInvsl(double *h6,double *dh6,double *t1,double *dt1,const double vf,const double tsum);
-void ast (double vf,double vr);
+ void csyn(double *coai,double *dcoai,double *oai,double *doai,double *dciti,const double v);
+ void split(double *h6,double *dh6,double *t1,double *dt1,const double vf,const double vr);
+ void spInvsl(double *h6,double *dh6,double *t1,double *dt1,const double vf,const double tsum);
+ void ast (double vf,double vr);
 
-void sklad(int itime){gl.skladc(itime);gl.skladm0(itime); lac.skladc(itime); gln.skladc(itime); lac.skladm0(itime); glu.skladm0(itime); glu25.skladm0(itime); ala.skladm0(itime); rna.skladm0(itime); gly.skladm0(itime); ser.skladm0(itime); pro.skladm0(itime); cit.skladm0(itime); agl.skladm0(itime); asp.skladm0(itime);  fum.skladm0(itime); mal.skladm0(itime);}
+ void sklad(int itime){gl.skladc(itime);gl.skladm0(itime); glycog.skladc(itime);glycog.skladm0(itime); lac.skladc(itime); gln.skladc(itime); lac.skladm0(itime); glu.skladm0(itime); glu25.skladm0(itime); ala.skladm0(itime); rna.skladm0(itime); gly.skladm0(itime); ser.skladm0(itime); pro.skladm0(itime); cit.skladm0(itime); agl.skladm0(itime); asp.skladm0(itime);  fum.skladm0(itime); mal.skladm0(itime);}
 
-void wrikin(std::ostringstream& so, int nt){
-for(int i=0;i<lmet;i++) met[i]->wrikinm0(so,nt);
-}
+ void wrikin(std::ostringstream& so, int nt){
+   for(int i=0;i<lmet;i++) met[i]->wrikinm0(so,nt);
+ }
 
        void setdiso(double *pyinit);
        void setiso(double *pyinit);
    void wrim0ex(std::ostringstream& fo);
-void wriconex(std::ostringstream& fo);
-void fitmet(double& xic,int iout,int iin,double fac);
-double fitm(double& xic,int ipar,double fac);
-double ser_gly (double v, double xthf);
-double gly_ser (double v);
+ void wriconex(std::ostringstream& fo);
+ void fitmet(double& xic,int iout,int iin,double fac);
+ double fitm(double& xic,int ipar,double fac);
+ double ser_gly (double v, double xthf);
+ double gly_ser (double v);
 // void setmet(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
 // void setm0(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
-public:
-       Metab_data *met[5];
+ public:
+       Metab_data *met[6];
 //       void setmet(){met[0]=&gl; met[1]=&gly;}
     void setfige();
 //       double setLacInit(double fact){return lac.setInCon(fact);}
@@ -435,8 +450,9 @@ public:
        void showmi(std::ostringstream& fo,int nt);
       double readExp(char *fn);
       std::vector<std::string> spli(std::stringstream& test,char a);
+      int c13pos(std::string& s,int& nc,int& nlab);
       void defcol(int nucol[],std::vector<std::string> vstr);
-      void rcsv(std::ifstream& fi,std::vector<Iso>& result );
+      Tracer rcsv(std::ifstream& fi,std::vector<Iso>& result );
         int diff(const double da,double st[], double *palpha) ;
         void show(std::ostringstream& fo,double xfin);
 //        void showval(std::ostringstream& fo,double xfin);
@@ -445,8 +461,8 @@ public:
         double integrbs();
 	double ddisolve();
         int stor(double st[]) ;
-	Ldistr(): gl(6,"Glyc"), lac(3,"Lac"), glu(5,"Glu"), glu25(5,"Gl25"), gln(5), pro(5), arg(5), rna(5,"Rib"), asp(4), asn(4), ala(3), ser(3), cys(3), agl(3), h6(6), fbp(6),  t3(3), s7(7), pep(3), pyr(3), pyrm(3), coa(2), coac(2), gly(2), cthf(1),  oa(4), oac(4), cit(6), citc(6), akg(5), akgc(5), fum(4), mal(4), p5(5,"Rib"), e4(4) {	 met[0]=&rna; met[1]=&lac; met[2]=&glu; met[3]=&gl; met[4]=&glu25;}
-	~Ldistr(void) {}
+	Ldistr(): gl(6,"Gluc"), glycog(6,"Glycog"), lac(3,"Lac"), glu(5,"Glut"), glu25(5,"Gl25"), gln(5), pro(5), arg(5), rna(5,"Rib"), asp(4), asn(4), ala(3), ser(3), cys(3), agl(3), h6(6), fbp(6),  t3(3), s7(7), pep(3), pyr(3), pyrm(3), coa(2), coac(2), gly(2), cthf(1),  oa(4), oac(4), cit(6), citc(6), akg(5), akgc(5), fum(4), mal(4), p5(5,"Rib"), e4(4) { met[0]=&rna; met[1]=&lac; met[2]=&glu; met[3]=&gl; met[4]=&glu25; met[5]=&glycog;}
+	~Ldistr(void) {for(int i=0;i<result.size();i++) result[i].delmid(); result.clear();}
 };
 
 extern Ldistr horse;

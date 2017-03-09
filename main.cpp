@@ -20,7 +20,7 @@ using namespace std;
 double solve(){
 //solving the kinetic model:
    ts=clock(); 
-     horse.readExp(fex1); for(int i=0;i<numx;i++) xx[i]=xinit1[i];
+ for(int i=0;i<numx;i++) xx[i]=xinit1[i];
     tsolve(37000.); mader=Problem.dermax();
     // Problem.jacobian(xx);  tsolve(37000.); for(int i=0;i<numx;i++) xinit1[i]=xx[i];
       double xi=horse.integrbs();

@@ -6,7 +6,8 @@ using namespace std;
 
 int Ldistr::getN() {
 gl.ny=nmet;
-lac.ny=gl.ny+gl.getlen();
+glycog.ny=gl.ny+gl.getlen();
+lac.ny=glycog.ny+glycog.getlen();
 glu.ny=lac.ny+lac.getlen();
 glu25.ny=glu.ny;
 gln.ny=glu.ny+glu.getlen();
@@ -42,6 +43,7 @@ return (e4.ny+e4.getlen());
 
 void Ldistr::setdiso(double *pyinit) {
 gl.diso= &pyinit[gl.ny];
+glycog.diso= &pyinit[glycog.ny];
 lac.diso= &pyinit[lac.ny];
 glu.diso= &pyinit[glu.ny];
 glu25.diso= &pyinit[glu.ny];
@@ -77,6 +79,7 @@ e4.diso= &pyinit[e4.ny];
 
 void Ldistr::setiso(double *pyinit) {
 gl.iso= &pyinit[gl.ny];
+glycog.iso= &pyinit[glycog.ny];
 lac.iso= &pyinit[lac.ny];
 glu.iso= &pyinit[glu.ny];
 glu25.iso= &pyinit[glu.ny];
@@ -111,7 +114,7 @@ e4.iso= &pyinit[e4.ny];
 }
 
 void Ldistr::massfr() {
-gl.percent(); lac.percent(); glu.percent(1,1); glu25.percent(1,0); gln.percent(); ala.percent(); ser.percent(); agl.percent(); rna.percent(); asp.percent(); pro.percent(); pyr.percent(); pyrm.percent(); oa.percent(); oac.percent(); cit.percent(); citc.percent(); akg.percent(); fum.percent(); mal.percent(); coac.percent(); gly.percent(); cthf.percent(); }
+gl.percent(); glycog.percent(); lac.percent(); glu.percent(1,1); glu25.percent(1,0); gln.percent(); ala.percent(); ser.percent(); agl.percent(); rna.percent(); asp.percent(); pro.percent(); pyr.percent(); pyrm.percent(); oa.percent(); oac.percent(); cit.percent(); citc.percent(); akg.percent(); fum.percent(); mal.percent(); coac.percent(); gly.percent(); cthf.percent(); }
 
 double Ldistr::xits(int its) {int itp=its-1; double xi=0;
 for(int i=0;i<lmet;i++) xi += met[i]-> chisq(its,met[i]->getmi());

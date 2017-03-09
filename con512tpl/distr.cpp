@@ -15,6 +15,7 @@ void Ldistr::distr(double *py,double *pdydt) {
 	double xthf=thft-cthf.sumt();
 //h6.coriso(py[nh6],h6.sumt()); fbp.coriso(py[nfbp],fbp.sumt()); t3.coriso(py[nt3],t3.sumt()); pep.coriso(py[npep],pep.sumt()); pyr.coriso(py[npyr],pyr.sumt()); pyrm.coriso(py[npyrm],pyrm.sumt()); coa.coriso(py[ncoa],coa.sumt()); oa.coriso(py[noa],oa.sumt()); oac.coriso(py[noac],oac.sumt()); cit.coriso(py[ncit],cit.sumt()); citc.coriso(py[ncitc],citc.sumt()); akg.coriso(py[nakg],akg.sumt()); akgc.coriso(py[nakgc],akgc.sumt()); fum.coriso(py[nfum],fum.sumt()); mal.coriso(py[nmal],mal.sumt()); 
 gl.input(h6,fluxes[hk]/gl.sumt(), 0.);
+glycog.input(h6,fluxes[glycogout], fluxes[glycogin]);
 h6.input(fbp,fluxes[pfk], fluxes[fbpase]);
 t3.input(pep,fluxes[t3pep], fluxes[pept3]);
 pep.input(pyr,fluxes[pk], 0.);

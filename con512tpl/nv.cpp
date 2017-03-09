@@ -7,10 +7,10 @@
 #include "solvers.h"
 #include "analis.h"
 using namespace std;
-const int hk=0, pfk=hk+1, fbpase=pfk+1, t3pep=fbpase+1, pept3=t3pep+1, pk=pept3+1, pyrlac=pk+1, lacpyr=pyrlac+1, pyrdcm=lacpyr+1, pyrdmc=pyrdcm+1, pdh=pyrdmc+1, citakg=pdh+1, akgfum=citakg+1, fumal=akgfum+1, malfum=fumal+1, maloa=malfum+1, oamal=maloa+1, pc=oamal+1, malicm=pc+1, malicc=malicm+1, pepck=malicc+1, ppp=pepck+1, oacd=ppp+1, mald=oacd+1, citdmc=mald+1, citdcm=citdmc+1, akgdmc=citdcm+1, akgdcm=akgdmc+1, coaout=akgdcm+1, coar=coaout+1, citakg1=coar+1, akgcit1=citakg1+1, gln_in=akgcit1+1, gln_out=gln_in+1, gln_pr=gln_out+1, gluin=gln_pr+1, gluout=gluin+1, t3ser=gluout+1, serpyr=t3ser+1, ser_pr=serpyr+1, sergly=ser_pr+1, glyser=sergly+1, thf=glyser+1, mthf=thf+1, asp_o=mthf+1, asp_i=asp_o+1, asp_pr=asp_i+1, ala_o=asp_pr+1, ala_i=ala_o+1, trpala=ala_i+1, ala_pr=trpala+1, r5_o=ala_pr+1, r5_i=r5_o+1, cystin=r5_i+1, proin=cystin+1, proout=proin+1, pro_pr=proout+1, kgin=pro_pr+1, coain=kgin+1, aglin=coain+1, aglout=aglin+1, D=aglout+1, cs0=D+1, resp=cs0+1, atpase=resp+1, rald=atpase+1, rta=rald+1, rtk=rta+1, nrea=rtk+1, 
+const int hk=0, pfk=hk+1, fbpase=pfk+1, t3pep=fbpase+1, pept3=t3pep+1, pk=pept3+1, pyrlac=pk+1, lacpyr=pyrlac+1, pyrdcm=lacpyr+1, pyrdmc=pyrdcm+1, pdh=pyrdmc+1, citakg=pdh+1, akgfum=citakg+1, fumal=akgfum+1, malfum=fumal+1, maloa=malfum+1, oamal=maloa+1, pc=oamal+1, malicm=pc+1, malicc=malicm+1, pepck=malicc+1, ppp=pepck+1, oacd=ppp+1, mald=oacd+1, citdmc=mald+1, citdcm=citdmc+1, akgdmc=citdcm+1, akgdcm=akgdmc+1, coaout=akgdcm+1, coar=coaout+1, citakg1=coar+1, akgcit1=citakg1+1, gln_in=akgcit1+1, gln_out=gln_in+1, gln_pr=gln_out+1, gluin=gln_pr+1, gluout=gluin+1, t3ser=gluout+1, serpyr=t3ser+1, ser_pr=serpyr+1, sergly=ser_pr+1, glyser=sergly+1, thf=glyser+1, mthf=thf+1, asp_o=mthf+1, asp_i=asp_o+1, asp_pr=asp_i+1, ala_o=asp_pr+1, ala_i=ala_o+1, trpala=ala_i+1, ala_pr=trpala+1, r5_o=ala_pr+1, r5_i=r5_o+1, cystin=r5_i+1, proin=cystin+1, proout=proin+1, pro_pr=proout+1, kgin=pro_pr+1, coain=kgin+1, aglin=coain+1, aglout=aglin+1, glycogin=aglout+1, glycogout=glycogin+1, D=glycogout+1, cs0=D+1, resp=cs0+1, atpase=resp+1, rald=atpase+1, rta=rald+1, rtk=rta+1, nrea=rtk+1, 
 aldf=atpase+1, aldrev=aldf+1, aldfli=aldrev+1, aldi1=aldfli+1, tafl=aldi1+1, s7f6a=tafl+1, f6g3a=s7f6a+1, s7e4a=f6g3a+1, tkfl=s7e4a+1, s7p5=tkfl+1, f6p5=s7p5+1, p5f6=f6p5+1, f6s7=p5f6+1, s7f6=f6s7+1, p5g3i=s7f6+1, f6e4i=p5g3i+1, s7p5i=f6e4i+1, nflx =s7p5i+1;
 
-const int nh6=0, nfbp=nh6+1, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, ncoa=npyrm+1, noa=ncoa+1, noac=noa+1, ncit=noac+1, ncitc=ncit+1, nakg=ncitc+1, nakgc=nakg+1, nfum=nakgc+1, nmal=nfum+1, np5=nmal+1, ne4=np5+1, ns7=ne4+1, natp=ns7+1, nnad=natp+1, ngl=nnad+1, nlac=ngl+1, nglu=nlac+1, ngln=nglu+1, nala=ngln+1, nasp=nala+1, nser=nasp+1, npro=nser+1, nrna=npro+1, ngly=nrna+1, ncthf=ngly+1, ncoac=ngly+1, nagl=ncoac+1, nmet=nagl+1, numx=nnad+1;
+const int nh6=0, nfbp=nh6+1, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, ncoa=npyrm+1, noa=ncoa+1, noac=noa+1, ncit=noac+1, ncitc=ncit+1, nakg=ncitc+1, nakgc=nakg+1, nfum=nakgc+1, nmal=nfum+1, np5=nmal+1, ne4=np5+1, ns7=ne4+1, natp=ns7+1, nnad=natp+1, ngl=nnad+1, nlac=ngl+1, nglu=nlac+1, ngln=nglu+1, nala=ngln+1, nasp=nala+1, nser=nasp+1, npro=nser+1, nrna=npro+1, ngly=nrna+1, ncthf=ngly+1, ncoac=ncthf+1, nagl=ncoac+1, nglycog=nagl+1, nmet=nglycog+1, numx=nnad+1;
 
 Fit Problem;
 const double thft(1.);
@@ -22,19 +22,20 @@ double xm0,xinit1[numx],xinit2[numx];
  Reapar Parray::rea[nrea];
 double Analis::nv1[nrea], Analis::nv2[nrea];
 void Fit::ff(const double *y,double *dydx) { for(int i=0;i<numx;i++) dydx[i]=0.;
-dydx[ngl] = - flx[hk];
-dydx[nlac] = flx[pyrlac]-flx[lacpyr];
-dydx[nglu] = flx[gluout]-flx[gluin];
-dydx[ngln] = flx[gln_out]-flx[gln_in]-flx[gln_pr];
-dydx[nala] = flx[ala_o]-flx[ala_i]+flx[trpala]-flx[ala_pr];
-dydx[nasp] = flx[asp_o]-flx[asp_i]-flx[asp_pr];
-dydx[nser] = flx[t3ser]-flx[serpyr]-flx[ser_pr]+flx[glyser]-flx[sergly];
-dydx[ngly] = flx[sergly]-flx[glyser];
-dydx[ncthf] = flx[sergly]-flx[glyser]+flx[mthf]-flx[thf];
-dydx[npro] = flx[proout]-flx[proin]-flx[pro_pr];
-dydx[nrna] = flx[r5_o]-flx[r5_i]; // cout<<"dgly="<<dydx[ngly]<<"; xx(ngly)="<<xx[ngly]<<endl;
-dydx[ncoac] = flx[coaout] - flx[coar];
-dydx[nagl] = flx[aglin] - flx[aglout];
+dydx[ngl] = - flx[hk];                  //glucose
+dydx[nlac] = flx[pyrlac]-flx[lacpyr];   //lactate
+dydx[nglu] = flx[gluout]-flx[gluin];    //glutamate
+dydx[ngln] = flx[gln_out]-flx[gln_in]-flx[gln_pr];//glutamine
+dydx[nala] = flx[ala_o]-flx[ala_i]+flx[trpala]-flx[ala_pr];//alanine
+dydx[nasp] = flx[asp_o]-flx[asp_i]-flx[asp_pr];//aspartate
+dydx[nser] = flx[t3ser]-flx[serpyr]-flx[ser_pr]+flx[glyser]-flx[sergly];//serine
+dydx[ngly] = flx[sergly]-flx[glyser];   //glycine
+dydx[ncthf] = flx[sergly]-flx[glyser]+flx[mthf]-flx[thf];//tetrahydrofolate
+dydx[npro] = flx[proout]-flx[proin]-flx[pro_pr];//proline
+dydx[nrna] = flx[r5_o]-flx[r5_i];       //ribose
+dydx[ncoac] = flx[coaout] - flx[coar];  //accoa
+dydx[nagl] = flx[aglin] - flx[aglout];  //a-ketoglutarate
+dydx[nglycog] = flx[glycogin] - flx[glycogout];//glycogen
 }
 void Fit::f(const double *y,double *dydx) { for(int i=0;i<numx;i++) dydx[i]=0.;
                                             for(int i=0;i<nflx;i++) flx[i]=0.;
@@ -50,6 +51,8 @@ void Fit::f(const double *y,double *dydx) { for(int i=0;i<numx;i++) dydx[i]=0.;
                                   dydx[nh6] -= flx[pfk];    dydx[nfbp] += flx[pfk];
                                   dydx[natp] -= flx[pfk]; 
                                   dydx[nfbp] -= flx[fbpase]; dydx[nh6] += flx[fbpase];
+ flx[glycogin]=rea[glycogin].v(y[nh6]); dydx[nh6] += flx[glycogin];
+ flx[glycogout]=rea[glycogout].v();     dydx[nh6] -= flx[glycogout];
 aldolase.st1fl(&flx[aldf], y[nfbp], y[nt3]); dydx[nfbp] -= flx[aldf]; dydx[nt3] += 2.*flx[aldf];
  flx[t3pep]= rea[t3pep].v(y[nt3],adp,y[nnad]); 
  flx[pept3]= rea[pept3].v(y[npep],y[natp],nadh);
@@ -223,6 +226,8 @@ fluxes[proin]  /= xx[npro];
 fluxes[pro_pr]  /= xx[npro];
 fluxes[aglin]  /= xx[nagl];
 fluxes[aglout]  /= y[nt3];
+ fluxes[glycogin] /= y[nh6];
+ fluxes[glycogout] /= xx[nglycog];
 fluxes[cs0] /= (y[ncoa]*y[noa]);
 fluxes[aldf] /= y[nfbp];
 fluxes[aldf+1] /= (y[nt3]*y[nt3]);

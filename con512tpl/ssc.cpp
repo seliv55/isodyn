@@ -5,6 +5,7 @@ using namespace std;
 void Ldistr::ssc(double *pyinit) {setiso(pyinit);
 	 for(int i=0;i<nmet;i++) pyinit[i]=xx[i];
 gl.set0(gl.getconc()[0].mean);
+glycog.set0(glycog.getconc()[0].mean);
 lac.set0(lac.getconc()[0].mean);
 glu.set0(glu.getconc()[0].mean);
 glu25.set0(glu.getconc()[0].mean);
