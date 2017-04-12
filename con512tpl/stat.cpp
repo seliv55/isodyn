@@ -27,14 +27,14 @@ double Fit::read(int &t,double &c, string fn){
 	fi.close(); flg++; //cout<<fn<<"; xi="<<xi<<endl;
 return xi;}
 
-void Fit::write (time_t tf,string& sst, int& ifn,const double xi0,const double xm,bool flg) const {
+void Fit::write (time_t tf, int& ifn,const double xi0,const double xm,bool flg) const {
          int i; stringstream fn;
-            if(flg) for(int i=ifn;;i++) { fn<<sst<<i; //sprintf(fn,"%i",i);
+            if(flg) for(int i=ifn;;i++) { fn<<outdir<<i; //sprintf(fn,"%i",i);
 	   ifstream checkfi(fn.str().c_str());
 	   if(!checkfi.good()) { checkfi.close(); ifn=i; break;}
 	   checkfi.close();
    } 
-   else fn<<sst<<i; //sprintf(fn,"%i",ifn);
+   else fn<<outdir<<ifn; //sprintf(fn,"%i",ifn);
   ofstream fi(fn.str().c_str());
     for (i=0;i<nrea;i++) rea[i].write(fi,i); 
 	for (i=1; i<par[0]; i++) fi << par[i]<<" "; fi << "-1" << endl;

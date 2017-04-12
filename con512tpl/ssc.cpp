@@ -20,7 +20,7 @@ asp.set0(asp.getconc()[0].mean);
 pro.set0(pro.getconc()[0].mean);
 gln.set0(gln.getconc()[0].mean*gln.getexper(0)[0].mean);
 gln.iso[31]=gln.getconc()[0].mean*gln.getexper(0)[5].mean;
-gl.set0(gl.getconc()[0].mean*gl.getexper(0)[0].mean); cout<<"Glc="<<gl.getexper(0)[0].mean<<endl;
+gl.set0(gl.getconc()[0].mean*gl.getexper(0)[0].mean); 
 gl.iso[1] =gl.getconc()[0].mean*gl.getexper(0)[1].mean;
 gl.iso[48]=gl.getconc()[0].mean*gl.getexper(0)[2].mean;
 gl.iso[49]=gl.getconc()[0].mean*gl.getexper(0)[3].mean/4.;

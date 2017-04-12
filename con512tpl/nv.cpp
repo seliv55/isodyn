@@ -157,7 +157,7 @@ tk.st1fl(&flx[tkfl], y[nt3]/ft3, y[np5], y[ne4], y[nh6]/fh6, y[np5], y[ns7]);
 //					dydx[nnad]=0.;dydx[natp]=0.;
 }
 
-void Parray::init(){ft3=10.; fh6=7.; cout<<"proin="<<proin<<endl;
+void Parray::init(){ft3=10.; fh6=7.; 
 	tk.setk(rea[rtk].getpar() );
 	ta.setk(rea[rta].getpar());
 	aldolase.setk(rea[rald].getpar());}

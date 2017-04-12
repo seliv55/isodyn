@@ -2,6 +2,7 @@
 #ifndef NVH
 #define NVH
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 class Reapar{
    std::string name, *spar;
@@ -53,27 +54,36 @@ public:
 };
 class Fit: public Parray{
 	int i68, i90, i95, i99;
-	std::string parstr;
-	public:	
+	std::string outdir;
+    public:	
       void stat(const int NP );
       double read(int &t,double &c, std::string fn);
       void readst( int* );
       void wstorefl (const char fn1[], int numpar, const double** m,std::string n[]);
-      void write (time_t tf,std::string&, int& fn,const  double xi0, const double xm,bool flg=true) const ;
-           void perturb(const double f1);
-    void cont(const int,const  double,const double);
- void setpar(int p[]){ for(int i=1;;i++) {par[i]=p[i-1]; if(par[i]<0) {par[0]=i; break;}}}
+      void write (time_t tf, int& fn,const  double xi0, const double xm,bool flg=true) const ;
+      void perturb(const double f1);
+      void cont(const int,const  double,const double);
+      void setpar(int p[]){ for(int i=1;;i++) {par[i]=p[i-1]; if(par[i]<0) {par[0]=i; break;}}}
+      void fitc(double dc,double dm,int iin,int iout);
+      int* getFitPar(){return &par[0];}
+      void setsst();
+      double jacobian(double *y);
+      double eigen(double dx[]);
+      void chpar(int ipar,int ovar,double factor,int);
+      void f(const double *y,double *dydx);
+      void ff(const double *y,double *dydx);
+ 
+    void setodir(char *filo){ std::string infi(filo);
+         int pos=infi.find_last_of('/');   outdir=infi.substr(0,pos+1);   }
+    std::string* getodir(){return &outdir;}
+         
+    int setnumofi(){ for(int i=1;;i++) {std::stringstream fn;
+       fn<<outdir<<i;   std::ifstream checkfi(fn.str().c_str()); checkfi.close(); 
+	 if(!checkfi.good())  return (i-1);}    }
 
-        void fitc(double dc,double dm,int iin,int iout);
-	int getListFit(int list[]) const {      int k=1;
+     int getListFit(int list[]) const {      int k=1;
 	   while (par[k]+1) {list[k-1] = par[k]; k++;} return (k-1);}
-	int* getFitPar(){return &par[0];}
-	void setsst();
-      	double jacobian(double *y);
-	double eigen(double dx[]);
-	void chpar(int ipar,int ovar,double factor,int);
-	void f(const double *y,double *dydx);
-        void ff(const double *y,double *dydx);
+	   
         void shownx(int nx,double dx[]){for(int i=0;i<nx;i++) std::cout<<namex[i]<<":"<<dx[i]<<"; ";
                                              std::cout<<std::endl;}
         double dermax();
