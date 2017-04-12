@@ -28,7 +28,7 @@ double solve(){
 //      tsolve(37000.); 
 //      xi += horse.integrbs();
   tf=clock()-ts;for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
-   suxx=horse.label(); // suxx += dif;
+   suxx=horse.consum(); // suxx += dif;
     dif = suxx;
    return (xi);}
    
@@ -50,8 +50,8 @@ int main( int argc, char *argv[] ){
     if(argc>2) {Problem.setodir(argv[2]);
                 ifn=Problem.setnumofi();}
      
- if (argv[1][0]=='.')  { Problem.stat(ifn); return 0; }
-  else if ((argc>1)&&(argv[1][0]=='c')) {chekxi(); return 0; }
+ if(argc==2){ if(argv[1][0]=='.')  { Problem.stat(ifn); return 0; }
+  else if (argv[1][0]=='c') {chekxi(); return 0; } }
    else{
      cout.precision(3);
      xi0=Problem.read(itmp,tmp,argv[2]);    //read parameters

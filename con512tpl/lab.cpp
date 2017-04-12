@@ -145,7 +145,7 @@ for(int i=0;i<lmet;i++) met[i]-> showm0(fo);}
 //  fo<<"Ser ";  ser.showmi(fo,nt);}
 
 
-double Ldistr::label() {
+double Ldistr::consum() {
 return (h6.sumt()+fbp.sumt()+t3.sumt()+s7.sumt()+pep.sumt()+pyr.sumt()+pyrm.sumt()+coa.sumt()+oa.sumt()+oac.sumt()+cit.sumt()+citc.sumt()+akg.sumt()+akgc.sumt()+fum.sumt()+mal.sumt()+p5.sumt()+e4.sumt());}
 
 void Ldistr::flback(){ cout<<" ∑isotopomers-variable:"<<"\n";

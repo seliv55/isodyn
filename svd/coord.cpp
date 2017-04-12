@@ -184,8 +184,8 @@ cout<< "\nPerturbation+CoordinateDescent:\nPar#\txi2con\txi2iso\tParValue\tdif:"
   catch( char const* str ){cout << "exception: "<< str <<endl; {Problem.restoreVm(nrea,nv2); }
                    /**/
  chimin=xi; dif0=dif;
-//   cout<<"* reduce Lac *"<<endl; descent(fdes,-2);
-     cout<<"* reduce xi total *"<<endl;// descent(fdes);
+   descent(fdes,-2);
+//     cout<<"* reduce xi total *"<<endl;// descent(fdes);
  //      xi=horse.fitcon(); Problem.write(tf,ifn,xi,suxx); ifn++;
  //     horse.setcon();
        /*  while(xmax()>xlim) ; 
