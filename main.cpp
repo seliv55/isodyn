@@ -48,10 +48,10 @@ int main( int argc, char *argv[] ){
    int itmp; bool check;
     fex1=argv[1]; fex2=fex1;
     if(argc>2) {Problem.setodir(argv[2]);
-                ifn=Problem.setnumofi();}
+                ifn=Problem.setnumofi();}  cout<<ifn<<endl;
      
- if(argc==2){ if(argv[1][0]=='.')  { Problem.stat(ifn); return 0; }
-  else if (argv[1][0]=='c') {chekxi(); return 0; } }
+  if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn); return 0; }
+//  else if (argv[1][0]=='c') {chekxi(); return 0; }
    else{
      cout.precision(3);
      xi0=Problem.read(itmp,tmp,argv[2]);    //read parameters

@@ -74,7 +74,7 @@ class Fit: public Parray{
       void ff(const double *y,double *dydx);
  
     void setodir(char *filo){ std::string infi(filo);
-         int pos=infi.find_last_of('/');   outdir=infi.substr(0,pos+1);   }
+         int pos=infi.find_last_of('/');   outdir=infi.substr(0,pos+1); std::cout<<outdir<<std::endl; }
     std::string* getodir(){return &outdir;}
          
     int setnumofi(){ for(int i=1;;i++) {std::stringstream fn;

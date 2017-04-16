@@ -29,12 +29,8 @@ return xi;}
 
 void Fit::write (time_t tf, int& ifn,const double xi0,const double xm,bool flg) const {
          int i; stringstream fn;
-            if(flg) for(int i=ifn;;i++) { fn<<outdir<<i; //sprintf(fn,"%i",i);
-	   ifstream checkfi(fn.str().c_str());
-	   if(!checkfi.good()) { checkfi.close(); ifn=i; break;}
-	   checkfi.close();
-   } 
-   else fn<<outdir<<ifn; //sprintf(fn,"%i",ifn);
+            if(flg) ifn=Problem.setnumofi();
+    fn<<outdir<<ifn; //sprintf(fn,"%i",ifn);
   ofstream fi(fn.str().c_str());
     for (i=0;i<nrea;i++) rea[i].write(fi,i); 
 	for (i=1; i<par[0]; i++) fi << par[i]<<" "; fi << "-1" << endl;
@@ -88,7 +84,7 @@ void Fit::readst( int* b){
 	getline(fi,aaa);
 	for (i=0;i<numx;i++) fi>>aaa>>namex[i]>>xx[i];
         for (i=0;i<nflx;i++) fi>>aaa>>namef[i]>>mfl[iset][i];
- /*       mfl[iset][mdh_net]=mfl[iset][maloa]-mfl[iset][oamal];
+/*      mfl[iset][mdh_net]=mfl[iset][maloa]-mfl[iset][oamal];
         mfl[iset][aldfl+2]=mfl[iset][aldfl]-mfl[iset][aldfl+1];
         mfl[iset][ckg_net]=mfl[iset][citakg1]-mfl[iset][idhr];
         mfl[iset][kgd_net]=mfl[iset][akgdf]-mfl[iset][akgdr];
@@ -109,10 +105,10 @@ mfl[iset][nadhf]=mfl[iset][pdh]+mfl[iset][akgfum]+(mfl[iset][citakg]+mfl[iset][r
 void Fit::stat(const int NP ){
         Vec_DP a(NP), conc(NP); Vec_INT b(NP),t(NP);
         int* pb=&b[0];
-        int i,sys; char fn[15];
+        int i,sys;
  for ( i=1;i<=NP;i++) {
-	 sprintf(fn,"%i",i); 
-       a[i-1] = read(t[i-1],conc[i-1],fn);
+	  stringstream fn; fn<<outdir<<i; cout<<fn.str().c_str()<<endl;
+       a[i-1] = read(t[i-1],conc[i-1],fn.str().c_str());
        b[i-1] = i;
  }
         NR::sort2a(a,b);
@@ -134,12 +130,12 @@ if ((i%3)==0) cout<<endl;
 readst( pb);
 int chr=NP;//i99;
  for (i=0;i<chr;i++) {
-	sprintf(fn,"mv %i %ia",b[i],i+1);
-		sys=system(fn);
+	  stringstream fn; fn<<"mv "<<outdir<<b[i]<<" "<<outdir<<(i+1)<<"a";
+		sys=system(fn.str().c_str());
 	}
  for (i=0;i<chr;i++) {
-	sprintf(fn,"mv %ia %i",i+1,i+1);
-		sys=system(fn);
+	  stringstream fn; fn<<"mv "<<outdir<<(i+1)<<"a "<<outdir<<(i+1);
+		sys=system(fn.str().c_str());
 	}
 	cout<<"selected " <<i99<<" from "<<NP<<endl;
 }
