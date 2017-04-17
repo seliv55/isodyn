@@ -32,12 +32,13 @@ double solve(){
     dif = suxx;
    return (xi);}
    
-inline void chekxi(){
+inline void chekxi(char *efi){
    stringstream fn; int itmp, iin, ifin;  double tmp,xi0;
     cout<<"first file: "; cin>>iin;
     cout<<"\nlast file: "; cin>>ifin; 
-     for(int i=iin;i<ifin;i++) {fn<<Problem.getodir()<<i; cout<<i<<": "<<endl;
-      Problem.read(itmp,tmp,fn.str().c_str()); for(int ii=0;ii<numx;ii++) xinit1[ii]=xx[ii];
+     for(int i=iin;i<ifin;i++) {fn<<*Problem.getodir()<<i; cout<<i<<": "<<endl;
+      Problem.read(itmp,tmp,fn.str().c_str()); cout<<fn.str().c_str()<<endl;
+      horse.readExp(efi); for(int ii=0;ii<nmet;ii++) cout<<(xinit1[ii]=xx[ii])<<endl;
          xi0=solve();            
    Problem.write(tf,i,xi0,suxx,0);      } /**/
   }
@@ -46,12 +47,11 @@ int main( int argc, char *argv[] ){
    double tmp,xi0;ofstream kkin("kinxx"); 
 //   int a[][3]={{1,2,3},{4,5,6}}}; cout<<"a11="<<a[1][1]<<endl;
    int itmp; bool check;
-    fex1=argv[1]; fex2=fex1;
-    if(argc>2) {Problem.setodir(argv[2]);
-                ifn=Problem.setnumofi();}  cout<<ifn<<endl;
+         fex1=argv[1]; fex2=fex1;
+    Problem.setodir(argv[2]);  ifn=Problem.setnumofi();
      
-  if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn); return 0; }
-//  else if (argv[1][0]=='c') {chekxi(); return 0; }
+  if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn); return 0; } //order parameter files by increasing of χ2
+  else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
    else{
      cout.precision(3);
      xi0=Problem.read(itmp,tmp,argv[2]);    //read parameters
