@@ -8,37 +8,29 @@
 #include "analis.h"
 #include "solvers.h"
 using namespace std;
-double Analis::descent(double factor,int ip){ 
-	double xi1, a, sens, slim=0.01, dp=factor-1.;
+double Analis::descent(double factor,int ip){
+	double xi1, oval, sens, slim=0.01, dp=factor-1.;
 	const double xili(0.9998);
 	int k, jfail(0), parcp[nrea];
-  double tcal=tf;
-  double xi0 = (chimin+suxx*suxx); cout<<"xi0="<<xi0<<endl;
   int npf = Problem.getListFit(parcp); ifn++;
-  if(ip>=0) {for(k=0;k<npf;k++) if(parcp[k] = ip) break;
-   cout<<"Descent: par="<<Problem.rea[parcp[k]].getname()<<endl;
-                 for(int i=k;i<npf;i++) parcp[i] = parcp[i+1]; npf--;}
+//  if(ip>=0) {for(k=0;k<npf;k++) if(parcp[k] = ip) break;
+//   cout<<"Descent: par="<<Problem.rea[parcp[k]].getname()<<endl;
+//                 for(int i=k;i<npf;i++) parcp[i] = parcp[i+1]; npf--;}
    cout<<"npf="<<npf<<"  "<<parcp[npf-1]<<endl;
   while (npf>0)  {int j(0), flag(0);
-   int i = rand() % npf; npf--; 
-    while (flag<2) { a = Problem.rea[parcp[i]].v();
-     Problem.rea[parcp[i]].setVm(a*factor); cout << parcp[i] << ")";
-      try{ xmin = solve(); xm=mader;  double tr=(double)tf/(double)tcal;
-	xi1 = (xmin+suxx*suxx)*tr*mader/xm;
-	 sens=(xi0-xi1)/xi0/dp;
-	  cout<<Problem.rea[parcp[i]].getname()<<": sens="<<sens<<endl;
-       } catch( char const* str )
-	  {cout << "exception: "<< str <<endl; sens=0.;  jfail++; flag=2; Problem.rea[parcp[i]].setVm(a);
-  if(!(jfail-5)){jfail=0; Problem.restoreVm(nrea,nv2); } }
- if (sens>slim) {
-   xi0 = xi1; chimin=xmin; tcal=tf; xm=mader; jfail=0; j++; Problem.write(tf,ifn,xmin,suxx,0);
-     if(!(j-3)) flag=2;   Problem.storeVms(nrea,nv1);
-       	}
- else if(sens<-slim) {factor = 1./factor; ++flag; Problem.rea[parcp[i]].setVm(a);}
-  else {flag=2; Problem.rea[parcp[i]].setVm(a);}
+   int i = rand() % npf; npf--;  cout << i << endl;
+    while (flag<2) { oval = Problem.rea[parcp[i]].v();
+     Problem.rea[parcp[i]].setVm(oval*factor); cout << parcp[i] << ")";
+      try{ xi1 = solve(); 
+    }  catch( char const* str ){cout << "exception: "<< str <<endl; Problem.restoreVm(nrea,nv2);
+                 for(int i=0;i<nmet;i++) xinit1[i]=xinit2[i];}
+      
+    if((xi1*tf*suxx/(x00*tmin*xmin))<1) {Problem.write(tf,ifn,xi1,suxx); x00=xi1; tmin=tf; xmin=suxx;
+                             Problem.storeVms(nrea,nv1);   for(int i=0;i<nmet;i++) xinit1[i]=xx[i];} 
+     else {factor = 1./factor; ++flag; Problem.rea[parcp[i]].setVm(oval);}
         }//end while flag
 	for ( k=i;k<npf;k++) parcp[k] = parcp[k+1];}
- return xi0;}
+ return x00;}
  
  void Analis::rconfint(ifstream& fi, double ami[],double ama[]){
   string aaa; getline(fi,aaa);
@@ -175,23 +167,26 @@ cout<< "\nPerturbation+CoordinateDescent:\nPar#\txi2con\txi2iso\tParValue\tdif:"
 //       xi=horse.fitcon(); Problem.write(tf,ifn,xi,suxx); ifn++;
 //       horse.setcon(); 
      for(;;){//Problem.setpar(pmain);
+      for(int i=0;i<9;i++) {
         Problem.perturb(f1);
- for(int i=0;i<3;i++) {  try {
+  try {
 //   while(xmax()>xlim) ; 
 //    double dm(1.);  while(dm>limdx) { dm=dermax(); if(dm>1.) {xi=solve();  Problem.write(tf,ifn,xi,suxx,0); break;}}
-    xi=solve(); xm=mader; Problem.write(tf,ifn,xi,suxx);
-    }
-  catch( char const* str ){cout << "exception: "<< str <<endl; {Problem.restoreVm(nrea,nv2); }
-                   /**/
- chimin=xi; dif0=dif;
+    xi=solve();
+    if((xi*tf*suxx/(x00*tmin*xmin))<1) {Problem.write(tf,ifn,xi,suxx); x00=xi; tmin=tf; xmin=suxx;
+                              for(int i=0;i<nmet;i++) xinit1[i]=xx[i];} 
+    }  catch( char const* str ){cout << "exception: "<< str <<endl; Problem.restoreVm(nrea,nv2);
+                 for(int i=0;i<nmet;i++) xinit1[i]=xinit2[i];}
+                 }
+// chimin=xi; dif0=dif;
    descent(fdes,-2);
 //     cout<<"* reduce xi total *"<<endl;// descent(fdes);
  //      xi=horse.fitcon(); Problem.write(tf,ifn,xi,suxx); ifn++;
  //     horse.setcon();
        /*  while(xmax()>xlim) ; 
     double dm(1.);  while(dm>limdx) { dm=dermax(); if(dm>1.) {xi=solve();  Problem.write(tf,ifn,xi,suxx); break;}}*/
- chimin=solve(); xm=mader; Problem.write(tf,ifn,chimin,suxx);
-  }
+// chimin=solve(); xm=mader; Problem.write(tf,ifn,chimin,suxx);
+ 
 /*  while (chimin<xi) {
 //  while (dif<dif0) {
     try {  while(xmax()>xlim) ;
@@ -202,7 +197,7 @@ cout<< "\nPerturbation+CoordinateDescent:\nPar#\txi2con\txi2iso\tParValue\tdif:"
     xi=chimin; cout<<"* reduce Lac *"<<endl; descent(fdes,-2);
       cout<<"* reduce xi total *"<<endl; descent(fdes);}*/
 	}
-}}
+}
 /*
 void Analis::sensitiv(const double tmax){ 
   double factor(1.1), xi1, xm1, a;

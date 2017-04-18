@@ -57,7 +57,7 @@ int main( int argc, char *argv[] ){
      xi0=Problem.read(itmp,tmp,argv[2]);    //read parameters
 //      horse.setfige();                // set experimental data for figure
         horse.readExp(argv[1]);            // read experimental data 
-     for(int i=0;i<nmet;i++) xinit1[i]=xx[i]; //copy initial values
+     for(int i=0;i<nmet;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values
 	try{   ts=clock();
     tsolve(37000.);                     //solve ODEs for total concentrations
 //     mader=Problem.dermax(); Problem.jacobian(xx);  tsolve(37000.);
@@ -85,7 +85,7 @@ int main( int argc, char *argv[] ){
 //     cout<<foc; kkin.open("kinetics"); kkin<<kin<<endl; kkin.close();
 //      suxx=horse.label(); 
 		Analis analis;
-		analis.setx00(xi0);
+		analis.setx00(xi0,tf,suxx);
 //           for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
                 int ifn0=250002; Problem.write(tf,ifn0,xi0,suxx,0);
 //	Problem.cont(121,0.0001, 0.015);

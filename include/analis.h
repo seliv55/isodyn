@@ -17,7 +17,7 @@ void cross(double p1[],double p2[]);
 void mutate(int npf,int par[]);
 public:
 double getmax();
-void setx00(const double x){x00=x;}
+void setx00(const double xi,const double t,const double x){x00=xi; tmin=t; xmin=x;}
 void fitm0(const double tmax);
 void sensitiv(const double tmax);
 void coord(const double f1, double);

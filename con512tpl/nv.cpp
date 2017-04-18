@@ -15,7 +15,7 @@ const int nh6=0, nfbp=nh6+1, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, 
 Fit Problem;
 const double thft(1.);
 double dt, xx[nmet],flx[nflx],fluxes[nflx];
-double xm0,xinit1[numx],xinit2[numx];
+double xm0,xinit1[nmet],xinit2[nmet];
 //int Parray::ipcit_pyr[]={Vpyrdcm, Vmalicm, Vpc};
 //int Parray::oa_con[]={Vgln_in,Vgln_pr,Vgluin,Vgluout,Vasp_o,Vasp_pr,Vpc,Vmalicm,Vpdh};
  int Parray::par[nrea]; string Parray::namef[nflx], Parray::namex[numx];
