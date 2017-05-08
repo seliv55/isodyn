@@ -16,8 +16,8 @@ double Analis::descent(double factor,int ip){
 //  if(ip>=0) {for(k=0;k<npf;k++) if(parcp[k] = ip) break;
 //   cout<<"Descent: par="<<Problem.rea[parcp[k]].getname()<<endl;
 //                 for(int i=k;i<npf;i++) parcp[i] = parcp[i+1]; npf--;}
-   cout<<"npf="<<npf<<"  "<<parcp[npf-1]<<endl;
   while (npf>0)  {int j(0), flag(0);
+   cout<<"N(pars)="<<npf<<endl;
    int i = rand() % npf; npf--;  cout << i << endl;
     while (flag<2) { oval = Problem.rea[parcp[i]].v();
      Problem.rea[parcp[i]].setVm(oval*factor); cout << parcp[i] << ")";
@@ -45,7 +45,7 @@ double Analis::descent(double factor,int ip){
    double oldp;
    cout << "; v["<<Problem.rea[i].getname()<<"]: "<<Problem.rea[i].v()<<endl;
   try { chimin = solve();
-     for(int j=0;j<5;j++) {oldp = Problem.rea[i].chanVm(factor); chimin = solve(); 
+     for(int j=0;j<5;j++) {oldp = Problem.rea[i].chanVm(factor); chimin = solve(); cout<<"chi="<<chimin<<endl;
        if((chimin-x00)>6.7) break;}   Problem.write(tf,ifn,chimin,suxx);   
         descent(fdes,i); Problem.write(tf,ifn,chimin,suxx); 
    if (chimin<x00) {x00=chimin; Problem.storeVms(nrea,nv1); Problem.write(tf,ifn,chimin,suxx);

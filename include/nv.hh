@@ -77,9 +77,9 @@ class Fit: public Parray{
          int pos=infi.find_last_of('/');   outdir=infi.substr(0,pos+1); std::cout<<outdir<<std::endl; }
     std::string* getodir(){return &outdir;}
          
-    int setnumofi(){ for(int i=1;;i++) {std::stringstream fn;
+    int setnumofi()const{ for(int i=1;;i++) {std::stringstream fn;
        fn<<outdir<<i;   std::ifstream checkfi(fn.str().c_str()); checkfi.close(); 
-	 if(!checkfi.good())  return (i-1);}    }
+	 if(!checkfi.good())  return (i);}    }
 
      int getListFit(int list[]) const {      int k=1;
 	   while (par[k]+1) {list[k-1] = par[k]; k++;} return (k-1);}

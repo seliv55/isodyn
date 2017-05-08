@@ -50,7 +50,7 @@ int main( int argc, char *argv[] ){
          fex1=argv[1]; fex2=fex1;
     Problem.setodir(argv[2]);  ifn=Problem.setnumofi();
      
-  if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn); return 0; } //order parameter files by increasing of χ2
+  if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
    else{
      cout.precision(3);
