@@ -40,3 +40,7 @@ clean:
 #	make clean -C nrused
 #	make clean -C integrT
 
+install:
+	cp isodyn.out /usr/local/bin/isodyn
+	cp plkin.p /usr/local/bin/plkin.p
+	chmod a+x /usr/local/bin/plkin.p

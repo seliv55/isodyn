@@ -67,7 +67,7 @@ int main( int argc, char *argv[] ){
 //    tsolve(35000.);  for(int i=0;i<numx;i++)  xinit1[i]=xx[i];
        Problem.shownx(numx,xx);         // print concentrations on screen
      kkin<<kin0;  kkin.close();         //save concentration dynamics to "kinxx"
-        int sys=system("gnuplot plkin.p");//gnuplot -e 'var=value' script.gp
+        int sys=system("plkin.p");//gnuplot -e 'var=value' script.gp
   xi0=solve();//horse.integrbs();                 //solve ODEs for isotopomers
 //	horse.flback();                 //print Σisotopomers on screen
      cout<<" Σxi²="<<xi0 <<"\n";        //final results
