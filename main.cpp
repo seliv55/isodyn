@@ -80,7 +80,7 @@ int main( int argc, char *argv[] ){
 //      tsolve(37000.);
 //   xi0+=horse.integrbs();
 //  xi0+=horse.ddisolve();
-       tf=clock()-ts;
+//       tf=clock()-ts;
 	} catch( char const* str ){cout << "exception: "<< str <<endl;}
 //     cout<<foc; kkin.open("kinetics"); kkin<<kin<<endl; kkin.close();
 //      suxx=horse.label(); 
