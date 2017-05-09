@@ -45,8 +45,11 @@ double Analis::descent(double factor,int ip){
    double oldp;
    cout << "; v["<<Problem.rea[i].getname()<<"]: "<<Problem.rea[i].v()<<endl;
   try { chimin = solve();
-     for(int j=0;j<5;j++) {oldp = Problem.rea[i].chanVm(factor); chimin = solve(); cout<<"chi="<<chimin<<endl;
-       if((chimin-x00)>6.7) break;}   Problem.write(tf,ifn,chimin,suxx);   
+     for(int j=0;j<5;j++) {oldp = Problem.rea[i].chanVm(factor); chimin = solve();
+       if(chimin<x00) Problem.write(tf,ifn,chimin,suxx);          cout<<"chi="<<chimin<<endl;
+         if((chimin-x00)>6.7) break;}
+          if((chimin-x00)<0.01) return;
+          Problem.write(tf,ifn,chimin,suxx);    x00=chimin;
         descent(fdes,i); Problem.write(tf,ifn,chimin,suxx); 
    if (chimin<x00) {x00=chimin; Problem.storeVms(nrea,nv1); Problem.write(tf,ifn,chimin,suxx);
    } }
@@ -58,7 +61,7 @@ void Analis::confidence(double factor,double fdes){
 	 ifstream fi("statfl"); rconfint(fi,a0mi,a0ma); fi.close();
 	   fi.open("statfl1");  rconfint(fi,a1mi,a1ma); fi.close();
 	int parcp[nrea], npf = Problem.getListFit(parcp);
-	          Problem.storeVms(nrea,nv1);  chimin=x00;
+	          Problem.storeVms(nrea,nv1);
   while (npf>0)  {   int i = rand() % npf;
    if((a0ma[parcp[i]]<a1mi[parcp[i]])&&(parcp[i]>7.e-7)){
        stepdown(factor,parcp[i],fdes);}

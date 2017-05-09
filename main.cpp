@@ -68,10 +68,10 @@ int main( int argc, char *argv[] ){
        Problem.shownx(numx,xx);         // print concentrations on screen
      kkin<<kin0;  kkin.close();         //save concentration dynamics to "kinxx"
         int sys=system("gnuplot plkin.p");//gnuplot -e 'var=value' script.gp
-  xi0=horse.integrbs();                 //solve ODEs for isotopomers
+  xi0=solve();//horse.integrbs();                 //solve ODEs for isotopomers
 //	horse.flback();                 //print Σisotopomers on screen
      cout<<" Σxi²="<<xi0 <<"\n";        //final results
-     cout<<"*Metab   *   init    Final : exper -> xi²"<<"\n" <<foc; 
+     cout<<setw(9)<<"* "<<"*Metab  *  init  Final : exper -> xi²"<<"\n" <<foc; 
 //        kkin.open("kinGlc"); kkin<<kin<<endl; kkin.close();
 //        kkin.open("kinflx"); kkin<<kinflx<<endl; kkin.close();
         

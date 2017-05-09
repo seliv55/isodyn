@@ -257,8 +257,8 @@ class Metab_data:public Metab {
     so<<descr<<"_c: ";  for(int i=0;i<nt;i++) so<<std::setw(9)<<this->kinc[i]; so<<"** "<<conc[nt-1].mean<<" -> "<<xicon[nt-1]<<std::endl;
  }
  void wrikinm0(std::ostringstream& so, int nt) { so.precision(3);
-      so<<descr<<"_m0: ";
-    for(int i=0;i<nt;i++) so<<std::setw(9)<<this->kinm0[i];
+      so<<std::setw(12)<<descr<<"_m0: ";
+    for(int i=0;i<nt;i++) so<<std::setw(7)<<this->kinm0[i];
       so<<" : "<<exper[nt-1][0].mean<<" -> "<<xi[nt-1]<<std::endl;
  }
 
