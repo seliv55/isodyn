@@ -29,7 +29,7 @@ return xi;}
 
 void Fit::write (time_t tf, int& ifn,const double xi0,const double xm,bool flg) const {
          int i; stringstream fn;
-            if(flg) ifn=setnumofi();
+            if(flg) ifn=setnumofi();  if((ifn>fnfin)&&(ifn<(fnfin+5))) throw(invalid_argument("limit number of iterations reached"));
     fn<<outdir<<ifn; //sprintf(fn,"%i",ifn);
   ofstream fi(fn.str().c_str());
     for (i=0;i<nrea;i++) rea[i].write(fi,i); 

@@ -48,7 +48,7 @@ int main( int argc, char *argv[] ){
 //   int a[][3]={{1,2,3},{4,5,6}}}; cout<<"a11="<<a[1][1]<<endl;
    int itmp; bool check;
          fex1=argv[1]; fex2=fex1;
-    Problem.setodir(argv[2]);  ifn=Problem.setnumofi();
+    Problem.setodir(argv[2]);  ifn=Problem.setnumofi(); 
      
   if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
@@ -92,15 +92,14 @@ int main( int argc, char *argv[] ){
 //chekxi(1,33);
 //          int sys=system("gnuplot xplt.p");//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
- if (argc>3) { int ia=(int)argv[3][0]-(int)'0'; if(ia>9) analis.coord(0.03,1.1);
+ if (argc>3) {  stringstream stx(argv[3]); int ia; stx>>ia; cout<<ia<<endl; Problem.setfnfin(ifn+ia);
    
 // 	cout<<"parameter set="<<ia<<endl;
-          for(;;){
                analis.confidence(1.15,1.07);
-	         Problem.stat(ifn);
+	         Problem.stat(ifn-1);
                   xi0=Problem.read(itmp,tmp,"1");
                    for(int i=0;i<numx;i++) xinit1[i]=xx[i];
-                  }}
+                  }
 //               analis.sensitiv(tmax);
 //               analis.swarm(tmax,111);
 //               analis.grad(tmax);

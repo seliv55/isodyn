@@ -53,12 +53,13 @@ public:
   virtual ~Parray(){  }
 };
 class Fit: public Parray{
-	int i68, i90, i95, i99;
+	int i68, i90, i95, i99, fnfin;
 	std::string outdir;
     public:	
       void stat(const int NP );
       double read(int &t,double &c, std::string fn);
       void readst( int* );
+      void setfnfin(int ia){fnfin=ia;}
       void wstorefl (const char fn1[], int numpar, const double** m,std::string n[]);
       void write (time_t tf, int& fn,const  double xi0, const double xm,bool flg=true) const ;
       void perturb(const double f1);
