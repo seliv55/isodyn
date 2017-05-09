@@ -1,5 +1,6 @@
 //---------------------------------------------------------------------------
 #include <iostream>
+#include <string>
 #include "nr.h"
 #include "nums.hh"
 #include "tk.hh"
@@ -87,13 +88,12 @@ int main( int argc, char *argv[] ){
 //         cout<<"aldf="<<flx[aldf]<<"; aldr="<<flx[aldf+1]<<endl;
 //       Problem.chpar(28,noa,0.99,27);
 //    tsolve(35000.);  for(int i=0;i<numx;i++)  xinit1[i]=xx[i];
-       Problem.shownx(numx,xx);         // print concentrations on screen
+     Problem.shownx(numx,xx);         // print concentrations on screen
      kkin<<kin0;  kkin.close();         //save concentration dynamics to "kinxx"
-    std::string comm="gnuplot -e  \"filename=\'"+indir+"sconc.png\'\"  -e  \"fn2=\'"+indir+"kinxx\'\" "+indir+"plkin.p";
-        int sys=system(comm.c_str());//gnuplot -e 'var=value' script.gp
-//  xi0=horse.integrbs();                 //solve ODEs for isotopomers
-  sol0=solve();//horse.integrbs();                 //solve ODEs for isotopomers
-       Problem.shownx(numx,xx);         // print concentrations on screen
+     int sys=system("plkin.p "+indir+"sconc.png"); //gnuplot -e 'var=value' script.gp
+//  xi0=horse.integrbs();                          //solve ODEs for isotopomers
+     sol0=solve();//horse.integrbs();              //solve ODEs for isotopomers
+     Problem.shownx(numx,xx);         // print concentrations on screen
      cout<<" Σxi²="<<get<0>(sol0) <<"\n";        //final results
      cout<<setw(9)<<"*"<<"*Metab   *   init    Final : "<<setw(17)<<"exper -> xi²\n" <<foc; 
 //        kkin.open("kinGlc"); kkin<<kin<<endl; kkin.close();
@@ -105,7 +105,7 @@ int main( int argc, char *argv[] ){
 //   xi0+=horse.integrbs();
 //  xi0+=horse.ddisolve();
 //       tf=clock()-ts;
-cout<<comm<<endl;
+//cout<<comm<<endl;
 	} catch( char const* str ){cout << "exception: "<< str <<endl;}
 //     cout<<foc; kkin.open("kinetics"); kkin<<kin<<endl; kkin.close();
 //      suxx=horse.label(); 
