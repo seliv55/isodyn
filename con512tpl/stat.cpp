@@ -78,8 +78,8 @@ void Fit::readst( int* b){
 	ifstream fi;
  for (int iset=0;iset<i99;iset++) {
 	pmp[iset]=&mpar[iset][0]; pmf[iset]=&mfl[iset][0];
-	 sprintf(fn,"%i",(iset+1)); 
-          fi.open(fn);
+	 stringstream fn; fn<<outdir<<(iset+1);
+          fi.open(fn.str().c_str());
 	for (i=0;i<nrea;i++) {fi>>aaa>>aaa>>aaa>>aaa>>mpar[iset][i]; getline(fi,aaa);}
 	getline(fi,aaa);
 	for (i=0;i<numx;i++) fi>>aaa>>namex[i]>>xx[i];
