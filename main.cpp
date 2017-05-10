@@ -95,7 +95,7 @@ int main( int argc, char *argv[] ){
  if (argc>3) {  stringstream stx(argv[3]); int ia; stx>>ia; cout<<ia<<endl; Problem.setfnfin(ifn+ia);
    
 // 	cout<<"parameter set="<<ia<<endl;
-               analis.confidence(1.15,1.07);
+           try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<ia<<" files saved!\n"; return 0;}
 	         Problem.stat(ifn-1);
                   xi0=Problem.read(itmp,tmp,"1");
                    for(int i=0;i<numx;i++) xinit1[i]=xx[i];
@@ -103,5 +103,6 @@ int main( int argc, char *argv[] ){
 //               analis.sensitiv(tmax);
 //               analis.swarm(tmax,111);
 //               analis.grad(tmax);
-}}
+}
+return 0;}
 
