@@ -25,6 +25,7 @@ pyrm.cutfirst(coa,fluxes[pdh]);
 cit.icdh(akg,fluxes[citakg]);
 akg.decarb(fum,fluxes[akgfum]);
 fum.input(mal,fluxes[fumal], fluxes[malfum]);
+fum.output(fluxes[fumout]);
 mal.input(oa,fluxes[maloa], fluxes[oamal]);
 pyrm.carb(oa,fluxes[pc]);
 mal.decarb(pyrm,fluxes[malicm]);
