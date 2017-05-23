@@ -46,18 +46,18 @@ cout <<"File saved: "<<ifn << ": xi=" << xi0 << "; xm=" << xm <<"; time="<<((flo
 
 void Fit::wstorefl (const char fn1[],int numpar,const double** m,string name[]) {
         stringstream fn; fn<<outdir<<fn1;  ofstream fi(fn.str().c_str());
-   fi << "Confidence_level: 0.95\n Reaction_id Lower_bound Upper_bound name scheme\n";
+   fi << "Confidence_level: 0.99\n Reaction_id Lower_bound Upper_bound name scheme\n";
 //	        for (int j=0;j<parsets;j++) fi<<" "<<j; fi <<endl;
 	        for (int i=0;i<numpar;i++) {
 			fi<<name[i]<<" ";
 //			cout<<setw(11)<<name[i]<<" ";
 	double mn=m[0][i], mx=m[0][i]; int imn=0, imx=0;
-	        for (int j=0;j<i95;j++) {
-			if(m[j][i]>mx) {mx=m[j][i]; imx=j;}
-			else if((m[j][i]<mn)&&(m[j][i]>1e-13)) {mn=m[j][i]; imn=j;}
-		 }   fi  << mn <<" "<< mx <<" ";
+//	        for (int j=0;j<i95;j++) {
+//			if(m[j][i]>mx) {mx=m[j][i]; imx=j;}
+//			else if((m[j][i]<mn)&&(m[j][i]>1e-13)) {mn=m[j][i]; imn=j;}
+//		 }   fi  << mn <<" "<< mx <<" ";
 		 
-	        for (int j=i95;j<i99;j++) {
+	        for (int j=0;j<i99;j++) {
 			if(m[j][i]>mx) {mx=m[j][i]; imx=j;}
 			else if((m[j][i]<mn)&&(m[j][i]>1e-13)) {mn=m[j][i]; imn=j;}
  }   fi  << mn <<" "<< mx <<"\n";//<< m[0][i]<<" "<<imn<<" "<<imx <<" ";
@@ -104,7 +104,6 @@ mfl[iset][nadhf]=mfl[iset][pdh]+mfl[iset][akgfum]+(mfl[iset][citakg]+mfl[iset][r
 }
 void Fit::stat(const int NP ){
         Vec_DP a(NP), conc(NP); Vec_INT b(NP),t(NP);
-        int* pb=&b[0];
         int i,sys;
  for ( i=1;i<=NP;i++) {
 	  stringstream fn; fn<<outdir<<i; cout<<fn.str().c_str()<<endl;
@@ -127,7 +126,7 @@ cout<<setw(3)<<b[i]<<" ("<<a[i]<<"; "<<conc[i]<<"; "<<t[i]<<") ";
 if ((i%3)==0) cout<<endl;
 	    }
 	cout<<endl;
-readst( pb);
+readst( &b[0]);
 int chr=NP;//i99;
  for (i=0;i<chr;i++) {
 	  stringstream fn; fn<<"mv "<<outdir<<b[i]<<" "<<outdir<<(i+1)<<"a";
