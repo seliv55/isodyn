@@ -45,8 +45,8 @@ cout <<"File saved: "<<ifn << ": xi=" << xi0 << "; xm=" << xm <<"; time="<<((flo
 }
 
 void Fit::wstorefl (const char fn1[],int numpar,const double** m,string name[]) {
-        ofstream fi(fn1);
-   fi << " 95% +- 99% +- bestfit fimin fimax xmin xmax" << endl;
+        stringstream fn; fn<<outdir<<fn1;  ofstream fi(fn.str().c_str());
+   fi << "Confidence_level: 0.95\n Reaction_id Lower_bound Upper_bound name scheme\n";
 //	        for (int j=0;j<parsets;j++) fi<<" "<<j; fi <<endl;
 	        for (int i=0;i<numpar;i++) {
 			fi<<name[i]<<" ";
@@ -60,8 +60,8 @@ void Fit::wstorefl (const char fn1[],int numpar,const double** m,string name[]) 
 	        for (int j=i95;j<i99;j++) {
 			if(m[j][i]>mx) {mx=m[j][i]; imx=j;}
 			else if((m[j][i]<mn)&&(m[j][i]>1e-13)) {mn=m[j][i]; imn=j;}
- }   fi  << mn <<" "<< mx <<" "<< m[0][i]<<" "<<imn<<" "<<imx <<" ";
-   fi <<(m[imn][nflx]-m[0][nflx])<<" "<<(m[imx][nflx]-m[0][nflx])<<endl;
+ }   fi  << mn <<" "<< mx <<"\n";//<< m[0][i]<<" "<<imn<<" "<<imx <<" ";
+//   fi <<(m[imn][nflx]-m[0][nflx])<<" "<<(m[imx][nflx]-m[0][nflx])<<endl;
 //   cout << (mx+mn)/2. <<" "<< (mx-mn)/2. <<" "<< m[0][i] <<endl;
                 }
    fi<<"chi         "<<m[0][numpar]; fi <<endl;

@@ -1,0 +1,21 @@
+Confidence level:,0.95
+Reaction id,Lower bound,Upper bound
+Rbottom_Glc,0.8099,1.0,Glyceraldehyde phosphate dehydrogenase,Gap_c --> Pep_c
+RextraPyr,0.0,0.19010000000000005,extra pyruvate, --> Pyr_c
+Rfba,0.40493333333347437,0.5,Aldolase,Fru16bp_c <=> Dhap_c + Gap_c
+Rglc6p_pdif,0.40495000000009895,0.505266666667012,Difussion between Glucose 6-phosphate pools,Glc6p_a_c <=> Glc6p_b_c
+RglcEx,0.3841,0.4523,Glucose uptake, --> Glc_c
+RglycEx,0.004766666666967012,0.09641666666672677,Glycogen utilization, --> Glc6p_a_c
+Rhex1,0.3841,0.4523,Hexokinase,Glc_c --> Glc6p_a_c
+RlacEx,1.0,1.0,Lactate release,Lac_c --> 
+Rldh_l,1.0,1.0,L-lactate dehydrogenase,Pyr_c <=> Lac_c
+RoxPPP,0.0,0.0619,Glucose 6-Phosphate dehydrogenase,Glc6p_b_c --> Rul5p_c
+Rpfk,0.40493333333344594,0.5,Phosphofructokinase,Fru6p_c --> Fru16bp_c
+Rpgi,0.37568333333354076,0.5,Glucose-6-phosphate isomerase,Glc6p_b_c <=> Fru6p_c
+Rpyk,0.8099,1.0,Pyruvate Kinase,Pep_c --> Pyr_c
+Rrpe,0.0,0.04126666666661549,Ribulose 5 phosphate epimerase,Rul5p_c <=> Xyl5p_c
+Rrpi,0.0,0.020633333333307746,Ribose phosphate isomerase,Rul5p_c <=> Rib5p_c
+Rtala,0.0,0.020633333333307746,Transaldolase,Gap_c + Sed7p_c <=> E4p_c + Fru6p_c
+Rtkt1,0.0,0.020633333333307746,Transketolase 1,Rib5p_c + Xyl5p_c <=> Gap_c + Sed7p_c
+Rtkt2,0.0,0.020633333333307746,Transketolase 2,E4p_c + Xyl5p_c <=> Fru6p_c + Gap_c
+Rtpi,0.40493333333347437,0.5,Triose-phosphate isomerase,Dhap_c <=> Gap_c
