@@ -98,7 +98,7 @@ int main( int argc, char *argv[] ){
            try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<ia<<" files saved!\n"; return 0;}
 	         Problem.stat(ifn-1);
                   xi0=Problem.read(itmp,tmp,"1");
-                   for(int i=0;i<numx;i++) xinit1[i]=xx[i];
+                   for(int i=0;i<nmet;i++) xinit1[i]=xx[i];
                   }
 //               analis.sensitiv(tmax);
 //               analis.swarm(tmax,111);

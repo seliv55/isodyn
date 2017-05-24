@@ -98,7 +98,7 @@ massfr();   show(kinet,tout);
 xi += xits(i);
      t=tex[i];  for(int j=0;j<nflx;j++) ppotok[i][j]=flx[j]*1000.*dt;
     }
-  for(int j=0;j<nflx;j++) { flxkin<<Problem.namef[j]<<" "; for(int i=0;i<ntime;i++) flxkin<<ppotok[i][j]<<" "; flxkin<<"\n";}
+  for(int j=0;j<nflx;j++) { flxkin<<Problem.fid[j]<<" "; for(int i=0;i<ntime;i++) flxkin<<ppotok[i][j]<<" "; flxkin<<"\n";}
 foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str();
             delete[] potok;
 return xi;}
@@ -192,7 +192,7 @@ for(int i=0;i<kmax;i++){
 	kin0=skin.str();
          Problem.fin(xx);// cout << pyri <<endl;
 /*     for(int i=0;i<nflx;i++) {
-         cout<<i<<") "<<Problem.namef[i]<<"= "<<flx[i]*1000.*dt<<endl;
+         cout<<i<<") "<<Problem.fid[i]<<"= "<<flx[i]*1000.*dt<<endl;
          if(!(i-aldf)) cout<<"aldf="<<flx[aldf]*1000.*dt<<"; aldr="<<flx[aldf+1]*1000.*dt<<endl;
          if(!(i-cs0)) cout<<"cs0="<<flx[cs0]*1000.*dt<<endl;
          if(!(i-coain)) cout<<"coain="<<flx[coain]*1000.*dt<<endl;

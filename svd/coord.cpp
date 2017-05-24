@@ -43,7 +43,7 @@ double Analis::descent(double factor,int ip){
  
  void Analis::stepdown(double factor, int& i,double fdes){
    double oldp;
-   cout << "; v["<<Problem.rea[i].getname()<<"]: "<<Problem.rea[i].v()<<endl;
+   cout << "; v["<<Problem.rea[i].getid()<<"]: "<<Problem.rea[i].v()<<endl;
   try { chimin = solve();
      for(int j=0;j<5;j++) {oldp = Problem.rea[i].chanVm(factor); chimin = solve();
        if(chimin<x00) Problem.write(tf,ifn,chimin,suxx);          cout<<"chi="<<chimin<<endl;

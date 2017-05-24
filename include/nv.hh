@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iomanip>
 class Reapar{
-   std::string name, *spar;
+   std::string id,name,schem, *spar;
     int npar; double *par;
   public:
 	double v(){return par[0];}
@@ -15,17 +15,17 @@ class Reapar{
 	double ving(double x,double y,double z){return par[0]*x/(par[1]+x+y/par[2]+z);}
 	double vin(double x,double y){return par[0]*x/(par[1]+x)*(par[2]/y+par[3]);}
 	
-  void read(std::ifstream& fi,int& flg){fi>>name>>name>>npar;
+  void read(std::ifstream& fi,int& flg){fi>>id>>id>>npar;
    if(!flg) {par=new double[npar]; spar=new std::string[npar];}
      for(int i=0;i<npar;i++) fi>>this->spar[i]>>this->par[i]; }
      
- void write(std::ofstream& fo,int ir){fo<<ir<<std::setw(9)<<name<<std::setw(4)<<npar;
+ void write(std::ofstream& fo,int ir){fo<<ir<<std::setw(9)<<id<<std::setw(4)<<npar;
   for(int i=0;i<npar;i++) fo<<"  "<<this->spar[i]<<" "<<this->par[i]; fo<<"\n";}
   
 	void setVm(double a) {par[0] = a;}
 	double chanVm(double ff) {double old=par[0]; par[0] *= ff; return old;}
 	double *getpar(){return par;}
-	std::string& getname(){return name;}
+	std::string& getid(){return id;}
 		Reapar() {}
 	virtual ~Reapar(){delete[] par; delete[] spar; }
 };
@@ -39,7 +39,7 @@ protected:
         Aldolase aldolase;
 	void flfor(double y[]);
 public:
- static std::string namef[], namex[];
+ static std::string fid[],fname[],fschem[], namex[];
 	static Reapar rea[];
        double sumx();
        void result() const;
@@ -49,6 +49,7 @@ public:
       bool belong(int ip) const;
         void init();
         void fin(double y[]);
+        void rnames(std::ifstream& fi);
   Parray( ): tan(1.1),tnad(1.){ }
   virtual ~Parray(){  }
 };

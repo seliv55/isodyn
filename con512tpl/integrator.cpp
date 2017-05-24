@@ -42,7 +42,7 @@ xi += xits(i); sklad(i);
      x1=tex[i];  for(int j=0;j<nflx;j++) ppotok[i][j]=flx[j]*1000.*dt;
     }
 wrikin(foc1,ntime);
-  for(int j=0;j<nflx;j++) { flxkin<<Problem.namef[j]<<" "; for(int i=0;i<ntime;i++) flxkin<<ppotok[i][j]<<" "; flxkin<<"\n";}
+  for(int j=0;j<nflx;j++) { flxkin<<Problem.fid[j]<<" "; for(int i=0;i<ntime;i++) flxkin<<ppotok[i][j]<<" "; flxkin<<"\n";}
 foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str();
         delete yp_p;
         delete xp_p;
