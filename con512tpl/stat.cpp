@@ -44,12 +44,14 @@ void Fit::write (time_t tf, int& ifn,const double xi0,const double xm,bool flg) 
 cout <<"File saved: "<<ifn << ": xi=" << xi0 << "; xm=" << xm <<"; time="<<((float)tf/CLOCKS_PER_SEC)<<"; dif="<<dif<<endl;	
 }
 
-void Fit::wstorefl (const char fn1[],int numpar,const double** m,string name[]) {
+void Fit::wstorefl (const char fn1[],int numpar,const double** m) {
+     stringstream finame; finame<<outdir<<"names"; ifstream fii(finame.str().c_str());
+     rnames(fii);
         stringstream fn; fn<<outdir<<fn1;  ofstream fi(fn.str().c_str());
    fi << "Confidence_level: 0.99\n Reaction_id Lower_bound Upper_bound name scheme\n";
 //	        for (int j=0;j<parsets;j++) fi<<" "<<j; fi <<endl;
 	        for (int i=0;i<numpar;i++) {
-			fi<<name[i]<<" ";
+			fi<<fid[i]<<" ";
 //			cout<<setw(11)<<name[i]<<" ";
 	double mn=m[0][i], mx=m[0][i]; int imn=0, imx=0;
 //	        for (int j=0;j<i95;j++) {
@@ -60,13 +62,12 @@ void Fit::wstorefl (const char fn1[],int numpar,const double** m,string name[]) 
 	        for (int j=0;j<i99;j++) {
 			if(m[j][i]>mx) {mx=m[j][i]; imx=j;}
 			else if((m[j][i]<mn)&&(m[j][i]>1e-13)) {mn=m[j][i]; imn=j;}
- }   fi  << mn <<" "<< mx <<"\n";//<< m[0][i]<<" "<<imn<<" "<<imx <<" ";
+ }   fi  << mn <<" "<< mx <<" "<<fname[i]<<" "<<fschem[i]<<"\n";
 //   fi <<(m[imn][nflx]-m[0][nflx])<<" "<<(m[imx][nflx]-m[0][nflx])<<endl;
 //   cout << (mx+mn)/2. <<" "<< (mx-mn)/2. <<" "<< m[0][i] <<endl;
                 }
-   fi<<"chi         "<<m[0][numpar]; fi <<endl;
-   fi<<"time         "<<m[0][numpar+1]; fi <<endl;
-   fi<<"conc         "<<m[0][numpar+2]; fi <<endl;
+   fi<<"chi "<<m[0][numpar] <<"\n";
+   fi<<"time "<<m[0][numpar+1] <<"\n";
 
 	fi.close();
 }
@@ -98,9 +99,9 @@ mfl[iset][nadhf]=mfl[iset][pdh]+mfl[iset][akgfum]+(mfl[iset][citakg]+mfl[iset][r
 	fi.close();
  } cout<<fid[0]<<endl;
 //    cout<<"Parameters:"<<setw(11)<<"mean"<<setw(11)<<"SD"<<setw(11)<<"SE"<<endl;
-         wstorefl("statpar", nrea, pmp,fid);
+         wstorefl("statpar", nrea, pmp);
 //    cout<<"\nFluxes:    "<<setw(11)<<"mean"<<setw(11)<<"SD"<<setw(11)<<"SE"<<endl;
-         wstorefl("statfl", nflx, pmf,fid);
+         wstorefl("statfl", nflx, pmf);
 }
 void Fit::stat(const int NP ){
         Vec_DP a(NP), conc(NP); Vec_INT b(NP),t(NP);

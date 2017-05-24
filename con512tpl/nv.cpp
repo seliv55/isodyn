@@ -20,9 +20,9 @@ const int nh6=0, nfbp=nh6+1, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, 
    string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[numx];
    Reapar Parray::rea[nrea];
    double Analis::nv1[nrea], Analis::nv2[nrea];
-void Parray::prnames(std::ifstream& fi){
+void Parray::rnames(ifstream& fi){
    for (int i=0;i<nflx;i++)
-        fi>>fid[i]i>>fid[i]>>fname[i]>>fschem[i];
+        fi>>fid[i]>>fid[i]>>fname[i]>>fschem[i];
         }
    
 void Fit::ff(const double *y,double *dydx) { for(int i=0;i<numx;i++) dydx[i]=0.;

@@ -61,7 +61,7 @@ class Fit: public Parray{
       double read(int &t,double &c, std::string fn);
       void readst( int* );
       void setfnfin(int ia){fnfin=ia;}
-      void wstorefl (const char fn1[], int numpar, const double** m,std::string n[]);
+      void wstorefl (const char fn1[], int numpar, const double** m);
       void write (time_t tf, int& fn,const  double xi0, const double xm,bool flg=true) const ;
       void perturb(const double f1);
       void cont(const int,const  double,const double);

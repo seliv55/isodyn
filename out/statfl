@@ -1,90 +1,90 @@
-Confidence_level: 0.95
+Confidence_level: 0.99
  Reaction_id Lower_bound Upper_bound name scheme
-hk 2.31112 2.31112
-pfk 2.77247 2.87771
-fbpase 0.640039 0.741204
-t3pep 3.64276 3.6629
-pept3 8.44933e-07 8.49425e-06
-pk 3.64277 3.66289
-pyrlac 4.53333 4.56701
-lacpyr 0.0412938 0.0418273
-pyrdcm 0.605342 0.760388
-pyrdmc 0.508345 0.679222
-pdh 0.122427 0.131295
-citakg 0.019932 0.0275874
-akgfum 0.499145 0.527767
-fumal 0.323251 0.336125
-malfum 0.00391424 0.0122595
-maloa 0.280252 0.291414
-oamal 0.0699053 0.117492
-pc 0.000578185 0.0152608
-malicm 0.0282632 0.0290865
-malicc 0.0462113 0.0721817
-pepck 0.207292 0.267699
-ppp 2.35454e-06 2.16409e-05
-oacd 0.236442 0.23752
-mald 0.0237149 0.0308223
-citdmc 0.160291 0.244368
-citdcm 0.0789235 0.105335
-akgdmc 0.001267 0.00162783
-akgdcm 0.119864 0.124764
-coaout 0.588784 0.629822
-coar 0.0557469 0.0721995
-citakg1 0.00111571 0.00111571
-akgcit1 0.0219017 0.0315041
-gln_in 0 0
-gln_out 0.00860136 0.00862564
-gln_pr 0 0
-gluin 0 0
-gluout 1.11465 1.11972
-t3ser 0.577559 0.57783
-serpyr 0.0391825 0.0392047
-ser_pr 0.00691081 0.00691147
-sergly 0.0585668 0.058602
-glyser 0.0780458 0.0780927
-thf 0.0714006 0.0714041
-mthf 2.96938e-06 2.96938e-06
-asp_o 0 0
-asp_i 0.00148369 0.00193471
-asp_pr 0.0921042 0.0921042
-ala_o 0.00531825 0.0065611
-ala_i 0.0107685 0.0108257
-trpala 0.0130776 0.0131671
-ala_pr 0.00264479 0.00264479
-r5_o 0 0
-r5_i 0.0904539 0.0904539
-cystin 0 0
-proin 0.51 0.51
-proout 5.92161e-06 6.17785e-06
-pro_pr 0.000532502 0.000532656
-kgin 0 0
-coain 0.00263576 0.00263576
-aglin 0 0
-aglout 0.0246032 0.0246032
-D 0.583261 0.583593
-cs0 0.0692802 0.0713846
-resp 0.0072546 0.0072546
-atpase 3.84476 3.84476
-aldf 0.0975908 0.131295
-aldrev 0.147074 0.204049
-aldfli 2.58038 2.5998
-aldi1 2.44309 2.46483
-tafl 0.317321 0.329356
-s7f6a 51.4408 51.4708
-f6g3a 51.4408 51.4708
-s7e4a 2.08468e-05 9.70372e-05
-tkfl 0.000149403 0.00015872
-s7p5 0.00926535 0.0129596
-f6p5 0.000156138 0.000165502
-p5f6 0.000510948 0.000595008
-f6s7 3.28856e-09 4.07846e-09
-s7f6 3.60433e-09 1.02787e-08
-p5g3i 3.78225e-05 6.35484e-05
-f6e4i 5.1926e-05 0.000139933
-s7p5i 3.31406e-06 6.28189e-06
-2637964 0.000438047 0.000447673
-1.85333e-05 3.82415e-05 0.000122604
-1369918 3.92258e-05 4.33045e-05
+hk 2.31112 2.31112 glucose_uptake glucose_o->x[nh6]
+pfk 2.77247 2.87771 phosphofructokinase x[nh6]->x[nfbp]
+fbpase 0.640039 0.741204 fructose_bisphosphatase x[nfbp]->x[nh6]
+t3pep 3.64276 3.6629 trioseP->P_enol_pyr x[nt3]->x[npep]
+pept3 8.44933e-07 8.49425e-06 P_enol_pyr->trioseP x[npep]->x[nt3]
+pk 3.64277 3.66289 pyruvate_kinase x[npep]->x[npyr]
+pyrlac 4.53333 4.56701 lactate_secretion x[npyr]->lac_o
+lacpyr 0.0412938 0.0418273 lactate_uptake lac_o->x[npyr]
+pyrdcm 0.605342 0.760388 pyr_cytosol>mito x[npyr]->x[npyrm]
+pyrdmc 0.508345 0.679222 pyr_mito>cytosol x[npyrm]->x[npyr]
+pdh 0.122427 0.131295 PDH x[npyrm]->x[ncoa]
+citakg 0.019932 0.0275874 mito_cit>akg x[ncit]->x[nakg]
+akgfum 0.499145 0.527767 mito_akg>fum x[nakg]->x[nfum]
+fumal 0.323251 0.336125 fumarate>malate x[nfum]->x[nmal]
+malfum 0.00391424 0.0122595 malate>fumarate x[nmal]->x[nfum]
+fumout 0.280252 0.291414 fumarate_use x[nfum]->
+maloa 0.0699053 0.117492 MDH_for x[nmal]->x[noa]
+oamal 0.000578185 0.0152608 MDH_rev x[noa]->x[nmal]
+pc 0.0282632 0.0290865 pyr_carboxylase x[npyrm]->x[noa]
+malicm 0.0462113 0.0721817 malic_mito x[nmal]->x[npyrm]
+malicc 0.207292 0.267699 malic_citosol x[noac]->x[npyr]
+pepck 2.35454e-06 2.16409e-05 PEPCK x[noa]->x[npep]
+ppp 0.236442 0.23752 PPP_oxidative x[nh6]->x[np5]
+oacd 0.0237149 0.0308223 mal_diffus_cito>mito x[noac]->x[nmal]
+mald 0.160291 0.244368 mal_diffus_mito>cito x[nmal]->x[noac]
+citdmc 0.0789235 0.105335 cit_diffus-mito>cyto x[ncit]->x[ncitc]
+citdcm 0.001267 0.00162783 cit_diffus-cyto>mito x[ncitc]->x[ncit]
+akgdmc 0.119864 0.124764 akg_diffus_mito>cito x[nakg]->x[nakgc]
+akgdcm 0.588784 0.629822 akg_diffus-cyto>mito x[nakgc]->x[nakg]
+coaout 0.0557469 0.0721995 citrate_liase x[ncitc]->x[noac]+x[ncoac]
+coar 0.00111571 0.00111571 accoa_use x[ncoac]->
+citakg1 0.0219017 0.0315041 citc>akgc x[ncitc]->x[nakgc]
+akgcit1 0 0 akgc>citc x[nakgc]->x[ncitc]
+gln_in 0.00860136 0.00862564 glutamine_uptake x[ngln]->x[nakgc]
+gln_out 0 0 glutamine_secretion x[nakgc]->x[ngln]
+gln_pr 0 0 glutamine>proteins x[ngln]->
+gluin 1.11465 1.11972 glutamate_uptake x[nglu]->x[nakgc]
+gluout 0.577559 0.57783 glutamate_secretion x[nakgc]->x[nglu]
+t3ser 0.0391825 0.0392047 serine_synthesis x[nt3]->x[nser]
+serpyr 0.00691081 0.00691147 serine>pyruvate x[nser]->x[npyr]
+ser_pr 0.0585668 0.058602 serine>proteins x[nser]->
+sergly 0.0780458 0.0780927 serine>glycine x[nser]->x[ngly]+x[ncthf]
+glyser 0.0714006 0.0714041 glycine>serine x[ngly]+x[ncthf]->x[nser]
+thf 2.96938e-06 2.96938e-06 tetrahydrofolate_demetilation x[ncthf]->xthf
+mthf 0 0 tetrahydrofolate_metilation xthf->x[ncthf]
+asp_o 0.00148369 0.00193471 aspartate_secretion x[noac]->x[nasp]
+asp_i 0.0921042 0.0921042 aspartate_uptake x[nasp]->x[nfum]
+asp_pr 0.00531825 0.0065611 aspartate>proteins x[nasp]->
+ala_o 0.0107685 0.0108257 alanine_secretion x[nt3]->x[nala]
+ala_i 0.0130776 0.0131671 alanine_uptake x[nala]->x[npyr]
+trpala 0.00264479 0.00264479 alanine_secretion ->x[nala]
+ala_pr 0 0 alanine>proteins x[nala]->
+r5_o 0.0904539 0.0904539 r5p_use x[np5]->x[nrna]
+r5_i 0 0 r5p_production x[nrna]->x[np5]
+cystin 0.51 0.51 cystein>pyruvate ->x[npyr]
+proin 5.92161e-06 6.17785e-06 proline_use x[npro]->x[nakgc]
+proout 0.000532502 0.000532656 proline_secretion x[nakgc]->x[npro]
+pro_pr 0 0 proline>proteins x[npro]->
+kgin 0.00263576 0.00263576 aminoacids>akg ->x[nakg]
+coain 0 0 accoa_production ->x[ncoa]
+aglin 0.0246032 0.0246032 a-glycerate_in x[nagl]->x[nt3]
+aglout 0.583261 0.583593 a-glycerate_out x[nt3]->x[nagl]
+glycogin 0.0692802 0.0713846 glycogen_in x[]->x[]
+glycogout 0.0072546 0.0072546 glycogen_out x[]->x[]
+D 3.84476 3.84476 koefficient_TCA V_TCA=v*D
+cs0 0.0975908 0.131295 citrate_synthase x[ncoa]+x[noa]->x[ncit]
+resp 0.147074 0.204049 respiration nadh->x[nad]
+atpase 2.58038 2.5998 atpase x[atp]->adp
+aldf 2.44309 2.46483 aldolase_for x[nfbp]->x[nt3]
+aldrev 0.317321 0.329356 aldolase_rev x[nt3]->x[nfbp]
+aldfli 51.4408 51.4708 aldolase_exchange x[nt3]<->x[nfbp]
+aldi1 51.4408 51.4708 aldolase_exchange x[nt3]<->x[nfbp]
+tafl 2.08468e-05 9.70372e-05 transaldolase x[nh6]->x[ns7]
+s7f6a 0.000149403 0.00015872 ta_s7>f6 x[ns7]->x[nh6]
+f6g3a 0.00926535 0.0129596 ta_g3<>f6 x[nt3]<->x[nh6]
+s7e4a 0.000156138 0.000165502 ta_s7<>e4 x[ns7]<->x[ne4]
+tkfl 0.000510948 0.000595008 transketolase x[]->x[]
+s7p5 3.28856e-09 4.07846e-09 transketolase x[ns7]->x[np5]
+f6p5 3.60433e-09 1.02787e-08 transketolase x[nh6]->x[np5]
+p5f6 3.78225e-05 6.35484e-05 transketolase x[np5]->x[nh6]
+f6s7 5.1926e-05 0.000139933 transketolase x[nh6]->x[ns7]
+s7f6 3.31406e-06 6.28189e-06 transketolase x[ns7]->x[nh6]
+p5g3i 0.000438047 0.000447673 transketolase x[np5]<->x[nt3]
+f6e4i 3.82415e-05 0.000122604 transketolase x[nf6]<->x[ne4]
+s7p5i 3.92258e-05 4.33045e-05 transketolase x[]->x[]
 chi         1.36601
 time         1.18384e+07
 conc         47.285
