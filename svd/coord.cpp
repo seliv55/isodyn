@@ -22,15 +22,16 @@ double Analis::descent(double factor,int ip){
     while (flag<2) { oval = Problem.rea[parcp[i]].v();
      Problem.rea[parcp[i]].setVm(oval*factor); cout << parcp[i] << ")";
       try{ xi1 = solve(); 
-    }  catch( char const* str ){cout << "exception: "<< str <<endl; Problem.restoreVm(nrea,nv2);
+    if(((xi1*tf/chimin/tmin)<1)&&(suxx<xmin)) {
+       Problem.write(tf,ifn,xi1,suxx); Problem.storeVms(nrea,nv1);
+       for(int i=0;i<nmet;i++) xinit1[i]=xx[i]; chimin=xi1; tmin=tf; xmin=suxx;}
+     else {factor = 1./factor; ++flag; Problem.rea[parcp[i]].setVm(oval);}
+    }  catch( char const* str ){cout << "descent: "<< str <<endl; Problem.restoreVm(nrea,nv1);
                  for(int i=0;i<nmet;i++) xinit1[i]=xinit2[i];}
       
-    if((xi1*tf*suxx/(x00*tmin*xmin))<1) {Problem.write(tf,ifn,xi1,suxx); x00=xi1; tmin=tf; xmin=suxx;
-                             Problem.storeVms(nrea,nv1);   for(int i=0;i<nmet;i++) xinit1[i]=xx[i];} 
-     else {factor = 1./factor; ++flag; Problem.rea[parcp[i]].setVm(oval);}
         }//end while flag
 	for ( k=i;k<npf;k++) parcp[k] = parcp[k+1];}
- return x00;}
+ return chimin;}
  
  void Analis::rconfint(ifstream& fi, double ami[],double ama[]){
   string aaa; getline(fi,aaa);
@@ -44,12 +45,11 @@ double Analis::descent(double factor,int ip){
  void Analis::stepdown(double factor, int& i,double fdes){
    double oldp;
    cout << "; v["<<Problem.rea[i].getid()<<"]: "<<Problem.rea[i].v()<<endl;
-  try { chimin = solve();
+  try { x00 = solve(); tmin=tf; xmin=suxx;
      for(int j=0;j<5;j++) {oldp = Problem.rea[i].chanVm(factor); chimin = solve();
-       if(chimin<x00) Problem.write(tf,ifn,chimin,suxx);          cout<<"chi="<<chimin<<endl;
+       if(chimin<x00) {Problem.write(tf,ifn,chimin,suxx); x00=chimin; Problem.storeVms(nrea,nv1);}
          if((chimin-x00)>6.7) break;}
-          if((chimin-x00)<0.01) return;
-          Problem.write(tf,ifn,chimin,suxx);    x00=chimin;
+//          if((chimin-x00)<0.01) return;
         descent(fdes,i); Problem.write(tf,ifn,chimin,suxx); 
    if (chimin<x00) {x00=chimin; Problem.storeVms(nrea,nv1); Problem.write(tf,ifn,chimin,suxx);
    } }
@@ -58,17 +58,27 @@ double Analis::descent(double factor,int ip){
  
 void Analis::confidence(double factor,double fdes){ 
 	double a0mi[nrea], a0ma[nrea], a1mi[nrea], a1ma[nrea];
-	 ifstream fi("statfl"); rconfint(fi,a0mi,a0ma); fi.close();
-	   fi.open("statfl1");  rconfint(fi,a1mi,a1ma); fi.close();
-	int parcp[nrea], npf = Problem.getListFit(parcp);
+	int parcp[nrea], npf = Problem.getListFit(parcp); 
 	          Problem.storeVms(nrea,nv1);
+	          Problem.storeVms(nrea,nv2);
+	 ifstream fi("statfl"); rconfint(fi,a0mi,a0ma); fi.close(); //read CI for condition 0
+	   fi.open("statfl1");
+	   if(fi.good()){
+	   rconfint(fi,a1mi,a1ma); fi.close(); //read CI for condition 1
   while (npf>0)  {   int i = rand() % npf;
-   if((a0ma[parcp[i]]<a1mi[parcp[i]])&&(parcp[i]>7.e-7)){
+   if((a0ma[parcp[i]]<a1mi[parcp[i]])&&(a0ma[parcp[i]]>7.e-7)){ //if current CI is totally below that for cond 1
        stepdown(factor,parcp[i],fdes);}
-   else if((a0mi[parcp[i]]>a1ma[parcp[i]])&&(parcp[i]>7.e-7)) {
+   else if((a0mi[parcp[i]]>a1ma[parcp[i]])&&(a1ma[parcp[i]]>7.e-7)) {//if current CI is totally above that for cond 1
        stepdown(1./factor,parcp[i],fdes);}
-   npf--; for (int k=i;k<npf;k++) parcp[k]=parcp[k+1];
+    for (int k=i;k<npf;k++) parcp[k]=parcp[k+1];npf--;
         Problem.restoreVm(nrea,nv1);  }
+	               }
+	   else{ while (npf>0)  {   int i = rand() % npf; if(Problem.rea[parcp[i]].v()>7e-7) {
+	    stepdown(factor,parcp[i],fdes); Problem.restoreVm(nrea,nv1);
+	    stepdown(1./factor,parcp[i],fdes); Problem.restoreVm(nrea,nv1);
+	   }
+	     for (int k=i;k<npf;k++) parcp[k]=parcp[k+1]; npf--;  Problem.restoreVm(nrea,nv1);}
+	   }
    }
 
 void Fit::perturb(const double f1){

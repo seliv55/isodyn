@@ -12,7 +12,7 @@
 using namespace std;
  Ldistr horse;
   int  ifn=0; const int Nn= horse.getN(), neq=870;
-   double dlt, dif, suxx, mader;
+   double dlt, suxx, mader;
 //   const double flf=60.*1000.*5./7.;
     time_t ts,tf; char *fex1, *fex2;
   extern string foc, kin0, kin, kinflx;
@@ -27,9 +27,8 @@ double solve(){
 //horse.readExp(fex2);for(int i=0;i<numx;i++) xx[i]=xinit1[i];
 //      tsolve(37000.); 
 //      xi += horse.integrbs();
-  tf=clock()-ts;for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
+  tf=clock()-ts; for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
    suxx=horse.consum(); // suxx += dif;
-    dif = suxx;
    return (xi);}
    
 inline void chekxi(char *efi){
@@ -87,7 +86,7 @@ int main( int argc, char *argv[] ){
 		Analis analis;
 		analis.setx00(xi0,tf,suxx);
 //           for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
-                int ifn0=250002; Problem.write(tf,ifn0,xi0,suxx,0);
+                int ifn0=250002; Problem.write(tf,ifn0,xi0,suxx,0); cout<<"argc="<<argc<<endl;
 //	Problem.cont(121,0.0001, 0.015);
 //chekxi(1,33);
 //          int sys=system("gnuplot xplt.p");//gnuplot -e 'var=value' script.gp

@@ -39,9 +39,8 @@ void Fit::write (time_t tf, int& ifn,const double xi0,const double xm,bool flg) 
 		fi << xi0 <<endl;
 		fi << tf <<endl;
 		fi << xm <<endl;
-		fi << dif <<endl;
 	fi.close();
-cout <<"File saved: "<<ifn << ": xi=" << xi0 << "; xm=" << xm <<"; time="<<((float)tf/CLOCKS_PER_SEC)<<"; dif="<<dif<<endl;	
+cout <<"File saved: "<<ifn << ": xi=" << xi0 << "; xm=" << xm <<"; time="<<((float)tf/CLOCKS_PER_SEC)<<endl;	
 }
 
 void Fit::wstorefl (const char fn1[],int numpar,const double** m) {
