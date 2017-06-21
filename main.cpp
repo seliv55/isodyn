@@ -96,8 +96,8 @@ int main( int argc, char *argv[] ){
 //chekxi(1,33);
 //          int sys=system("gnuplot xplt.p");//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
- if (argc>3) if(argv[3][0]=='g') analis.grad(1000);
- else {  stringstream stx(argv[3]); int ia; stx>>ia; cout<<ia<<endl; Problem.setfnfin(ifn+ia);
+ if (argc>3) //if(argv[3][0]=='g') analis.grad(1000); else 
+{  stringstream stx(argv[3]); int ia; stx>>ia; cout<<ia<<endl; Problem.setfnfin(ifn+ia);
    
 // 	cout<<"parameter set="<<ia<<endl;
            try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<ia<<" files saved!\n"; return 0;}
