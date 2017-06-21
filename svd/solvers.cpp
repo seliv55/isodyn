@@ -192,7 +192,7 @@ for(int i=0;i<kmax;i++){
 	kin0=skin.str();
          Problem.fin(xx);// cout << pyri <<endl;
 /*     for(int i=0;i<nflx;i++) {
-         cout<<i<<") "<<Problem.fid[i]<<"= "<<flx[i]*1000.*dt<<endl;
+         cout<<i<<") "<<Problem.namef[i]<<"= "<<flx[i]*1000.*dt<<endl;
          if(!(i-aldf)) cout<<"aldf="<<flx[aldf]*1000.*dt<<"; aldr="<<flx[aldf+1]*1000.*dt<<endl;
          if(!(i-cs0)) cout<<"cs0="<<flx[cs0]*1000.*dt<<endl;
          if(!(i-coain)) cout<<"coain="<<flx[coain]*1000.*dt<<endl;

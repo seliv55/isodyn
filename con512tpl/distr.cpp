@@ -9,6 +9,8 @@ void Ldistr::distr(double *py,double *pdydt) {
 	setiso(py); setdiso(pdydt);
 	for (int i=0;i<Nn;i++) pdydt[i]=0.;
 	h6.sett(); t3.sett(); s7.sett(); p5.sett(); e4.sett(); 
+xx[nh6]=h6.sumt(); xx[nfbp]=fbp.sumt(); xx[nt3]=t3.sumt(); xx[npep]=pep.sumt(); xx[npyr]=pyr.sumt(); xx[npyrm]=pyrm.sumt(); xx[ncoa]=coa.sumt(); xx[noa]=oa.sumt(); xx[noac]=oac.sumt(); xx[ncit]=cit.sumt(); xx[ncitc]=citc.sumt(); xx[nakg]=akg.sumt(); xx[nakgc]=akgc.sumt(); xx[nfum]=fum.sumt(); xx[nmal]=mal.sumt(); xx[np5]=p5.sumt(); xx[ne4]=e4.sumt(); xx[ns7]=s7.sumt();
+xx[ngl]=py[ngl]=gl.sumt(); xx[nlac]=py[nlac]=lac.sumt(); xx[nglu]=py[nglu]=glu.sumt();  xx[ngln]=py[ngln]=gln.sumt();  xx[nala]=py[nala]=ala.sumt();  xx[nser]=py[nser]=ser.sumt(); xx[nrna]=py[nrna]=rna.sumt();  xx[nasp]=py[nasp]=asp.sumt();  xx[npro]=py[npro]=pro.sumt();   xx[ngly]=py[ngly]=gly.sumt(); 
 	Problem.f(py,pdydt);
 	Problem.ff(py,pdydt);
 	Problem.fin(py);/**/
@@ -81,7 +83,7 @@ h6.invistk(e4,fluxes[tkfl+7]);
 s7.invistk(p5,fluxes[tkfl+8]);
 	gl.volume(Vt);
 	lac.volume(Vt);
-	glu.volume(Vt);
+//	glu.volume(Vt);
 	gln.volume(Vt);
 //	ala.volume(Vt);
 	ser.volume(Vt);
@@ -91,6 +93,4 @@ s7.invistk(p5,fluxes[tkfl+8]);
 //	asp.volume(Vt);
 	pro.volume(Vt);
 	symm(fum.getisot());
-xx[nh6]=h6.sumt(); xx[nfbp]=fbp.sumt(); xx[nt3]=t3.sumt(); xx[npep]=pep.sumt(); xx[npyr]=pyr.sumt(); xx[npyrm]=pyrm.sumt(); xx[ncoa]=coa.sumt(); xx[noa]=oa.sumt(); xx[noac]=oac.sumt(); xx[ncit]=cit.sumt(); xx[ncitc]=citc.sumt(); xx[nakg]=akg.sumt(); xx[nakgc]=akgc.sumt(); xx[nfum]=fum.sumt(); xx[nmal]=mal.sumt(); xx[np5]=p5.sumt(); xx[ne4]=e4.sumt(); xx[ns7]=s7.sumt();
-xx[ngl]=py[ngl]=gl.sumt(); xx[nlac]=py[nlac]=lac.sumt(); xx[nglu]=py[nglu]=glu.sumt();  xx[ngln]=py[ngln]=gln.sumt();  xx[nala]=py[nala]=ala.sumt();  xx[nser]=py[nser]=ser.sumt(); xx[nrna]=py[nrna]=rna.sumt();  xx[nasp]=py[nasp]=asp.sumt();  xx[npro]=py[npro]=pro.sumt();   xx[ngly]=py[ngly]; 
 }

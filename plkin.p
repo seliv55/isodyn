@@ -1,7 +1,4 @@
-#!/usr/bin/env gnuplot
-
 set t pngcairo enhanced dashed font "arial,12" size 1000,500;
-system "mkdir figs"
 set output "figs/sconc.png";
 set multiplot layout 2,5
 set border 3;

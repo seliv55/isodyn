@@ -1,11 +1,11 @@
-# Isodyn_wf
+# Isodyn
 Version: 1.0
 
 ![Logo](text3923.png)
 
 ## Short Description
 
-“C++”-program simulating the dynamics of metabolites and their isotopic isomers in central metabolic network using kinetic model
+“C++”-program simulating the dynamics of metabolites and their isotopic isomers in central metabolic network using a corresponding kinetic model
 
 ## Description
 
@@ -33,12 +33,6 @@ Version: 1.0
 
 - MS
 
-## Screenshots
-
-- screenshot of input data (format Metabolights), output is the same format with one more column added: corrected mass spectrum
-
-![screenshot](Screenshot.png)
-
 ## Tool Authors
 
 - Vitaly Selivanov (Universitat de Barcelona)
@@ -53,7 +47,7 @@ Version: 1.0
 
 ## Git Repository
 
-- https://github.com/seliv55/Isodyn_wf
+-https://github.com/seliv55/wf/tree/master/isodyn
 
 ## Installation
 
@@ -62,12 +56,47 @@ Version: 1.0
 
 ## Usage Instructions
 
-- To run MIDcor as independent program, execute:
+- The following command forces Isodyn to perform just one simulation of the data presented in "experimental_data_file" with a set of parameters presented in "parameters_file" and stop:
  
- '''  ./isodyn.out experimental_data_file '''
+ '''  ./isodyn.out experimental_data_file parameters_file '''
+
+- The addition of parameter "s" forces to calculate the confidence intervals for all fluxes, based on the previously saved in the output directory files with model parameters and metabolic fluxes, and save the results in file "statfl":
  
-- in the provided example the experimental_data_file is "edata"
+ '''  ./isodyn.out experimental_data_file parameters_file s '''
+
+- The addition of parameter "x" forces to recalculate the χ2 for the parameters sets previously saved in the output directory as files "1", "2", etc:
  
+ '''  ./isodyn.out experimental_data_file parameters_file x '''
+
+- The addition of integer forces to perform optimization using Simulated Annealing algorithm minimizing χ2 and stop after saving "int_number" of files with optimized parameters in the output directory:
+ 
+ '''  ./isodyn.out experimental_data_file parameters_file int_number '''
+
+
+ 
+## The provided example:
+ 
+Simulation of corrected experimental data selected for the cell line A549 presented in MIDcor output file and using an initial set of parameters presented in the file "out/1".
+Single simulation:
+
+ ''' ./isodyn.out ../midcor/A549 out/1 '''
+
+screenshot of a simulation of input data, shown only for unlabeled fraction (m0)
+
+![screenshot](Screenshot.png)
+
+ 
+- Statistics for fluxes, saved in the files  "1", "2", etc, in the directory /out:
+
+ '''  ./isodyn.out ../midcor/A549 out/1 s '''
+ 
+- recalculating χ2 for the parameters sets previously saved in the output directory out/1 as files "1", "2", etc:
+ 
+ '''  ./isodyn.out  ../midcor/A549 out/1 x '''
+
+- performing optimization using Simulated Annealing algorithm minimizing χ2 and stop after saving 33 files with optimized parameters in the output directory:
+ 
+ '''  ./isodyn.out  ../midcor/A549 out/1 33 '''
 
 ## Publications
 

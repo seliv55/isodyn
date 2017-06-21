@@ -28,6 +28,6 @@ void genetic(const double tmax,const int ngen);
 Analis(){}
 ~Analis(){}
 };
-extern double solve();
+extern std::tuple<double,double,time_t> solve();
 #endif
 

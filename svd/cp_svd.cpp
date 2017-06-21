@@ -45,8 +45,8 @@ void Analis::hessian(int ndim,int np,int nex,double xi0,double st[], Mat_DP& aa,
         a=Problem.rea[par1[i]].v();
         Problem.rea[par1[i]].setVm(a*fact);
         da= a*(fact - 1.) ;
-       xi1= get<0>(solve());  nex1=horse.stor(&dex[i][0]); horse.diff(da,st,&dex[i][0]);
-         xi1 += get<0>(solve()); horse.stor(&dex[i][nex1]); horse.diff(da,st,&dex[i][nex1]);
+       xi1= solve();  nex1=horse.stor(&dex[i][0]); horse.diff(da,st,&dex[i][0]);
+         xi1 += solve(); horse.stor(&dex[i][nex1]); horse.diff(da,st,&dex[i][nex1]);
         
         b[i] = -(xi1-xi0)/da/2.;
 	Problem.restoreVm(nrea,nv1);//gets nv
@@ -59,15 +59,15 @@ void Analis::hessian(int ndim,int np,int nex,double xi0,double st[], Mat_DP& aa,
      }
 }
 void Analis::grad(double tmax) {
-     int n=Problem.getparsize(),m(1);
-	int par1[n],k,l,np(0),ndim(8);
+	int par1[nrea],k,l,np(0),ndim(8);
+     int n=(Problem.getListFit(par1)-1),m(1);
      double stcalc[99];
      ofstream fi1("hes1.csv");
      Mat_DP A(n,n);
 	Problem.storeVms(nrea,nv1);//saves nv
 	for(int i=0;i<numx;i++) xinit1[i]=xx[i];//saves xx
-          double xi0= get<0>(solve()); int nex=horse.stor(stcalc);
-           xi0 += get<0>(solve()); nex += horse.stor(&stcalc[nex]);
+          double xi0= solve(); int nex=horse.stor(stcalc);
+           xi0 += solve(); nex += horse.stor(&stcalc[nex]);
               cout<<"points: "<<nex<<endl;
    while(n>=ndim) {
 Mat_DP aa(ndim,ndim),ai(ndim,ndim),u(ndim,ndim),v(ndim,ndim),uu(ndim,ndim),uuu(ndim,ndim);

@@ -10,11 +10,9 @@
 using namespace std;
 double Analis::descent(double factor,int ip){
 	double xi1, oval, sens, slim=0.01, dp=factor-1.;
-	tuple<double,double,time_t> sol;
 	const double xili(0.9998);
-	int k, jfail(0); 
-  vector<int>parcp=Problem.getFitPar(); ifn++;
-  int npf=parcp.size();
+	int k, jfail(0), parcp[nrea];
+  int npf = Problem.getListFit(parcp); ifn++;
 //  if(ip>=0) {for(k=0;k<npf;k++) if(parcp[k] = ip) break;
 //   cout<<"Descent: par="<<Problem.rea[parcp[k]].getname()<<endl;
 //                 for(int i=k;i<npf;i++) parcp[i] = parcp[i+1]; npf--;}
@@ -23,15 +21,15 @@ double Analis::descent(double factor,int ip){
    int i = rand() % npf; npf--;  cout << i << endl;
     while (flag<2) { oval = Problem.rea[parcp[i]].v();
      Problem.rea[parcp[i]].setVm(oval*factor); cout << parcp[i] << ")";
-      try{ sol =solve();  xi1 =get<0>(sol);
-    if(((xi1*tf/chimin/tmin)<1)&&(suxx<xmin)) {Problem.write(sol,ifn); Problem.storeVms(nrea,nv1);
-                   for(int i=0;i<nmet;i++) xinit1[i]=xx[i]; chimin=xi1; tmin=tf; xmin=suxx;} 
-     else {factor = 1./factor; ++flag; Problem.rea[parcp[i]].setVm(oval);}
-    }  catch( char const* str ){cout << "Analis::descent: "<< str <<endl; Problem.restoreVm(nrea,nv2);
+      try{ xi1 = solve(); 
+    }  catch( char const* str ){cout << "exception: "<< str <<endl; Problem.restoreVm(nrea,nv2);
                  for(int i=0;i<nmet;i++) xinit1[i]=xinit2[i];}
       
+    if((xi1*tf*suxx/(x00*tmin*xmin))<1) {Problem.write(tf,ifn,xi1,suxx); x00=xi1; tmin=tf; xmin=suxx;
+                             Problem.storeVms(nrea,nv1);   for(int i=0;i<nmet;i++) xinit1[i]=xx[i];} 
+     else {factor = 1./factor; ++flag; Problem.rea[parcp[i]].setVm(oval);}
         }//end while flag
-	 parcp.erase(parcp.begin()+i); npf=parcp.size();}
+	for ( k=i;k<npf;k++) parcp[k] = parcp[k+1];}
  return x00;}
  
  void Analis::rconfint(ifstream& fi, double ami[],double ama[]){
@@ -44,25 +42,25 @@ double Analis::descent(double factor,int ip){
  }
  
  void Analis::stepdown(double factor, int& i,double fdes){
-   double oldp; tuple<double,double,time_t> sol;
+   double oldp;
    cout << "; v["<<Problem.rea[i].getname()<<"]: "<<Problem.rea[i].v()<<endl;
-  try { sol = solve(); tmin=tf; xmin=suxx;
-     for(int j=0;j<5;j++) {oldp = Problem.rea[i].chanVm(factor); chimin =get<0>(solve());
-       if(chimin<x00) {Problem.write(sol,ifn); x00=chimin; Problem.storeVms(nrea,nv1);}
+  try { chimin = solve();
+     for(int j=0;j<5;j++) {oldp = Problem.rea[i].chanVm(factor); chimin = solve();
+       if(chimin<x00) Problem.write(tf,ifn,chimin,suxx);          cout<<"chi="<<chimin<<endl;
          if((chimin-x00)>6.7) break;}
-//          if((chimin-x00)<0.01) return;
-        descent(fdes,i); Problem.write(sol,ifn); 
-   if (chimin<x00) {x00=chimin; Problem.storeVms(nrea,nv1); Problem.write(sol,ifn);
+          if((chimin-x00)<0.01) return;
+          Problem.write(tf,ifn,chimin,suxx);    x00=chimin;
+        descent(fdes,i); Problem.write(tf,ifn,chimin,suxx); 
+   if (chimin<x00) {x00=chimin; Problem.storeVms(nrea,nv1); Problem.write(tf,ifn,chimin,suxx);
    } }
-  catch( char const* str ){ cout << "Analis::stepdown: "<< str <<endl; chimin=x00+1000.; Problem.rea[i].setVm(oldp);}
+  catch( char const* str ){ cout << "exception: "<< str <<endl; chimin=x00+1000.; Problem.rea[i].setVm(oldp);}
        }
  
 void Analis::confidence(double factor,double fdes){ 
 	double a0mi[nrea], a0ma[nrea], a1mi[nrea], a1ma[nrea];
 	 ifstream fi("statfl"); rconfint(fi,a0mi,a0ma); fi.close();
 	   fi.open("statfl1");  rconfint(fi,a1mi,a1ma); fi.close();
-	int npf =Problem.getparsize(),  parcp[npf];
-	 Problem.getListFit(parcp);
+	int parcp[nrea], npf = Problem.getListFit(parcp);
 	          Problem.storeVms(nrea,nv1);  chimin=x00;
   while (npf>0)  {   int i = rand() % npf;
    if((a0ma[parcp[i]]<a1mi[parcp[i]])&&(parcp[i]>7.e-7)){
@@ -156,7 +154,7 @@ void Ldistr::fitmet(double& xic,int iout,int iin,double fac){
 
 double Ldistr::fitm(double& xic,int ipar,double fac){
   double dif0=xic, oldpar=Problem.rea[ipar].v(), xi; int ic(0);
-  for (;;){  Problem.rea[ipar].setVm(Problem.rea[ipar].v()*fac); xi=get<0>(solve());
+  for (;;){  Problem.rea[ipar].setVm(Problem.rea[ipar].v()*fac); xi=solve();
      cout<<"dif="<<xic<<endl;
       if(xic<dif0){dif0=xic; oldpar=Problem.rea[ipar].v(); }
        else if(ic<2){Problem.rea[ipar].setVm(oldpar); fac=1./fac; ic++;}
@@ -165,25 +163,25 @@ double Ldistr::fitm(double& xic,int ipar,double fac){
 return xi;}
 
 void Analis::coord(const double f1,double fdes){
-	double xi, xi0,dif0,limdx=20e-4,xlim=2.0; tuple<double,double,time_t> sol;
+	double xi, xi0,dif0,limdx=20e-4,xlim=2.0;
 	int  ifail(0);//,pmain[]={14,16,18,20,22,24,30,32,34,36,38,40,42,44,46,48,50,52,54,86,87,88,-1};
 	Problem.storeVms(nrea,nv2);//saves nv&xx
 cout<< "\nPerturbation+CoordinateDescent:\nPar#\txi2con\txi2iso\tParValue\tdif:" <<endl;
 //       xi=horse.fitcon(); Problem.write(tf,ifn,xi,suxx); ifn++;
 //       horse.setcon(); 
-     for(;;){
+     for(;;){//Problem.setpar(pmain);
       for(int i=0;i<99;i++) {
         Problem.perturb(f1);
   try {
 //   while(xmax()>xlim) ; 
-//    double dm(1.);  while(dm>limdx) { dm=dermax(); if(dm>1.) {xi=get<0>(solve());  Problem.write(tf,ifn,xi,suxx,0); break;}}
-    xi=get<0>(solve()); xi=get<0>(sol);
-    if((xi*tf*suxx/(x00*tmin*xmin))<1) {Problem.write(sol,ifn); x00=xi; tmin=tf; xmin=suxx;
+//    double dm(1.);  while(dm>limdx) { dm=dermax(); if(dm>1.) {xi=solve();  Problem.write(tf,ifn,xi,suxx,0); break;}}
+    xi=solve();
+    if((xi*tf*suxx/(x00*tmin*xmin))<1) {Problem.write(tf,ifn,xi,suxx); x00=xi; tmin=tf; xmin=suxx;
                               for(int i=0;i<nmet;i++) xinit1[i]=xx[i];} 
-    }  catch( char const* str ){cout << "Analis::coord: "<< str <<endl; Problem.restoreVm(nrea,nv2);
+    }  catch( char const* str ){cout << "exception: "<< str <<endl; Problem.restoreVm(nrea,nv2);
                  for(int i=0;i<nmet;i++) xinit1[i]=xinit2[i];}
                  }
-// chimin=xi; dif0=dif;sol
+// chimin=xi; dif0=dif;
    descent(fdes,-2);
 //     cout<<"* reduce xi total *"<<endl;// descent(fdes);
  //      xi=horse.fitcon(); Problem.write(tf,ifn,xi,suxx); ifn++;
@@ -299,15 +297,15 @@ if(xm<xmm){
                 Problem.write(tmin,nfi,chimin,xm);}
 }*/
 void Analis::swarm(const double tmax,const int ngen){
-	char fn[11]; tuple<double,double,time_t> sol;
-double xi,r1,r2,f1,xmm(100.),c1(0.8),c2(1.),w(0.5),v[nrea],f0[ngen];
+	char fn[11];
+double xi,r1,r2,f1,xmm(100.),c1(0.8),c2(1.),w(0.5),xm,v[nrea],f0[ngen];
 double pbest[ngen][nrea],pcurr[ngen][nrea];
-	int ifail(0),par[nrea];
+	int it,ifail(0),par[nrea];
 cout<<"swarm:"<<endl;
 		int sign,imut,nfi;
 for(int i=1;i<ngen;i++){
  sprintf(fn,"%i",i);
-  sol=Problem.read(fn); xi=get<0>(sol);
+  xi=Problem.read(it,xm,fn);
 	Problem.storeVms(nrea, &pbest[i][0]);
 	Problem.storeVms(nrea, &pcurr[i][0]);
   f0[i] = xi; 
@@ -324,11 +322,11 @@ for(int i=2;i<ngen;i++){cout<<" i="<<i;
     }/**/
 	try {
 	//   get(numx,xx,xinit1); 
-  sol=solve(); xi=get<0>(sol); cout<<"; xi="<<xi<< endl;
+  xi=solve(); cout<<"; xi="<<xi<< endl;
     xm=suxx; Problem.storeVms(nrea,&pcurr[i][0]);
        f1 = xi;//+xm)*sqrt((dif/dif0)); 
 	//   get(numx,xx,xinit1); 
-    if(f1<f0[i])  {Problem.write(sol,i,0); 
+    if(f1<f0[i])  {Problem.write(tf,i,xi,xm,0); 
        cout<<"f0="<<(f0[i]=f1)<<endl;
           Problem.storeVms(nrea,&pbest[i][0]); 
     if(f1<f0[0]){f0[0]=f1; Problem.storeVms(nrea,&pbest[0][0]);}}

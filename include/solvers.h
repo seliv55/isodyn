@@ -65,13 +65,6 @@ extern void integ(const double tmax);
 extern void derivsl(const DP x, Vec_IO_DP &y, Vec_O_DP &dydx);
 extern void integrbs(const double tmax);
 //extern void  NR::jacobn_s(const DP x, Vec_I_DP &y, Vec_O_DP &dfdx, Mat_O_DP &dfdy);
-extern double setgrad(double xi0,const double tmax); 
-extern double fitonerand(const double a,double tmax);
-extern void fit(const double tmax);
-extern void coord(const double tmax);
-extern void grad(double fact, double tmax) ;
-extern void reshit(const double tmax);
-extern double getmax();
 extern DP dxsav;   // defining declarations
 extern int kmax,kount;
 extern Vec_DP *xp_p;

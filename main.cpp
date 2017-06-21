@@ -12,48 +12,52 @@
 using namespace std;
  Ldistr horse;
   int  ifn=0; const int Nn= horse.getN(), neq=870;
-   double dlt, suxx, mader;
+   double dlt, dif, suxx, mader;
 //   const double flf=60.*1000.*5./7.;
     time_t ts,tf; char *fex1, *fex2;
   extern string foc, kin0, kin, kinflx;
     
-double solve(){
+tuple<double,double,time_t> solve(){
 //solving the kinetic model:
    ts=clock(); 
- for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
+ for(int i=0;i<nmet;i++) xx[i]=xinit1[i]; //take initial values
     tsolve(37000.); mader=Problem.dermax();
+//  for(int i=0;i<10;i++)   ddsolve(3700.);
     // Problem.jacobian(xx);  tsolve(37000.); for(int i=0;i<numx;i++) xinit1[i]=xx[i];
       double xi=horse.integrbs();
 //horse.readExp(fex2);for(int i=0;i<numx;i++) xx[i]=xinit1[i];
 //      tsolve(37000.); 
 //      xi += horse.integrbs();
-  tf=clock()-ts; for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
+  tf=clock()-ts;
    suxx=horse.consum(); // suxx += dif;
-   return (xi);}
+   for(int i=0;i<nmet;i++) xx[i]=xinit1[i]; //set iv for a case of saving them
+   return make_tuple(xi,suxx,tf);}
    
 inline void chekxi(char *efi){
-   stringstream fn; int itmp, iin, ifin;  double tmp,xi0;
+   stringstream fn; int iin, ifin;  double xi0;
     cout<<"first file: "; cin>>iin;
     cout<<"\nlast file: "; cin>>ifin; 
      for(int i=iin;i<ifin;i++) {fn<<*Problem.getodir()<<i; cout<<i<<": "<<endl;
-      Problem.read(itmp,tmp,fn.str().c_str()); cout<<fn.str().c_str()<<endl;
+      Problem.read(fn.str().c_str()); cout<<fn.str().c_str()<<endl;
       horse.readExp(efi); for(int ii=0;ii<nmet;ii++) cout<<(xinit1[ii]=xx[ii])<<endl;
-         xi0=solve();            
-   Problem.write(tf,i,xi0,suxx,0);      } /**/
+        tuple<double,double,time_t> sol=solve();            
+   Problem.write(sol,i,0);      } /**/
   }
+
+    tuple<double,double,time_t> sol0;
 
 int main( int argc, char *argv[] ){
    double tmp,xi0;ofstream kkin("kinxx"); 
 //   int a[][3]={{1,2,3},{4,5,6}}}; cout<<"a11="<<a[1][1]<<endl;
    int itmp; bool check;
          fex1=argv[1]; fex2=fex1;
-    Problem.setodir(argv[2]);  ifn=Problem.setnumofi(); 
+    Problem.setodir(argv[2]);  ifn=Problem.setnumofi();
      
   if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
    else{
      cout.precision(3);
-     xi0=Problem.read(itmp,tmp,argv[2]);    //read parameters
+     sol0=Problem.read(argv[2]);    //read parameters
 //      horse.setfige();                // set experimental data for figure
         horse.readExp(argv[1]);            // read experimental data 
      for(int i=0;i<nmet;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values
@@ -66,11 +70,12 @@ int main( int argc, char *argv[] ){
 //    tsolve(35000.);  for(int i=0;i<numx;i++)  xinit1[i]=xx[i];
        Problem.shownx(numx,xx);         // print concentrations on screen
      kkin<<kin0;  kkin.close();         //save concentration dynamics to "kinxx"
-        int sys=system("plkin.p");//gnuplot -e 'var=value' script.gp
-  xi0=solve();//horse.integrbs();                 //solve ODEs for isotopomers
-//	horse.flback();                 //print Σisotopomers on screen
-     cout<<" Σxi²="<<xi0 <<"\n";        //final results
-     cout<<setw(9)<<"* "<<"*Metab  *  init  Final : exper -> xi²"<<"\n" <<foc; 
+        int sys=system("gnuplot plkin.p");//gnuplot -e 'var=value' script.gp
+//  xi0=horse.integrbs();                 //solve ODEs for isotopomers
+  sol0=solve();//horse.integrbs();                 //solve ODEs for isotopomers
+       Problem.shownx(numx,xx);         // print concentrations on screen
+     cout<<" Σxi²="<<get<0>(sol0) <<"\n";        //final results
+     cout<<setw(9)<<"*"<<"*Metab   *   init    Final : "<<setw(17)<<"exper -> xi²\n" <<foc; 
 //        kkin.open("kinGlc"); kkin<<kin<<endl; kkin.close();
 //        kkin.open("kinflx"); kkin<<kinflx<<endl; kkin.close();
         
@@ -86,18 +91,19 @@ int main( int argc, char *argv[] ){
 		Analis analis;
 		analis.setx00(xi0,tf,suxx);
 //           for(int i=0;i<nmet;i++) xx[i]=xinit1[i];
-                int ifn0=250002; Problem.write(tf,ifn0,xi0,suxx,0); cout<<"argc="<<argc<<endl;
+                int ifn0=250002; Problem.write(sol0,ifn0,0);
 //	Problem.cont(121,0.0001, 0.015);
 //chekxi(1,33);
 //          int sys=system("gnuplot xplt.p");//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
- if (argc>3) {  stringstream stx(argv[3]); int ia; stx>>ia; cout<<ia<<endl; Problem.setfnfin(ifn+ia);
+ if (argc>3) if(argv[3][0]=='g') analis.grad(1000);
+ else {  stringstream stx(argv[3]); int ia; stx>>ia; cout<<ia<<endl; Problem.setfnfin(ifn+ia);
    
 // 	cout<<"parameter set="<<ia<<endl;
            try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<ia<<" files saved!\n"; return 0;}
 	         Problem.stat(ifn-1);
-                  xi0=Problem.read(itmp,tmp,"1");
-                   for(int i=0;i<nmet;i++) xinit1[i]=xx[i];
+                  sol0=Problem.read("1");
+                   for(int i=0;i<numx;i++) xinit1[i]=xx[i];
                   }
 //               analis.sensitiv(tmax);
 //               analis.swarm(tmax,111);

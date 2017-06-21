@@ -18,9 +18,9 @@ public:
 
 class Iso {
  protected:
-  int niso;  std::string name; data *mid;
+  int niso; double ttime;  std::string name; data *mid;
  public:
-    void showmid(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].mean<<" "; std::cout<<name+s<<std::endl;}
+    void showmid(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].mean<<" "; std::cout<<name+s<<" time="<<ttime<<"\n";}
     void showsd(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].sd<<" "; std::cout<<name+s<<std::endl;}
     void calmesd(std::vector<Iso>& linj){
        int len=linj.size();
@@ -37,7 +37,7 @@ class Iso {
     int getniso(){return niso;}
     data* getmid(){return mid;}
     
-  Iso(int n, std::string s){niso=n; name=s;
+  Iso(int n, double tti, std::string s){niso=n; ttime=tti; name=s;
    mid=new data[n]; for(int i=0;i<niso;i++){ mid[i].mean=0.; mid[i].sd=0.1; }}
   virtual ~Iso(){}
 };
@@ -48,7 +48,7 @@ class Tracer:public Iso {
  public:
   double fract;
   void setrac(){mid[0].mean=(100.-fract); mid[nmi].mean=fract;}
- Tracer(int n,std::string s,int nc,double abun,int nlab):Iso(n,s){nmark=nc; fract=abun;
+ Tracer(int n, double tti,std::string s,int nc,double abun,int nlab):Iso(n,tti,s){nmark=nc; fract=abun;
    nmi=nlab;}
  ~Tracer(){}
 };
@@ -234,12 +234,14 @@ class Metab_data:public Metab {
  double chisq(int nt,int nl, double add=0.,double a0=0.) {
 	double a, b=this->calc[N+1]+add, b0=this->calc[0]+a0;
 	 xi[nt]=0; 
-	if(exper[nt][0].sd>1.e-5){
+    if(exper[nt][0].mean>1.e-5){
+       if(exper[nt][0].sd>1.e-5){
      a=(exper[nt][0].mean-b0/b)/(exper[nt][0].sd); xi[nt] += a*a;
   for(int k=1;k<nl;k++) {
      a=(exper[nt][k].mean-this->calc[k]/b)/(exper[nt][k].sd); xi[nt] += a*a;
-     } }
+                         } }    }	
   return xi[nt];}
+  
  double chisqsum(Metab& s2,int nt,int nl) {
 	double a, b=this->calc[N+1]+s2.getcalc()[N+1];
 	 xi[nt]=0; 
@@ -256,10 +258,12 @@ class Metab_data:public Metab {
  void wrikinc(std::string descr, std::ostringstream& so, int nt) {
     so<<descr<<"_c: ";  for(int i=0;i<nt;i++) so<<std::setw(9)<<this->kinc[i]; so<<"** "<<conc[nt-1].mean<<" -> "<<xicon[nt-1]<<std::endl;
  }
- void wrikinm0(std::ostringstream& so, int nt) { so.precision(3);
+ void wrikinm0(std::ostringstream& so, int nt) {if(xi[nt-1]>0){
+ so.precision(3);
       so<<std::setw(12)<<descr<<"_m0: ";
-    for(int i=0;i<nt;i++) so<<std::setw(7)<<this->kinm0[i];
-      so<<" : "<<exper[nt-1][0].mean<<" -> "<<xi[nt-1]<<std::endl;
+    for(int i=0;i<nt;i++)  so<<std::setw(9)<<this->kinm0[i];
+      so<<" : "<<std::setw(7)<<exper[nt-1][0].mean<<" -> "<<xi[nt-1]<<std::endl;
+ } 
  }
 
   Metab_data(int n,std::string simya=""):Metab(n,simya){for(int i=0;i<tt;i++) exper[i]=new data[N+1];}
@@ -407,11 +411,11 @@ class ketose:public Metab_data {
 };
 
 class Ldistr {
-	int ntime,lmet;
+	int ntime,lmet,itrac,markis;
   Metab_data gl, glycog, lac, glu, glu25, gln, pro, arg, rna, asp, asn, ala, ser, cys, agl, pyrm, coa, coac, gly, oa, oac, cit, akg, fum, mal;
   Metab fbp, t3, pep, pyr, cthf, citc, akgc, e4;
   ketose h6, s7, p5;
-  double lacout,coaefl,tca,fpdh;
+  double lacout,coaefl,tca,fpdh,marfrac;
   std::vector<double> tex;
   std::vector<Iso> result;
       void symm (double *s);
@@ -420,7 +424,7 @@ class Ldistr {
  void spInvsl(double *h6,double *dh6,double *t1,double *dt1,const double vf,const double tsum);
  void ast (double vf,double vr);
 
- void sklad(int itime){gl.skladc(itime);gl.skladm0(itime); glycog.skladc(itime);glycog.skladm0(itime); lac.skladc(itime); gln.skladc(itime); lac.skladm0(itime); glu.skladm0(itime); glu25.skladm0(itime); ala.skladm0(itime); rna.skladm0(itime); gly.skladm0(itime); ser.skladm0(itime); pro.skladm0(itime); cit.skladm0(itime); agl.skladm0(itime); asp.skladm0(itime);  fum.skladm0(itime); mal.skladm0(itime);}
+ void sklad(int itime){gl.skladc(itime);gl.skladm0(itime); glycog.skladc(itime);glycog.skladm0(itime); lac.skladc(itime); gln.skladc(itime); gln.skladm0(itime); lac.skladm0(itime); glu.skladm0(itime); glu25.skladm0(itime); ala.skladm0(itime); rna.skladm0(itime); gly.skladm0(itime); ser.skladm0(itime); pro.skladm0(itime); cit.skladm0(itime); agl.skladm0(itime); asp.skladm0(itime);  fum.skladm0(itime); mal.skladm0(itime);}
 
  void wrikin(std::ostringstream& so, int nt){
    for(int i=0;i<lmet;i++) met[i]->wrikinm0(so,nt);
@@ -437,7 +441,7 @@ class Ldistr {
 // void setmet(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
 // void setm0(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
  public:
-       Metab_data *met[6];
+       Metab_data *met[10];
 //       void setmet(){met[0]=&gl; met[1]=&gly;}
     void setfige();
 //       double setLacInit(double fact){return lac.setInCon(fact);}
@@ -452,6 +456,7 @@ class Ldistr {
       std::vector<std::string> spli(std::stringstream& test,char a);
       int c13pos(std::string& s,int& nc,int& nlab);
       void defcol(int nucol[],std::vector<std::string> vstr);
+      int findmet(std::string *s,int niso,data* mid);
       Tracer rcsv(std::ifstream& fi,std::vector<Iso>& result );
         int diff(const double da,double st[], double *palpha) ;
         void show(std::ostringstream& fo,double xfin);
@@ -461,8 +466,8 @@ class Ldistr {
         double integrbs();
 	double ddisolve();
         int stor(double st[]) ;
-	Ldistr(): gl(6,"Gluc"), glycog(6,"Glycog"), lac(3,"Lac"), glu(5,"Glut"), glu25(5,"Gl25"), gln(5), pro(5), arg(5), rna(5,"Rib"), asp(4), asn(4), ala(3), ser(3), cys(3), agl(3), h6(6), fbp(6),  t3(3), s7(7), pep(3), pyr(3), pyrm(3), coa(2), coac(2), gly(2), cthf(1),  oa(4), oac(4), cit(6), citc(6), akg(5), akgc(5), fum(4), mal(4), p5(5,"Rib"), e4(4) { met[0]=&rna; met[1]=&lac; met[2]=&glu; met[3]=&gl; met[4]=&glu25; met[5]=&glycog;}
-	~Ldistr(void) {for(int i=0;i<result.size();i++) result[i].delmid(); result.clear();}
+	Ldistr(): gl(6,"Gluc"), glycog(6,"Glycog"), lac(3,"Lac"), glu(5,"Glutamate2-4"), glu25(5,"Glutamate2-5"), gln(5,"Glutamin"), pro(5), arg(5), rna(5,"Rib"), asp(4,"Asp"), asn(4), ala(3), ser(3), cys(3), agl(3), h6(6), fbp(6),  t3(3), s7(7), pep(3), pyr(3), pyrm(3), coa(2), coac(2), gly(2), cthf(1),  oa(4), oac(4), cit(6,"Cit"), citc(6), akg(5), akgc(5), fum(4), mal(4,"Mal"), p5(5,"Rib"), e4(4) { met[0]=&rna; met[1]=&lac; met[2]=&glu; met[3]=&gl; met[4]=&glu25; met[5]=&glycog; met[6]=&cit; met[7]=&asp; met[8]=&mal; met[9]=&gln;}
+	~Ldistr(void) { result.clear();}
 };
 
 extern Ldistr horse;

@@ -12,19 +12,19 @@ aldf=atpase+1, aldrev=aldf+1, aldfli=aldrev+1, aldi1=aldfli+1, tafl=aldi1+1, s7f
 
 const int nh6=0, nfbp=nh6+1, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, ncoa=npyrm+1, noa=ncoa+1, noac=noa+1, ncit=noac+1, ncitc=ncit+1, nakg=ncitc+1, nakgc=nakg+1, nfum=nakgc+1, nmal=nfum+1, np5=nmal+1, ne4=np5+1, ns7=ne4+1, natp=ns7+1, nnad=natp+1, ngl=nnad+1, nlac=ngl+1, nglu=nlac+1, ngln=nglu+1, nala=ngln+1, nasp=nala+1, nser=nasp+1, npro=nser+1, nrna=npro+1, ngly=nrna+1, ncthf=ngly+1, ncoac=ncthf+1, nagl=ncoac+1, nglycog=nagl+1, nmet=nglycog+1, numx=nnad+1;
 
-   Fit Problem;
-   const double thft(1.);
-   double dt, xx[nmet],flx[nflx],fluxes[nflx];
-   double xm0,xinit1[nmet],xinit2[nmet];
-   int Parray::par[nrea];
+Fit Problem;
+const double thft(1.);
+double dt, xx[nmet],flx[nflx],fluxes[nflx];
+double xm0,xinit1[nmet],xinit2[nmet];
+//   string Parray::namef[nflx], Parray::namex[numx];
    string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[numx];
-   Reapar Parray::rea[nrea];
-   double Analis::nv1[nrea], Analis::nv2[nrea];
+ Reapar Parray::rea[nrea];
+ double Analis::nv1[nrea], Analis::nv2[nrea];
 void Parray::rnames(ifstream& fi){
    for (int i=0;i<nflx;i++)
         fi>>fid[i]>>fid[i]>>fname[i]>>fschem[i];
         }
-   
+
 void Fit::ff(const double *y,double *dydx) { for(int i=0;i<numx;i++) dydx[i]=0.;
 dydx[ngl] = - flx[hk];                  //glucose
 dydx[nlac] = flx[pyrlac]-flx[lacpyr];   //lactate
@@ -38,7 +38,7 @@ dydx[ncthf] = flx[sergly]-flx[glyser]+flx[mthf]-flx[thf];//tetrahydrofolate
 dydx[npro] = flx[proout]-flx[proin]-flx[pro_pr];//proline
 dydx[nrna] = flx[r5_o]-flx[r5_i];       //ribose
 dydx[ncoac] = flx[coaout] - flx[coar];  //accoa
-dydx[nagl] = flx[aglin] - flx[aglout];  //a-glycerate
+dydx[nagl] = flx[aglin] - flx[aglout];  //a-ketoglutarate
 dydx[nglycog] = flx[glycogin] - flx[glycogout];//glycogen
 }
 void Fit::f(const double *y,double *dydx) { for(int i=0;i<numx;i++) dydx[i]=0.;
@@ -85,7 +85,7 @@ flx[ppp]= rea[ppp].v(y[nh6]);            dydx[nh6] -= flx[ppp];     dydx[np5] +=
  flx[akgfum]= rea[D].v()*rea[akgfum].v(y[nakg],y[nnad],adp);
                                 dydx[nakg] -= flx[akgfum];    dydx[nfum] += flx[akgfum];
                                 dydx[nnad] -= flx[akgfum];    dydx[natp] += flx[akgfum];
- flx[fumal]= rea[D].v()*rea[fumal].v(y[nfum]);   dydx[nfum] -= flx[fumal]; dydx[nmal] += flx[fumal];
+ flx[fumal]= rea[D].v()*rea[fumal].v(y[nfum]); dydx[nfum] -= flx[fumal]; dydx[nmal] += flx[fumal];
  flx[malfum]= rea[D].v()*rea[malfum].v(y[nmal]); dydx[nmal] -= flx[malfum]; dydx[nfum] += flx[malfum];
  flx[fumout]= rea[fumout].v(y[nfum]);            dydx[nfum] -= flx[fumout];
  flx[maloa]= rea[maloa].v(y[nmal], y[nnad]);
@@ -162,7 +162,7 @@ tk.st1fl(&flx[tkfl], y[nt3]/ft3, y[np5], y[ne4], y[nh6]/fh6, y[np5], y[ns7]);
 //					dydx[nnad]=0.;dydx[natp]=0.;
 }
 
-void Parray::init(){ft3=10.; fh6=7.; 
+void Parray::init(){ft3=10.; fh6=7.;
 	tk.setk(rea[rtk].getpar() );
 	ta.setk(rea[rta].getpar());
 	aldolase.setk(rea[rald].getpar());}
@@ -191,8 +191,8 @@ fluxes[citakg] /= y[ncit];
 fluxes[akgfum] /= y[nakg];
 fluxes[fumal] /= y[nfum];
 fluxes[malfum] /= y[nmal];
-fluxes[fumout] /= y[nfum];
 fluxes[maloa] /= y[nmal];
+fluxes[fumout] /= y[nfum];
 fluxes[oamal] /= y[noa];
 fluxes[pc] /= y[npyrm]; 
 fluxes[malicm] /= y[nmal];

@@ -19,7 +19,7 @@ $(CEL): $(COBJ) $(LIBS)
 #	g++ -O3 -lf52 -lf2c -u MAIN__ main.o svd/svd.a con512tpl/mod.a nrused/nr.a integrT/integT.a -o isodyn.out
 
 .cpp.o:
-	g++ $(CFLG) $< -o $@
+	g++ -std=c++11 $(CFLG) $< -o $@
 
 con512tpl/mod.a:
 	make -C con512tpl
@@ -40,7 +40,3 @@ clean:
 #	make clean -C nrused
 #	make clean -C integrT
 
-install:
-	cp isodyn.out /usr/local/bin/isodyn
-	cp plkin.p /usr/local/bin/plkin.p
-	chmod a+x /usr/local/bin/plkin.p
