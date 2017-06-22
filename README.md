@@ -56,6 +56,8 @@ Version: 1.0
 
 ## Usage Instructions
 
+Isodyn can run in several modes:
+
 - The following command forces Isodyn to perform just one simulation of the data presented in "experimental_data_file" with a set of parameters presented in "parameters_file" and stop:
  
  '''  ./isodyn.out experimental_data_file parameters_file '''
@@ -74,9 +76,10 @@ Version: 1.0
 
 
  
-## The provided example:
+## The provided examples:
  
-Simulation of corrected experimental data selected for the cell line A549 presented in MIDcor output file and using an initial set of parameters presented in the file "out/1".
+The provided set of multipeak CDF files contain the mass isotopomer distributions measured for various metabolites for three cell lines A549, BEAS2B, and NCIH460. Moreover the presented set of monopeak CDF files contains the mass isotopomer distributions measured for HUBEC cells. All these data, extracted by RaMID and corrected by midcor serve as examples of data that Isodyn uses for simulations. An initial set of parameters presented in the file "out/1". Below are the examples of commands to run Isodyn in several modes.
+
 Single simulation:
 
  ''' ./isodyn.out ../midcor/A549 out/1 '''
