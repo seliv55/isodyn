@@ -79,7 +79,8 @@ class Fit: public Parray{
       int getparsize(){for(unsigned i=0;i<par.size();i++) std::cout<<par[i]<<" "; std::cout<<"\n"; return par.size();}
  
     void setodir(char *filo){ std::string infi(filo);
-         int pos=infi.find_last_of('/');   outdir=infi.substr(0,pos+1); std::cout<<outdir<<std::endl; }
+         int pos=infi.find_last_of('/');   outdir=infi.substr(0,pos+1); }
+         
     std::string* getodir(){return &outdir;}
          
     int setnumofi()const{ for(int i=1;;i++) {std::stringstream fn;

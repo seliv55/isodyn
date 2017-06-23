@@ -51,7 +51,18 @@ int main( int argc, char *argv[] ){
 //   int a[][3]={{1,2,3},{4,5,6}}}; cout<<"a11="<<a[1][1]<<endl;
    int itmp; bool check;
          fex1=argv[1]; fex2=fex1;
-    Problem.setodir(argv[2]);  ifn=Problem.setnumofi();
+         
+     string arg1(argv[1]),name;
+       string cell=arg1.substr(arg1.find_last_of('/')+1); cout<<"cell="<<cell<<endl;
+      ifstream fi("xconc"); string aaa; int isu, ntime(2);
+      fi>>isu>>ntime; double conc[ntime];getline(fi,aaa); cout<<aaa<<endl;
+      while(!fi.eof()){  if(!(aaa.find(cell)+1)) break;}
+      for(int i=0;i<isu;i++){
+       fi>>name; cout<<name<<endl; for(int j=0;j<ntime;j++) fi>>conc[j];
+      }
+         
+     Problem.setodir(argv[2]); //set output directory
+      ifn=Problem.setnumofi(); //number of parameter files
      
   if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2

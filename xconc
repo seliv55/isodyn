@@ -1,0 +1,19 @@
+4 2 substrates
+A549
+Glucose  8.636  5.282
+Glutamine  2.915  2.167
+Lactate  0.907  7.850
+Glutamate  0.101 0.542
+
+BEAS2B
+Glucose  10.107  7.489
+Glutamine  3.809  3.666
+Lactate  0.001  5.950
+Glutamate  0.001  0.230
+
+NCIH460
+Glucose  9.003 3.063
+Glutamine  2.955, 1.903
+Lactate  0.920  12.517
+Glutamate  0.105, 0.419
+
