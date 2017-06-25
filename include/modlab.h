@@ -416,7 +416,7 @@ class Ldistr {
   Metab fbp, t3, pep, pyr, cthf, citc, akgc, e4;
   ketose h6, s7, p5;
   double lacout,coaefl,tca,fpdh,marfrac;
-  std::vector<double> tex;
+  std::vector<double> tex, texcon;
   std::vector<Iso> result;
       void symm (double *s);
  void csyn(double *coai,double *dcoai,double *oai,double *doai,double *dciti,const double v);
@@ -444,6 +444,7 @@ class Ldistr {
        Metab_data *met[10];
 //       void setmet(){met[0]=&gl; met[1]=&gly;}
     void setfige();
+    void read_con(std::ifstream& fi, std::string& arg1);
 //       double setLacInit(double fact){return lac.setInCon(fact);}
        void read (char *finame, int ndat);
        void flback();
