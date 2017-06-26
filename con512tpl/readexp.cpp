@@ -32,7 +32,7 @@ for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
 	 xx[nrna]=0.007; coac.setconc(xx[nrna]);
 
 	 xx[nagl]=1.0;
-	 xx[ncthf]=0.5;	 lmet=sizeof(met)/sizeof(*met); 
+	 xx[ncthf]=0.5;	 lmet=10;//sizeof(met)/sizeof(*met); 
 	 
        l13c.setmid(markis,marfrac*100.);  l13c.setmid(0,100*(1-marfrac)); 
         itrac=findmet(l13c.getname(),l13c.getniso(),l13c.getmid());

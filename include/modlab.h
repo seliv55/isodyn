@@ -441,8 +441,8 @@ class Ldistr {
 // void setmet(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
 // void setm0(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
  public:
-       Metab_data *met[10];
-//       void setmet(){met[0]=&gl; met[1]=&gly;}
+      static Metab_data *met[];
+       void setmet();
     void setfige();
     void read_con(std::ifstream& fi, std::string& arg1);
 //       double setLacInit(double fact){return lac.setInCon(fact);}
@@ -467,7 +467,7 @@ class Ldistr {
         double integrbs();
 	double ddisolve();
         int stor(double st[]) ;
-	Ldistr(): gl(6,"Gluc"), glycog(6,"Glycog"), lac(3,"Lac"), glu(5,"Glutamate2-4"), glu25(5,"Glutamate2-5"), gln(5,"Glutamin"), pro(5), arg(5), rna(5,"Rib"), asp(4,"Asp"), asn(4), ala(3), ser(3), cys(3), agl(3), h6(6), fbp(6),  t3(3), s7(7), pep(3), pyr(3), pyrm(3), coa(2), coac(2), gly(2), cthf(1),  oa(4), oac(4), cit(6,"Cit"), citc(6), akg(5), akgc(5), fum(4), mal(4,"Mal"), p5(5,"Rib"), e4(4) { met[0]=&rna; met[1]=&lac; met[2]=&glu; met[3]=&gl; met[4]=&glu25; met[5]=&glycog; met[6]=&cit; met[7]=&asp; met[8]=&mal; met[9]=&gln;}
+	Ldistr(): gl(6,"Gluc"), glycog(6,"Glycog"), lac(3,"Lac"), glu(5,"Glutamate2-4"), glu25(5,"Glutamate2-5"), gln(5,"Glutamin"), pro(5), arg(5), rna(5,"Rib"), asp(4,"Asp"), asn(4), ala(3), ser(3), cys(3), agl(3), h6(6), fbp(6),  t3(3), s7(7), pep(3), pyr(3), pyrm(3), coa(2), coac(2), gly(2), cthf(1),  oa(4), oac(4), cit(6,"Cit"), citc(6), akg(5), akgc(5), fum(4), mal(4,"Mal"), p5(5,"Rib"), e4(4) {setmet(); }
 	~Ldistr(void) { result.clear();}
 };
 

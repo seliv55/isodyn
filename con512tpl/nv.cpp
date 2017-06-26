@@ -20,6 +20,9 @@ double xm0,xinit1[nmet],xinit2[nmet];
    string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[numx];
  Reapar Parray::rea[nrea];
  double Analis::nv1[nrea], Analis::nv2[nrea];
+ Metab_data *Ldistr::met[numx];
+ void Ldistr::setmet(){met[nmet];met[0]=&rna; met[1]=&lac; met[2]=&glu; met[3]=&gl; met[4]=&glu25; met[5]=&glycog; met[6]=&cit; met[7]=&asp; met[8]=&mal; met[9]=&gln;}
+ 
 void Parray::rnames(ifstream& fi){
    for (int i=0;i<nflx;i++)
         fi>>fid[i]>>fid[i]>>fname[i]>>fschem[i];
