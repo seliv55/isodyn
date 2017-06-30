@@ -18,21 +18,13 @@ double Ldistr::readExp (char fn[]) {
  
 for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
  mu /= ((double)(ntime-1)*1.0);
-	 xx[ngl]=10.; gl.setconc(xx[ngl]); gl.setex0();
-	 xx[nglycog]=3.; glycog.setconc(xx[nglycog]);// glycog.setex0();
-	 xx[nlac]=0.001; lac.setconc(xx[nlac]);
-	 xx[nglu]=4.1; glu.setconc(xx[nglu]); glu25.setconc(xx[nglu]);
-	 xx[ngln]=4.9; gln.setconc(xx[ngln]); gln.setex0();
-	 xx[nala]=0.4; ala.setconc(xx[nala]);
-	 xx[ngly]=0.4; gly.setconc(xx[ngly]);
-	 xx[nser]=0.4; ser.setconc(xx[nser]);
-	 xx[nasp]=0.0001; asp.setconc(xx[nasp]);
-	 xx[npro]=0.0001; pro.setconc(xx[npro]);
-	 xx[ncoac]=0.007; coac.setconc(xx[ncoac]);
-	 xx[nrna]=0.007; coac.setconc(xx[nrna]);
+           for(int i=0;i<nfbp;i++)  met[i]->setconc(xx[i]);
+	 gl.setex0(); gln.setex0();
+	  glu.setconc(xx[nglu]); glu25.setconc(xx[nglu]);
+	  
 
 	 xx[nagl]=1.0;
-	 xx[ncthf]=0.5;	 lmet=10;//sizeof(met)/sizeof(*met); 
+	 xx[ncthf]=0.5;	 lmet=nfbp;//sizeof(met)/sizeof(*met); 
 	 
        l13c.setmid(markis,marfrac*100.);  l13c.setmid(0,100*(1-marfrac)); 
         itrac=findmet(l13c.getname(),l13c.getniso(),l13c.getmid());
@@ -66,12 +58,11 @@ void Ldistr::defcol(int nucol[],vector<string> vstr){
 }
 
 int Ldistr::findmet(string *s,int niso,data* mid) { int k(0);
-      for(int i=0;i<lmet;i++){
-      int imatch=(*s).find(met[i]->getdescr()); 
-        if(imatch != (int)std::string::npos){ met[i]->setex0(); k=i;
-//       cout<<"c13pos: "; cout<<markis<<" "<<marfrac<<"\n";
+      for(int i=0;i<=lmet;i++){
+      size_t imatch=(*s).find(met[i]->getdescr()); 
+        if(imatch +1){ met[i]->setex0(); k=i;
          cout<<i<<": "<<met[i]->getdescr()<<" niso="<<niso<<" m0="<<mid[0].mean<<" sd0="<<mid[0].sd<<endl;
-         met[i]->sex(niso,mid,1); break; }
+         met[i]->sex(niso,mid,1); expm0.push_back(met[i]); break;}
                              }
    if(k==0){cout<<*s<<" k="<<k<<" no metabolite match?!?!?!\n";}
      return k;}
@@ -185,7 +176,7 @@ while(iro<(nstrok-1)){
      for(int i=0;i<liso.size();i++) liso[i].showmid();
     iso=new Iso(lef,0.,segline[iro-2][cols[emet]]);
     iso->calmesd(liso); iso->showmid("_mean");  iso->showsd("_sd"); cout<<"\n";
-    if((*labmet.getname()).find(*iso->getname())<string::npos) {marfrac=iso->getmid()[nlab].mean*0.01; }
+    if((*labmet.getname()).find(*iso->getname())+1) {marfrac=iso->getmid()[nlab].mean*0.01; }
      result.push_back(*iso);
     liso.clear();
 //   while(segline[iro][cols[trac]]=="") if(iro<nstrok) iro++;

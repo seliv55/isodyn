@@ -223,7 +223,7 @@ class Metab_data:public Metab {
 
  data * getconc(){return conc;}
  int getmi(){return mi;}
- void setconc(double a){ conc[0].mean=a;}
+ void setconc(double a, int nt=0){ conc[nt].mean=a;}
  data * getexper(int nt){return &exper[nt][0];}
 
  void showmi(std::ostringstream& fo,int nt){
@@ -258,15 +258,15 @@ class Metab_data:public Metab {
  void wrikinc(std::string descr, std::ostringstream& so, int nt) {
     so<<descr<<"_c: ";  for(int i=0;i<nt;i++) so<<std::setw(9)<<this->kinc[i]; so<<"** "<<conc[nt-1].mean<<" -> "<<xicon[nt-1]<<std::endl;
  }
- void wrikinm0(std::ostringstream& so, int nt) {if(xi[nt-1]>0){
- so.precision(3);
+ void wrikinm0(std::ostringstream& so, int nt) {
+     if(xi[nt-1]>0){ so.precision(3);
       so<<std::setw(12)<<descr<<"_m0: ";
     for(int i=0;i<nt;i++)  so<<std::setw(9)<<this->kinm0[i];
-      so<<" : "<<std::setw(7)<<exper[nt-1][0].mean<<" -> "<<xi[nt-1]<<std::endl;
- } 
+    so<<" : "<<std::setw(7)<<exper[nt-1][0].mean<<" -> "<<xi[nt-1]<<std::endl;
+ }
  }
 
-  Metab_data(int n,std::string simya=""):Metab(n,simya){for(int i=0;i<tt;i++) exper[i]=new data[N+1];}
+  Metab_data(int n,std::string simya=" "):Metab(n,simya){for(int i=0;i<tt;i++) exper[i]=new data[N+1];}
   ~Metab_data(){for(int i=0;i<tt;i++) delete[] exper[i];}
 };
 
@@ -411,8 +411,8 @@ class ketose:public Metab_data {
 };
 
 class Ldistr {
-	int ntime,lmet,itrac,markis;
-  Metab_data gl, glycog, lac, glu, glu25, gln, pro, arg, rna, asp, asn, ala, ser, cys, agl, pyrm, coa, coac, gly, oa, oac, cit, akg, fum, mal;
+	int ntime,lmet,lmetb, lmetk, itrac,markis,Nn;
+  Metab_data gl, lac, glu, gln, rna, glycog, pro, asp, ala, ser, agl, pyrm, coa, coac, gly, oa, oac, cit, akg, fum, mal, glu25;
   Metab fbp, t3, pep, pyr, cthf, citc, akgc, e4;
   ketose h6, s7, p5;
   double lacout,coaefl,tca,fpdh,marfrac;
@@ -424,7 +424,7 @@ class Ldistr {
  void spInvsl(double *h6,double *dh6,double *t1,double *dt1,const double vf,const double tsum);
  void ast (double vf,double vr);
 
- void sklad(int itime){gl.skladc(itime);gl.skladm0(itime); glycog.skladc(itime);glycog.skladm0(itime); lac.skladc(itime); gln.skladc(itime); gln.skladm0(itime); lac.skladm0(itime); glu.skladm0(itime); glu25.skladm0(itime); ala.skladm0(itime); rna.skladm0(itime); gly.skladm0(itime); ser.skladm0(itime); pro.skladm0(itime); cit.skladm0(itime); agl.skladm0(itime); asp.skladm0(itime);  fum.skladm0(itime); mal.skladm0(itime);}
+ void sklad(int itime);
 
  void wrikin(std::ostringstream& so, int nt){
    for(int i=0;i<lmet;i++) met[i]->wrikinm0(so,nt);
@@ -442,6 +442,9 @@ class Ldistr {
 // void setm0(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
  public:
       static Metab_data *met[];
+      static Metab *metb[];
+      static ketose *metk[];
+      std::vector<Metab_data*> expcon, expm0;
        void setmet();
     void setfige();
     void read_con(std::ifstream& fi, std::string& arg1);
@@ -449,6 +452,7 @@ class Ldistr {
        void read (char *finame, int ndat);
        void flback();
        int getN();
+       int getNn(){return (Nn);}
        void ssc(double *);
        void distr(double *py,double *pdydt);
        double consum();
@@ -467,7 +471,9 @@ class Ldistr {
         double integrbs();
 	double ddisolve();
         int stor(double st[]) ;
-	Ldistr(): gl(6,"Gluc"), glycog(6,"Glycog"), lac(3,"Lac"), glu(5,"Glutamate2-4"), glu25(5,"Glutamate2-5"), gln(5,"Glutamin"), pro(5), arg(5), rna(5,"Rib"), asp(4,"Asp"), asn(4), ala(3), ser(3), cys(3), agl(3), h6(6), fbp(6),  t3(3), s7(7), pep(3), pyr(3), pyrm(3), coa(2), coac(2), gly(2), cthf(1),  oa(4), oac(4), cit(6,"Cit"), citc(6), akg(5), akgc(5), fum(4), mal(4,"Mal"), p5(5,"Rib"), e4(4) {setmet(); }
+	Ldistr(): gl(6,"Gluc"), lac(3,"Lac"), glu(5,"Glutamate2-4"), gln(5,"Glutamin"), rna(5,"Rib"), glycog(6,"Glycog"), pro(5,"Pro"), asp(4,"Asp"), ala(3,"Ala"), ser(3,"Ser"), agl(3,"Glycerol"), pyrm(3,"Pyr"), coa(2,"CoA"), coac(2), gly(2,"Gly"),  oa(4,"Oaa"), oac(4), cit(6,"Cit"), akg(5,"aKg"), fum(4,"Fum"), mal(4,"Mal"), glu25(5,"Glutamate2-5"),
+	 fbp(6), t3(3), pep(3), pyr(3), cthf(1), citc(6), akgc(5), e4(4),
+	  h6(6), s7(7), p5(5,"rib")  {setmet(); getN(); }
 	~Ldistr(void) { result.clear();}
 };
 
