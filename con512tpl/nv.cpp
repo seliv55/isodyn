@@ -10,18 +10,28 @@ using namespace std;
 const int hk=0, pfk=hk+1, fbpase=pfk+1, t3pep=fbpase+1, pept3=t3pep+1, pk=pept3+1, pyrlac=pk+1, lacpyr=pyrlac+1, pyrdcm=lacpyr+1, pyrdmc=pyrdcm+1, pdh=pyrdmc+1, citakg=pdh+1, akgfum=citakg+1, fumal=akgfum+1, malfum=fumal+1, fumout=malfum+1, maloa=fumout+1, oamal=maloa+1, pc=oamal+1, malicm=pc+1, malicc=malicm+1, pepck=malicc+1, ppp=pepck+1, oacd=ppp+1, mald=oacd+1, citdmc=mald+1, citdcm=citdmc+1, akgdmc=citdcm+1, akgdcm=akgdmc+1, coaout=akgdcm+1, coar=coaout+1, citakg1=coar+1, akgcit1=citakg1+1, gln_in=akgcit1+1, gln_out=gln_in+1, gln_pr=gln_out+1, gluin=gln_pr+1, gluout=gluin+1, t3ser=gluout+1, serpyr=t3ser+1, ser_pr=serpyr+1, sergly=ser_pr+1, glyser=sergly+1, thf=glyser+1, mthf=thf+1, asp_o=mthf+1, asp_i=asp_o+1, asp_pr=asp_i+1, ala_o=asp_pr+1, ala_i=ala_o+1, trpala=ala_i+1, ala_pr=trpala+1, r5_o=ala_pr+1, r5_i=r5_o+1, cystin=r5_i+1, proin=cystin+1, proout=proin+1, pro_pr=proout+1, kgin=pro_pr+1, coain=kgin+1, aglin=coain+1, aglout=aglin+1, glycogin=aglout+1, glycogout=glycogin+1, D=glycogout+1, cs0=D+1, resp=cs0+1, atpase=resp+1, rald=atpase+1, rta=rald+1, rtk=rta+1, nrea=rtk+1, 
 aldf=atpase+1, aldrev=aldf+1, aldfli=aldrev+1, aldi1=aldfli+1, tafl=aldi1+1, s7f6a=tafl+1, f6g3a=s7f6a+1, s7e4a=f6g3a+1, tkfl=s7e4a+1, s7p5=tkfl+1, f6p5=s7p5+1, p5f6=f6p5+1, f6s7=p5f6+1, s7f6=f6s7+1, p5g3i=s7f6+1, f6e4i=p5g3i+1, s7p5i=f6e4i+1, nflx =s7p5i+1;
 
-const int nh6=0, nfbp=nh6+1, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, ncoa=npyrm+1, noa=ncoa+1, noac=noa+1, ncit=noac+1, ncitc=ncit+1, nakg=ncitc+1, nakgc=nakg+1, nfum=nakgc+1, nmal=nfum+1, np5=nmal+1, ne4=np5+1, ns7=ne4+1, natp=ns7+1, nnad=natp+1, ngl=nnad+1, nlac=ngl+1, nglu=nlac+1, ngln=nglu+1, nala=ngln+1, nasp=nala+1, nser=nasp+1, npro=nser+1, nrna=npro+1, ngly=nrna+1, ncthf=ngly+1, ncoac=ncthf+1, nagl=ncoac+1, nglycog=nagl+1, nmet=nglycog+1, numx=nnad+1;
+const int ngl=0, nlac=ngl+1, nglu=nlac+1, ngln=nglu+1, nrna=ngln+1, nglycog=nrna+1, npro=nglycog+1, nasp=npro+1, nala=nasp+1, nser=nala+1, nagl=nser+1, npyrm=nagl+1, ncoa=npyrm+1, ncoac=ncoa+1, ngly=ncoac+1, noa=ngly+1, noac=noa+1, ncit=noac+1, nakg=ncit+1, nfum=nakg+1, nmal=nfum+1, nglu25=nmal+1,
+nfbp=nmal+1, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, ncthf=npyr+1, ncitc=ncthf+1, nakgc=ncitc+1, ne4=nakgc+1,
+nh6=ne4+1, ns7=nh6+1, np5=ns7+1, natp=np5+1, nnad=natp+1, numx=nnad+1;
 
 Fit Problem;
 const double thft(1.);
-double dt, xx[nmet],flx[nflx],fluxes[nflx];
-double xm0,xinit1[nmet],xinit2[nmet];
+double dt, xx[numx],flx[nflx],fluxes[nflx];
+double xm0,xinit1[numx],xinit2[numx];
 //   string Parray::namef[nflx], Parray::namex[numx];
    string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[numx];
  Reapar Parray::rea[nrea];
  double Analis::nv1[nrea], Analis::nv2[nrea];
- Metab_data *Ldistr::met[numx];
- void Ldistr::setmet(){met[nmet];met[0]=&rna; met[1]=&lac; met[2]=&glu; met[3]=&gl; met[4]=&glu25; met[5]=&glycog; met[6]=&cit; met[7]=&asp; met[8]=&mal; met[9]=&gln;}
+      Metab_data *Ldistr::met[nfbp+1];
+      Metab *Ldistr::metb[nh6-nfbp];
+      ketose *Ldistr::metk[natp-nh6];
+// void Ldistr::setmet(){ met[0]=&rna; met[1]=&lac; met[2]=&glu; met[3]=&gl; met[4]=&glu25; met[5]=&glycog; met[6]=&cit; met[7]=&asp; met[8]=&mal; met[9]=&gln;}
+ void Ldistr::setmet(){ met[ngl]=&gl; met[nlac]=&lac; met[nglu]=&glu; met[ngln]=&gln; met[nrna]=&rna; met[nglycog]=&glycog; met[npro]=&pro; met[nasp]=&asp; met[nala]=&ala; met[nser]=&ser; met[nagl]=&agl; met[npyrm]=&pyrm; met[ncoa]=&coa; met[ncoac]=&coac; met[ngly]=&gly; met[noa]=&oa; met[noac]=&oac; met[ncit]=&cit; met[nakg]=&akg; met[nfum]=&fum; met[nmal]=&mal; met[nglu25]=&glu25;
+metb[nfbp-nfbp]=&fbp; metb[nt3-nfbp]=&t3; metb[npep-nfbp]=&pep; metb[npyr-nfbp]=&pyr; metb[ncthf-nfbp]=&cthf; metb[ncitc-nfbp]=&citc; metb[nakgc-nfbp]=&akgc; metb[ne4-nfbp]=&e4;
+ metk[nh6-nh6]=&h6; metk[ns7-nh6]=&s7; metk[np5-nh6]=&p5;
+  lmet=nfbp; lmetb=nh6-nfbp; lmetk=numx-nh6-2;
+ }
+
  
 void Parray::rnames(ifstream& fi){
    for (int i=0;i<nflx;i++)

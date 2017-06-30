@@ -25,10 +25,10 @@ double Analis::descent(double factor,int ip){
      Problem.rea[parcp[i]].setVm(oval*factor); cout << parcp[i] << ")";
       try{ sol =solve();  xi1 =get<0>(sol);
     if(((xi1*tf/chimin/tmin)<1)&&(suxx<xmin)) {Problem.write(sol,ifn); Problem.storeVms(nrea,nv1);
-                   for(int i=0;i<nmet;i++) xinit1[i]=xx[i]; chimin=xi1; tmin=tf; xmin=suxx;} 
+                   for(int i=0;i<numx;i++) xinit1[i]=xx[i]; chimin=xi1; tmin=tf; xmin=suxx;} 
      else {factor = 1./factor; ++flag; Problem.rea[parcp[i]].setVm(oval);}
     }  catch( char const* str ){cout << "Analis::descent: "<< str <<endl; Problem.restoreVm(nrea,nv2);
-                 for(int i=0;i<nmet;i++) xinit1[i]=xinit2[i];}
+                 for(int i=0;i<numx;i++) xinit1[i]=xinit2[i];}
       
         }//end while flag
 	 parcp.erase(parcp.begin()+i); npf=parcp.size();}
@@ -179,9 +179,9 @@ cout<< "\nPerturbation+CoordinateDescent:\nPar#\txi2con\txi2iso\tParValue\tdif:"
 //    double dm(1.);  while(dm>limdx) { dm=dermax(); if(dm>1.) {xi=get<0>(solve());  Problem.write(tf,ifn,xi,suxx,0); break;}}
     xi=get<0>(solve()); xi=get<0>(sol);
     if((xi*tf*suxx/(x00*tmin*xmin))<1) {Problem.write(sol,ifn); x00=xi; tmin=tf; xmin=suxx;
-                              for(int i=0;i<nmet;i++) xinit1[i]=xx[i];} 
+                              for(int i=0;i<numx;i++) xinit1[i]=xx[i];} 
     }  catch( char const* str ){cout << "Analis::coord: "<< str <<endl; Problem.restoreVm(nrea,nv2);
-                 for(int i=0;i<nmet;i++) xinit1[i]=xinit2[i];}
+                 for(int i=0;i<numx;i++) xinit1[i]=xinit2[i];}
                  }
 // chimin=xi; dif0=dif;sol
    descent(fdes,-2);

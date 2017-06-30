@@ -61,16 +61,17 @@ ddassl_(res,numx,t,xx,yprime,tout,info,rtol,atol,idid,rwork,lrw,iwork, liw,  rpa
 //    dlt=horse.dilut();
 //	for(unsigned i=0;i<Nn;i++) ystart[i]=y[i];
 //}
-void resd02(int& neq,double& t,double y[],double ydot[],double r[],int& ires,int *iuser,double *ruser){        double f[Nn];
+void resd02(int& neq,double& t,double y[],double ydot[],double r[],int& ires,int *iuser,double *ruser){
+        double f[horse.getNn()];
 	horse.distr(y, f);
-	for(unsigned i=0;i<Nn;i++) r[i]=f[i]-ydot[i];
+	for(unsigned i=0;i<horse.getNn();i++) r[i]=f[i]-ydot[i];
 }
 void jacd02(int NEQ,double t,double y[],double YDOT[],double **PD,double& cj,int *iuser,double *ruser){};
 
 void isores(const double& T, double y[],const double yprime[], double delta[], int& iRes, const double rPar[], const int iPar[]){
-       double f[Nn];
+       double f[horse.getNn()];
 	horse.distr(y, f);
-	for(unsigned i=0;i<Nn;i++) delta[i]=f[i]-yprime[i];
+	for(unsigned i=0;i<horse.getNn();i++) delta[i]=f[i]-yprime[i];
 }
 
 double Ldistr::ddisolve() {
@@ -120,16 +121,16 @@ void Jacobian(double x, double *y, double **J){}
 void isosT::Jacobian(double x, double *y, double **dfdy){
 	int i,j;
 //	int Nn=y.size();
-        double dydx0[Nn];
-        double dydx1[Nn];
+        double dydx0[horse.getNn()];
+        double dydx1[horse.getNn()];
 	double dy,aa;
 		Function(x,y,dydx0);
-	for ( i=0;i<Nn;i++) { aa=y[i];
+	for ( i=0;i<horse.getNn();i++) { aa=y[i];
 	   if(aa>0.0001) dy=aa*0.01; else dy=0.000001;
 		y[i] += dy;
 		Function(x,y,dydx1);
 		y[i] = aa;
-		for ( j=0;j<Nn;j++) {
+		for ( j=0;j<horse.getNn();j++) {
 		dfdy[j][i] = (dydx1[j] - dydx0[j]) / dy;
 		}
 	}
@@ -201,7 +202,7 @@ for(int i=0;i<kmax;i++){
 	delete atoler;
 }
 void tisolve(const double tmax){
-	double y[Nn];
+	double y[horse.getNn()];
         horse.ssc(y);
 	double xbeg(0.0), xend = tmax, dx(10.0);
 	// rtoler and atoler are scalars
@@ -236,14 +237,14 @@ void tisolve(const double tmax){
 	
 	double beta = 0.03;
 	int nstiff = -1;
-	int nrdens = Nn;
+	int nrdens = horse.getNn();
 	unsigned *icont = NULL;
 //   cout<<"t0="<<t0<<"; t1="<<t1<<endl;
 /*	insT nonstiffT(Nn, y, xbeg, xend, dx, nrdens, itoler, rtoler, atoler, iout, 
 	  hinit, hmax, nmax, uround, safe, facl, facr, beta, nstiff, icont);
 	nonstiffT.Integrate();
 */	
-	isosT stiso(Nn, y, xbeg, xend, dx, itoler, rtoler, atoler,
+	isosT stiso(horse.getNn(), y, xbeg, xend, dx, itoler, rtoler, atoler,
 		iout, hinit, hmax, nmax, uround, safe, facl, facr, ijac, mljac,
 		mujac, imas, mlmas, mumas, nit, startn, nind1, nind2, nind3, npred,
 		m1, m2, hess, fnewt, quot1, quot2, thet);
@@ -319,18 +320,18 @@ void  NR::jacobn_s(const DP x, Vec_IO_DP &y, Vec_O_DP &dfdx, Mat_O_DP &dfdy)
 {
 	int i,j;
 //	int Nn=y.size();
-	for (i=0;i<Nn;i++) dfdx[i]=0.0; 
-        Vec_DP dydx0(Nn);
-        Vec_DP dydx1(Nn);
+	for (i=0;i<horse.getNn();i++) dfdx[i]=0.0; 
+        Vec_DP dydx0(horse.getNn());
+        Vec_DP dydx1(horse.getNn());
 	double dy,aa;
 		derivsl(x,y,dydx0);
-	for ( i=0;i<Nn;i++) { aa=y[i]; 
+	for ( i=0;i<horse.getNn();i++) { aa=y[i]; 
 		if (y[i]>0.0001) dy= y[i]*0.01;
 		  else dy= 0.00001;
 		  y[i] += dy;
 		derivsl(x,y,dydx1);
 		y[i] = aa;
-		for ( j=0;j<Nn;j++) {
+		for ( j=0;j<horse.getNn();j++) {
 		dfdy[j][i] = (dydx1[j] - dydx0[j]) / dy;
 		}
 	}
