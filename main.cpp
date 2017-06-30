@@ -46,19 +46,19 @@ inline void chekxi(char *efi){
 
     tuple<double,double,time_t> sol0;
     
-void Ldistr::read_con(ifstream& fi, string& arg1){int kmet;
-       string cell=arg1.substr(arg1.find_last_of('/')+1); cout<<"cell="<<cell<<endl;
-      string aaa; int isu, ntime(2);
-      fi>>isu>>aaa>>ntime>>aaa; double conc;
-      while(!fi.eof()){getline(fi,aaa);  if((aaa.find(cell)+1)) break;}
-      if(!fi.eof()){
-      for(int i=0;i<ntime;i++) {double ta; fi>>ta>>aaa; texcon.push_back(ta); cout<<"tex="<<texcon[i]<<endl;}
-      for(int i=0;i<isu;i++){
-       fi>>aaa; cout<<aaa<<"  "; for(int k=0;k<10;k++)
-              if(aaa.find(met[k]->getdescr())+1) {kmet=k;cout<<met[k]->getdescr()<<endl; break;}
-        for(int j=0;j<ntime;j++) {fi>>conc; met[kmet]->setconc(conc,j);}
-      }
-   }   }
+//void Ldistr::read_con(ifstream& fi, string& arg1){int kmet;
+//       string cell=arg1.substr(arg1.find_last_of('/')+1); cout<<"cell="<<cell<<endl;
+//      string aaa; int isu, ntime(2);
+//      fi>>isu>>aaa>>ntime>>aaa; double conc;
+//      while(!fi.eof()){getline(fi,aaa);  if((aaa.find(cell)+1)) break;}
+//      if(!fi.eof()){
+//      for(int i=0;i<ntime;i++) {double ta; fi>>ta>>aaa; texcon.push_back(ta); cout<<"tex="<<texcon[i]<<endl;}
+//      for(int i=0;i<isu;i++){
+//       fi>>aaa; cout<<aaa<<"  "; for(int k=0;k<10;k++)
+//              if(aaa.find(met[k]->getdescr())+1) {kmet=k;cout<<met[k]->getdescr()<<endl; break;}
+//        for(int j=0;j<ntime;j++) {fi>>conc; met[kmet]->setconc(conc,j);}
+//      }
+//   }   }
 
 int main( int argc, char *argv[] ){
    double tmp,xi0;ofstream kkin("kinxx"); 
@@ -66,8 +66,8 @@ int main( int argc, char *argv[] ){
    int itmp; bool check;
          fex1=argv[1]; fex2=fex1;
          
-     string arg1(argv[1]),name; ifstream fi("xconc");
-     horse.read_con(fi,arg1);
+//     string arg1(argv[1]),name; ifstream fi("xconc");
+//     horse.read_con(fi,arg1);
          
      Problem.setodir(argv[2]); //set output directory
       ifn=Problem.setnumofi(); //number of parameter files
