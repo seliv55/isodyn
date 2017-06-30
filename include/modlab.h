@@ -223,7 +223,7 @@ class Metab_data:public Metab {
 
  data * getconc(){return conc;}
  int getmi(){return mi;}
- void setconc(double a){ conc[0].mean=a;}
+ void setconc(double a,int nt=0){ conc[nt].mean=a;}
  data * getexper(int nt){return &exper[nt][0];}
 
  void showmi(std::ostringstream& fo,int nt){
