@@ -15,15 +15,15 @@ citakg 0.00918257 0.0126607 mito_cit>akg x[ncit]->x[nakg]
 akgfum 0.505524 0.564202 mito_akg>fum x[nakg]->x[nfum]
 fumal 0.591548 0.682736 fumarate>malate x[nfum]->x[nmal]
 malfum 0.0315576 0.0735248 malate>fumarate x[nmal]->x[nfum]
-fumout 0.0328389 0.0379011 fumarate_use x[nfum]->
+fumout 0.0328389 0.0394201 fumarate_use x[nfum]->
 maloa 0.3234 0.602204 MDH_for x[nmal]->x[noa]
 oamal 0.213099 0.430005 MDH_rev x[noa]->x[nmal]
 pc 0.0250912 0.0278077 pyr_carboxylase x[npyrm]->x[noa]
 malicm 0.235905 0.326818 malic_mito x[nmal]->x[npyrm]
-malicc 0.192014 0.211906 malic_citosol x[noac]->x[npyr]
+malicc 0.192014 0.219312 malic_citosol x[noac]->x[npyr]
 pepck 1.92612e-05 2.08356e-05 PEPCK x[noa]->x[npep]
 ppp 0.256392 0.25665 PPP_oxidative x[nh6]->x[np5]
-oacd 0.0175336 0.036931 mal_diffus_cito>mito x[noac]->x[nmal]
+oacd 0.00928137 0.036931 mal_diffus_cito>mito x[noac]->x[nmal]
 mald 0.150852 0.16035 mal_diffus_mito>cito x[nmal]->x[noac]
 citdmc 0.0890525 0.100408 cit_diffus-mito>cyto x[ncit]->x[ncitc]
 citdcm 0.00101383 0.00190993 cit_diffus-cyto>mito x[ncitc]->x[ncit]
@@ -45,11 +45,11 @@ sergly 0.0833394 0.0896129 serine>glycine x[nser]->x[ngly]+x[ncthf]
 glyser 0.0684878 0.0685084 glycine>serine x[ngly]+x[ncthf]->x[nser]
 thf 2.88504e-06 3.087e-06 tetrahydrofolate_demetilation x[ncthf]->xthf
 mthf 0 0 tetrahydrofolate_metilation xthf->x[ncthf]
-asp_o 0.00114455 0.00128076 aspartate_secretion x[noac]->x[nasp]
+asp_o 0.00064266 0.00128076 aspartate_secretion x[noac]->x[nasp]
 asp_i 0.084015 0.084015 aspartate_uptake x[nasp]->x[nfum]
-asp_pr 0.00164727 0.00444612 aspartate>proteins x[nasp]->
-ala_o 0.0101825 0.0115845 alanine_secretion x[nt3]->x[nala]
-ala_i 0.0126321 0.0140682 alanine_uptake x[nala]->x[npyr]
+asp_pr 0.00115865 0.00444612 aspartate>proteins x[nasp]->
+ala_o 0.0101825 0.011663 alanine_secretion x[nt3]->x[nala]
+ala_i 0.0126321 0.0140807 alanine_uptake x[nala]->x[npyr]
 trpala 0.00259844 0.00259844 alanine_secretion ->x[nala]
 ala_pr 0 0 alanine>proteins x[nala]->
 r5_o 0.256373 0.256635 r5p_use x[np5]->x[nrna]
@@ -58,7 +58,7 @@ cystin 0.445454 0.51 cystein>pyruvate ->x[npyr]
 proin 1.08428e-06 2.1164e-06 proline_use x[npro]->x[nakgc]
 proout 0.000522955 0.000559689 proline_secretion x[nakgc]->x[npro]
 pro_pr 0 0 proline>proteins x[npro]->
-kgin 0.00268228 0.00268228 aminoacids>akg ->x[nakg]
+kgin 0.00250681 0.00268228 aminoacids>akg ->x[nakg]
 coain 0 0 accoa_production ->x[ncoa]
 aglin 0.00297982 0.00318841 a-glycerate_in x[nagl]->x[nt3]
 aglout 0.437392 0.44365 a-glycerate_out x[nt3]->x[nagl]
@@ -85,5 +85,5 @@ s7f6 1.70171e-06 1.76561e-06 transketolase x[ns7]->x[nh6]
 p5g3i 0.000148743 0.000171424 transketolase x[np5]<->x[nt3]
 f6e4i 2.46316e-07 3.48619e-07 transketolase x[nf6]<->x[ne4]
 s7p5i 1.70151e-05 1.99381e-05 transketolase x[]->x[]
-chi 2.51141
-time 2.04506e+06
+chi 2.50093
+time 966636

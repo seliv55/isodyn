@@ -13,14 +13,14 @@ pyrdmc 0.005361 0.005361 pyr_mito>cytosol x[npyrm]->x[npyr]
 pdh 0.000227572 0.000227572 PDH x[npyrm]->x[ncoa]
 citakg 0.133519 0.163567 mito_cit>akg x[ncit]->x[nakg]
 akgfum 2.32751 4.68145 mito_akg>fum x[nakg]->x[nfum]
-fumal 0.372431 0.398501 fumarate>malate x[nfum]->x[nmal]
+fumal 0.372431 0.426396 fumarate>malate x[nfum]->x[nmal]
 malfum 0.0304623 0.0304623 malate>fumarate x[nmal]->x[nfum]
-fumout 0.0001 0.0001 fumarate_use x[nfum]->
+fumout 0.0001 0.00011449 fumarate_use x[nfum]->
 maloa 0.00205031 0.00205031 MDH_for x[nmal]->x[noa]
 oamal 0.00227212 0.00227212 MDH_rev x[noa]->x[nmal]
 pc 0.000101387 0.000101387 pyr_carboxylase x[npyrm]->x[noa]
 malicm 0.000942389 0.00189548 malic_mito x[nmal]->x[npyrm]
-malicc 0.00178504 0.00178504 malic_citosol x[noac]->x[npyr]
+malicc 0.00178504 0.00359035 malic_citosol x[noac]->x[npyr]
 pepck 7.23342e-08 7.23342e-08 PEPCK x[noa]->x[npep]
 ppp 0.00043228 0.00043228 PPP_oxidative x[nh6]->x[np5]
 oacd 0.000121883 0.00024515 mal_diffus_cito>mito x[noac]->x[nmal]
@@ -48,7 +48,7 @@ mthf 0 0 tetrahydrofolate_metilation xthf->x[ncthf]
 asp_o 8.7018e-06 8.7018e-06 aspartate_secretion x[noac]->x[nasp]
 asp_i 0.000140025 0.000140025 aspartate_uptake x[nasp]->x[nfum]
 asp_pr 0.000107988 0.000107988 aspartate>proteins x[nasp]->
-ala_o 4.25469e-05 4.25469e-05 alanine_secretion x[nt3]->x[nala]
+ala_o 4.25469e-05 4.55252e-05 alanine_secretion x[nt3]->x[nala]
 ala_i 0.00115505 0.00115505 alanine_uptake x[nala]->x[npyr]
 trpala 4.33073e-06 4.33073e-06 alanine_secretion ->x[nala]
 ala_pr 0 0 alanine>proteins x[nala]->
@@ -58,7 +58,7 @@ cystin 0.000794393 0.000850001 cystein>pyruvate ->x[npyr]
 proin 2.32389e-06 2.32389e-06 proline_use x[npro]->x[nakgc]
 proout 8.7248e-07 9.33554e-07 proline_secretion x[nakgc]->x[npro]
 pro_pr 0 0 proline>proteins x[npro]->
-kgin 4.47047e-06 4.47047e-06 aminoacids>akg ->x[nakg]
+kgin 4.17801e-06 4.47047e-06 aminoacids>akg ->x[nakg]
 coain 0 0 accoa_production ->x[ncoa]
 aglin 5.01603e-06 5.36715e-06 a-glycerate_in x[nagl]->x[nt3]
 aglout 0.000783917 0.000783917 a-glycerate_out x[nt3]->x[nagl]
@@ -71,5 +71,5 @@ atpase 0.0104466 0.0104466 atpase x[atp]->adp
 aldf 0.00863182 0.00863182 aldolase_for x[nfbp]->x[nt3]
 aldrev 0.000240936 0.000257802 aldolase_rev x[nt3]->x[nfbp]
 aldfli 5.15339e-07 5.15339e-07 aldolase_exchange x[nt3]<->x[nfbp]
-chi 2.51141
-time 2.04506e+06
+chi 2.50093
+time 966636
