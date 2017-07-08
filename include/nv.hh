@@ -58,7 +58,7 @@ public:
 };
 class Fit: public Parray{
 	int i68, i90, i95, i99, fnfin;
-	std::string outdir;
+	std::string outdir, indir;
     public:	
       void stat(const int NP );
       std::tuple<double,double,time_t> read(std::string fn);
@@ -78,8 +78,11 @@ class Fit: public Parray{
       void ff(const double *y,double *dydx);
       int getparsize(){for(unsigned i=0;i<par.size();i++) std::cout<<par[i]<<" "; std::cout<<"\n"; return par.size();}
  
-    void setodir(char *filo){ std::string infi(filo);
-         int pos=infi.find_last_of('/');   outdir=infi.substr(0,pos+1); }
+    std::string setiodir(char *filo){ std::string infi(filo);
+         int pos=infi.find_last_of('/');   outdir=infi.substr(0,pos+1);
+         indir=outdir; indir.back()=' ';
+         pos=indir.find_last_of('/');      indir=indir.substr(0,pos+1);
+          return indir;}
          
     std::string* getodir(){return &outdir;}
          

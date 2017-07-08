@@ -69,7 +69,7 @@ int main( int argc, char *argv[] ){
 //     string arg1(argv[1]),name; ifstream fi("xconc");
 //     horse.read_con(fi,arg1);
          
-     Problem.setodir(argv[2]); //set output directory
+     string indir=Problem.setiodir(argv[2]); //set output directory
       ifn=Problem.setnumofi(); //number of parameter files
      
   if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
@@ -89,7 +89,8 @@ int main( int argc, char *argv[] ){
 //    tsolve(35000.);  for(int i=0;i<numx;i++)  xinit1[i]=xx[i];
        Problem.shownx(numx,xx);         // print concentrations on screen
      kkin<<kin0;  kkin.close();         //save concentration dynamics to "kinxx"
-        int sys=system("gnuplot plkin.p");//gnuplot -e 'var=value' script.gp
+    std::string comm=("gnuplot -e  \"filename=\'"+indir+"sconc.png\'\" plkin.p");
+        int sys=system(comm.c_str());//gnuplot -e 'var=value' script.gp
 //  xi0=horse.integrbs();                 //solve ODEs for isotopomers
   sol0=solve();//horse.integrbs();                 //solve ODEs for isotopomers
        Problem.shownx(numx,xx);         // print concentrations on screen
@@ -104,6 +105,7 @@ int main( int argc, char *argv[] ){
 //   xi0+=horse.integrbs();
 //  xi0+=horse.ddisolve();
 //       tf=clock()-ts;
+		 cout<<comm<<endl;
 	} catch( char const* str ){cout << "exception: "<< str <<endl;}
 //     cout<<foc; kkin.open("kinetics"); kkin<<kin<<endl; kkin.close();
 //      suxx=horse.label(); 
@@ -127,6 +129,6 @@ int main( int argc, char *argv[] ){
 //               analis.sensitiv(tmax);
 //               analis.swarm(tmax,111);
 //               analis.grad(tmax);
-}
+ }
 return 0;}
 

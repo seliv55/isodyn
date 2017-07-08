@@ -1,5 +1,5 @@
 set t pngcairo enhanced dashed font "arial,12" size 1000,500;
-set output "figs/sconc.png";
+set output filename;
 set multiplot layout 2,5
 set border 3;
 set xrange [0:500]
