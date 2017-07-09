@@ -89,7 +89,7 @@ int main( int argc, char *argv[] ){
 //    tsolve(35000.);  for(int i=0;i<numx;i++)  xinit1[i]=xx[i];
        Problem.shownx(numx,xx);         // print concentrations on screen
      kkin<<kin0;  kkin.close();         //save concentration dynamics to "kinxx"
-    std::string comm="gnuplot -e  \"filename=\'"+indir+"sconc.png\'\" "+indir+"plkin.p";
+    std::string comm="gnuplot -e  \"filename=\'"+indir+"sconc.png\'\"  -e  \"fn2=\'"+indir+"kinxx\'\" "+indir+"plkin.p";
         int sys=system(comm.c_str());//gnuplot -e 'var=value' script.gp
 //  xi0=horse.integrbs();                 //solve ODEs for isotopomers
   sol0=solve();//horse.integrbs();                 //solve ODEs for isotopomers

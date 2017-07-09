@@ -17,34 +17,34 @@ set style line 2 lt 1 lw 1.5 lc rgb "#4e9a06"
 set label 1 "A"  at graph 0.15,0.95;
 set yrange [*:*]
 set key at graph 0.6,0.3 left Right  spacing 1.0 samplen 1 font "arial,11";
-plot 'kinxx' u ($1)/60:nfbp w l ls 1 t "fbp", 'kinxx' u ($1)/60:npyr w l ls 2 t "pyr"
+plot fn2 u ($1)/60:nfbp w l ls 1 t "fbp", fn2 u ($1)/60:npyr w l ls 2 t "pyr"
 
 set label 1 "B";
-plot 'kinxx' u ($1)/60:natp w l ls 1 t "atp", 'kinxx' u ($1)/60:nnad w l ls 2 t "nad"
+plot fn2 u ($1)/60:natp w l ls 1 t "atp", fn2 u ($1)/60:nnad w l ls 2 t "nad"
 
 set label 1 "C";
-plot 'kinxx' u ($1)/60:ncoa w l ls 1 t "accoa"
+plot fn2 u ($1)/60:ncoa w l ls 1 t "accoa"
 
 set label 1 "D";
-plot 'kinxx' u ($1)/60:ncit w l ls 1 t "cit"
+plot fn2 u ($1)/60:ncit w l ls 1 t "cit"
 
 set label 1 "E";
-plot 'kinxx' u ($1)/60:nakg w l ls 1 t "akg"
+plot fn2 u ($1)/60:nakg w l ls 1 t "akg"
 
 set label 1 "F";
-plot 'kinxx' u ($1)/60:nmal w l ls 1 t "mal"
+plot fn2 u ($1)/60:nmal w l ls 1 t "mal"
 
 set label 1 "G";
-plot 'kinxx' u ($1)/60:npep w l ls 1 t "pep"
+plot fn2 u ($1)/60:npep w l ls 1 t "pep"
 
 set label 1 "H";
-plot 'kinxx' u ($1)/60:ne4 w l ls 1 t "e4"
+plot fn2 u ($1)/60:ne4 w l ls 1 t "e4"
 
 set label 1 "I";
-plot 'kinxx' u ($1)/60:noa w l ls 1 t "oa"
+plot fn2 u ($1)/60:noa w l ls 1 t "oa"
 
 set label 1 "J";
-plot 'kinxx' u ($1)/60:npyrm w l ls 1 t "pyrm"
+plot fn2 u ($1)/60:npyrm w l ls 1 t "pyrm"
 
 unset multiplot;
 
