@@ -82,7 +82,7 @@ class Fit: public Parray{
          size_t pos=infi.find_last_of('/');   outdir=infi.substr(0,pos+1);
           std::string indir=outdir.substr(0,outdir.length()-1);
             pos=indir.find_last_of('/');
-             if(pos!=std::string::npos) return indir.substr(0,pos);
+             if(pos!=std::string::npos) return indir.substr(0,pos+1);
              else return "";}
          
     std::string* getodir(){return &outdir;}
