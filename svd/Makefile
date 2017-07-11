@@ -1,4 +1,4 @@
-CFLAGS = -static -O3 -c -I../include -I../integrT
+CFLAGS = -std=c++11 -static -O3 -c -I../include -I../integrT
 
 SRC = coord.cpp  solvers.cpp  svd.cpp
 

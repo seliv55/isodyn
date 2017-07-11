@@ -114,7 +114,7 @@ e4.iso= &pyinit[e4.ny];
 }
 
 void Ldistr::massfr() {
-gl.percent(); glycog.percent(); lac.percent(); glu.percent(1,1); glu25.percent(1,0); gln.percent(); ala.percent(); ser.percent(); agl.percent(); rna.percent(); asp.percent(); pro.percent(); pyr.percent(); pyrm.percent(); oa.percent(); oac.percent(); cit.percent(); citc.percent(); akg.percent(); fum.percent(); mal.percent(); coac.percent(); gly.percent(); cthf.percent(); }
+gl.percent(); glycog.percent(); lac.percent(); glu.percent(1,1); glu25.percent(1,0); gln.percent();  ala.percent(); ser.percent(); agl.percent(); rna.percent(); asp.percent(); pro.percent(); pyr.percent(); pyrm.percent(); oa.percent(); oac.percent(); cit.percent(); citc.percent(); akg.percent(); fum.percent(); mal.percent(); coac.percent(); gly.percent(); cthf.percent(); }
 
 double Ldistr::xits(int its) {int itp=its-1; double xi=0;
 for(int i=0;i<lmet;i++) xi += met[i]-> chisq(its,met[i]->getmi());

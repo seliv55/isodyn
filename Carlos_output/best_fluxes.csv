@@ -1,0 +1,20 @@
+ID,Name,Stoichiometry,Minimum,Maximum
+Rbottom_Glc,Glyceraldehyde phosphate dehydrogenase,Gap_c --> Pep_c,0.9999,1.0
+RextraPyr,extra pyruvate, --> Pyr_c,0.0,0.0001
+Rfba,Aldolase,Fru16bp_c <=> Dhap_c + Gap_c,0.499933,0.5
+Rglc6p_pdif,Difussion between Glucose 6-phosphate pools,Glc6p_a_c <=> Glc6p_b_c,0.49995,0.500017
+RglcEx,Glucose uptake, --> Glc_c,0.4036,0.4037
+RglycEx,Glycogen utilization, --> Glc6p_a_c,0.09625,0.096417
+Rhex1,Hexokinase,Glc_c --> Glc6p_a_c,0.4036,0.4037
+RlacEx,Lactate release,Lac_c --> ,1.0,1.0
+Rldh_l,L-lactate dehydrogenase,Pyr_c <=> Lac_c,1.0,1.0
+RoxPPP,Glucose 6-Phosphate dehydrogenase,Glc6p_b_c --> Rul5p_c,0.0,0.0001
+Rpfk,Phosphofructokinase,Fru6p_c --> Fru16bp_c,0.499933,0.5
+Rpgi,Glucose-6-phosphate isomerase,Glc6p_b_c <=> Fru6p_c,0.499867,0.5
+Rpyk,Pyruvate Kinase,Pep_c --> Pyr_c,0.9999,1.0
+Rrpe,Ribulose 5 phosphate epimerase,Rul5p_c <=> Xyl5p_c,0.0,6.7e-05
+Rrpi,Ribose phosphate isomerase,Rul5p_c <=> Rib5p_c,0.0,3.3e-05
+Rtala,Transaldolase,Gap_c + Sed7p_c <=> E4p_c + Fru6p_c,0.0,3.3e-05
+Rtkt1,Transketolase 1,Rib5p_c + Xyl5p_c <=> Gap_c + Sed7p_c,0.0,3.3e-05
+Rtkt2,Transketolase 2,E4p_c + Xyl5p_c <=> Fru6p_c + Gap_c,0.0,3.3e-05
+Rtpi,Triose-phosphate isomerase,Dhap_c <=> Gap_c,0.499933,0.5

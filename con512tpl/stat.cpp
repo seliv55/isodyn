@@ -15,58 +15,58 @@ double Fit::dermax(){    double dx[numx];     f(xx,dx);
             double xpos=positive(dx[i]); if(xpos>ma) ma=xpos;}
                                              return ma;}
                                              
-double Fit::read(int &t,double &c, string fn){
- int i; string aaa;  ifstream fi(fn.c_str()); string ppp;
- static int flg=0;
-  if(!fi.good()) return (1.e12);
+tuple<double,double,time_t> Fit::read(string fn){
+ int i, ip; string aaa;  ifstream fi(fn.c_str()); string ppp;
+ static int flg=0; tuple<double,double,time_t> sol(1.e12,0.,0);
+  if(!fi.good()) return sol;
     for (i=0;i<nrea;i++) rea[i].read(fi,flg); 
-	for(i=1;;i++) {fi>>par[i]; if(par[i]<0) {par[0]=i; break;}}
+	for(i=0;;i++) {fi>>ip; if(ip<0) break; par.push_back(ip);}
 	for (i=0;i<numx;i++) {fi>>aaa>>namex[i]>>xx[i];}
-        for (i=0;i<nflx;i++) fi>>aaa>>namef[i]>>flx[i]; if(flx[pfk]<1e-7) cout<<fn<<"!!!: hk=0"<<endl; 
-		fi >> xi >> t >> c;// if((flx[0]<0.1)||(flx[0]>0.2)) xi += 100.;
+        for (i=0;i<nflx;i++) fi>>aaa>>fid[i]>>flx[i]; if(flx[pfk]<1e-7) cout<<fn<<"!!!: hk=0"<<endl; 
+		fi >> get<0>(sol) >> get<2>(sol) >> get<1>(sol);// if((flx[0]<0.1)||(flx[0]>0.2)) xi += 100.;
 	fi.close(); flg++; //cout<<fn<<"; xi="<<xi<<endl;
-return xi;}
+return sol;}
 
-void Fit::write (time_t tf, int& ifn,const double xi0,const double xm,bool flg) const {
+void Fit::write (tuple<double,double,time_t> sol, int& ifn,bool flg) const {
          int i; stringstream fn;
-            if(flg) ifn=setnumofi();
+            if(flg) ifn=setnumofi();  if((ifn>fnfin)&&(ifn<(fnfin+5))) throw(invalid_argument("limit number of iterations reached"));
     fn<<outdir<<ifn; //sprintf(fn,"%i",ifn);
   ofstream fi(fn.str().c_str());
     for (i=0;i<nrea;i++) rea[i].write(fi,i); 
-	for (i=1; i<par[0]; i++) fi << par[i]<<" "; fi << "-1" << endl;
-  for (i=0;i<numx;i++) fi<<i<<") "<<setw(9)<<left<<namex[i]<<" "<<xx[i]<<endl;
-	for (i=0;i<nflx;i++) fi<<i<<") "<<setw(9)<<left<<namef[i]<< " "<<(flx[i]*1000.*dt)<<endl;
-		fi << xi0 <<endl;
-		fi << tf <<endl;
-		fi << xm <<endl;
-		fi << dif <<endl;
+	for (i=0;i<par.size();i++) fi << par[i]<<" "; fi << "-1\n";
+  for (i=0;i<numx;i++) fi<<i<<") "<<setw(9)<<left<<namex[i]<<" "<<xx[i]<<"\n";
+	for (i=0;i<nflx;i++) fi<<i<<") "<<setw(9)<<left<<fid[i]<< " "<<(flx[i]*1000.*dt)<<"\n";
+		fi << get<0>(sol) <<"\n";
+		fi << get<2>(sol) <<"\n";
+		fi << get<1>(sol) <<endl;
 	fi.close();
-cout <<"File saved: "<<ifn << ": xi=" << xi0 << "; xm=" << xm <<"; time="<<((float)tf/CLOCKS_PER_SEC)<<"; dif="<<dif<<endl;	
+cout <<"File saved: "<<ifn << ": xi=" << get<0>(sol) << "; xm=" << get<1>(sol) <<"; time="<<((float)get<2>(sol)/CLOCKS_PER_SEC)<<endl;	
 }
 
 void Fit::wstorefl (const char fn1[],int numpar,const double** m,string name[]) {
-        ofstream fi(fn1);
-   fi << " 95% +- 99% +- bestfit fimin fimax xmin xmax" << endl;
+     stringstream finame; finame<<outdir<<"names"; ifstream fii(finame.str().c_str());
+     rnames(fii);
+        stringstream fn; fn<<outdir<<fn1;  ofstream fi(fn.str().c_str());
+   fi << "Confidence_level: 0.99\n Reaction_id Lower_bound Upper_bound name scheme\n";
 //	        for (int j=0;j<parsets;j++) fi<<" "<<j; fi <<endl;
 	        for (int i=0;i<numpar;i++) {
-			fi<<name[i]<<" ";
+			fi<<fid[i]<<" ";
 //			cout<<setw(11)<<name[i]<<" ";
 	double mn=m[0][i], mx=m[0][i]; int imn=0, imx=0;
-	        for (int j=0;j<i95;j++) {
-			if(m[j][i]>mx) {mx=m[j][i]; imx=j;}
-			else if((m[j][i]<mn)&&(m[j][i]>1e-13)) {mn=m[j][i]; imn=j;}
-		 }   fi  << mn <<" "<< mx <<" ";
+//	        for (int j=0;j<i95;j++) {
+//			if(m[j][i]>mx) {mx=m[j][i]; imx=j;}
+//			else if((m[j][i]<mn)&&(m[j][i]>1e-13)) {mn=m[j][i]; imn=j;}
+//		 }   fi  << mn <<" "<< mx <<" ";
 		 
-	        for (int j=i95;j<i99;j++) {
+	        for (int j=0;j<i99;j++) {
 			if(m[j][i]>mx) {mx=m[j][i]; imx=j;}
 			else if((m[j][i]<mn)&&(m[j][i]>1e-13)) {mn=m[j][i]; imn=j;}
- }   fi  << mn <<" "<< mx <<" "<< m[0][i]<<" "<<imn<<" "<<imx <<" ";
-   fi <<(m[imn][nflx]-m[0][nflx])<<" "<<(m[imx][nflx]-m[0][nflx])<<endl;
+ }   fi  << mn <<" "<< mx <<" "<<fname[i]<<" "<<fschem[i]<<"\n";
+//   fi <<(m[imn][nflx]-m[0][nflx])<<" "<<(m[imx][nflx]-m[0][nflx])<<endl;
 //   cout << (mx+mn)/2. <<" "<< (mx-mn)/2. <<" "<< m[0][i] <<endl;
                 }
-   fi<<"chi         "<<m[0][numpar]; fi <<endl;
-   fi<<"time         "<<m[0][numpar+1]; fi <<endl;
-   fi<<"conc         "<<m[0][numpar+2]; fi <<endl;
+   fi<<"chi "<<m[0][numpar] <<"\n";
+   fi<<"time "<<m[0][numpar+1] <<"\n";
 
 	fi.close();
 }
@@ -78,12 +78,12 @@ void Fit::readst( int* b){
 	ifstream fi;
  for (int iset=0;iset<i99;iset++) {
 	pmp[iset]=&mpar[iset][0]; pmf[iset]=&mfl[iset][0];
-	 sprintf(fn,"%i",(iset+1)); 
-          fi.open(fn);
+	 stringstream fn; fn<<outdir<<(iset+1);
+          fi.open(fn.str().c_str());
 	for (i=0;i<nrea;i++) {fi>>aaa>>aaa>>aaa>>aaa>>mpar[iset][i]; getline(fi,aaa);}
 	getline(fi,aaa);
 	for (i=0;i<numx;i++) fi>>aaa>>namex[i]>>xx[i];
-        for (i=0;i<nflx;i++) fi>>aaa>>namef[i]>>mfl[iset][i];
+        for (i=0;i<nflx;i++) fi>>aaa>>fid[i]>>mfl[iset][i];
 /*      mfl[iset][mdh_net]=mfl[iset][maloa]-mfl[iset][oamal];
         mfl[iset][aldfl+2]=mfl[iset][aldfl]-mfl[iset][aldfl+1];
         mfl[iset][ckg_net]=mfl[iset][citakg1]-mfl[iset][idhr];
@@ -96,19 +96,19 @@ mfl[iset][nadhf]=mfl[iset][pdh]+mfl[iset][akgfum]+(mfl[iset][citakg]+mfl[iset][r
                 mpar[iset][nrea+1]= mfl[iset][nflx+1];
                 mpar[iset][nrea+2]= mfl[iset][nflx+2];
 	fi.close();
- } cout<<namef[0]<<endl;
+ } cout<<fid[0]<<endl;
 //    cout<<"Parameters:"<<setw(11)<<"mean"<<setw(11)<<"SD"<<setw(11)<<"SE"<<endl;
-         wstorefl("statpar", nrea, pmp,namef);
+         wstorefl("statpar", nrea, pmp,fid);
 //    cout<<"\nFluxes:    "<<setw(11)<<"mean"<<setw(11)<<"SD"<<setw(11)<<"SE"<<endl;
-         wstorefl("statfl", nflx, pmf,namef);
+         wstorefl("statfl", nflx, pmf,fid);
 }
 void Fit::stat(const int NP ){
         Vec_DP a(NP), conc(NP); Vec_INT b(NP),t(NP);
-        int* pb=&b[0];
         int i,sys;
  for ( i=1;i<=NP;i++) {
 	  stringstream fn; fn<<outdir<<i; cout<<fn.str().c_str()<<endl;
-       a[i-1] = read(t[i-1],conc[i-1],fn.str().c_str());
+       tie(a[i-1],conc[i-1],t[i-1]) = read(fn.str().c_str());
+//       a[i-1] = read(t[i-1],conc[i-1],fn.str().c_str());
        b[i-1] = i;
  }
         NR::sort2a(a,b);
@@ -127,7 +127,7 @@ cout<<setw(3)<<b[i]<<" ("<<a[i]<<"; "<<conc[i]<<"; "<<t[i]<<") ";
 if ((i%3)==0) cout<<endl;
 	    }
 	cout<<endl;
-readst( pb);
+readst( &b[0]);
 int chr=NP;//i99;
  for (i=0;i<chr;i++) {
 	  stringstream fn; fn<<"mv "<<outdir<<b[i]<<" "<<outdir<<(i+1)<<"a";
