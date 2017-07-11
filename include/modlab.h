@@ -222,8 +222,10 @@ class Metab_data:public Metab {
 	}
 
  data * getconc(){return conc;}
+ 
  int getmi(){return mi;}
- void setconc(double a, int nt=0){ conc[nt].mean=a;}
+ 
+ void setconc(double a, int nt=0){ conc[nt].mean=a; conc[nt].sd=a*0.1; }
  data * getexper(int nt){return &exper[nt][0];}
 
  void showmi(std::ostringstream& fo,int nt){
@@ -255,14 +257,20 @@ class Metab_data:public Metab {
      a=(conc[nt].mean-this->calc[N+1])/(conc[nt].sd);
   return (xicon[nt]=a*a);}
 
- void wrikinc(std::string descr, std::ostringstream& so, int nt) {
-    so<<descr<<"_c: ";  for(int i=0;i<nt;i++) so<<std::setw(9)<<this->kinc[i]; so<<"** "<<conc[nt-1].mean<<" -> "<<xicon[nt-1]<<std::endl;
+ void wrikinc(std::ostringstream& so, int nt) {
+  so.precision(3);
+    so<<std::setw(12)<<descr<<"_c: ";
+    for(int i=0;i<nt;i++) so<<std::setw(9)<<this->kinc[i];
+    so<<"** "<<std::setw(7)<<conc[nt-1].mean<<" -> "<<xicon[nt-1]<<std::endl;
  }
  void wrikinm0(std::ostringstream& so, int nt) {
      if(xi[nt-1]>0){ so.precision(3);
-      so<<std::setw(12)<<descr<<"_m0: ";
+      so<<"\n"<<std::setw(12)<<descr<<"_m0: ";
     for(int i=0;i<nt;i++)  so<<std::setw(9)<<this->kinm0[i];
     so<<" : "<<std::setw(7)<<exper[nt-1][0].mean<<" -> "<<xi[nt-1]<<std::endl;
+   so<<std::setw(12)<<descr<<"_c: ";
+     for(int i=0;i<nt;i++) so<<std::setw(9)<<this->kinc[i];
+    so<<" * "<<std::setw(7)<<conc[nt-1].mean<<" -> "<<xicon[nt-1]<<std::endl;
  }
  }
 
@@ -427,7 +435,11 @@ class Ldistr {
  void sklad(int itime);
 
  void wrikin(std::ostringstream& so, int nt){
-   for(int i=0;i<lmet;i++) met[i]->wrikinm0(so,nt);
+   for(int i=0;i<expm0.size();i++) expm0[i]->wrikinm0(so,nt);
+ }
+ 
+ void wricon(std::ostringstream& so, int nt){
+   for(int i=0;i<expcon.size();i++) expcon[i]->wrikinc(so,nt);
  }
 
        void setdiso(double *pyinit);

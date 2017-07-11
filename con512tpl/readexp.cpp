@@ -27,10 +27,10 @@ for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
 	 xx[ncthf]=0.5;	 lmet=nfbp;//sizeof(met)/sizeof(*met); 
 	 
        l13c.setmid(markis,marfrac*100.);  l13c.setmid(0,100*(1-marfrac)); 
-        itrac=findmet(l13c.getname(),l13c.getniso(),l13c.getmid());
+//        itrac=findmet(l13c.getname(),l13c.getniso(),l13c.getmid());
 	 
    for(int j=0;j<lres;j++){ findmet(result[j].getname(),result[j].getniso(),result[j].getmid());   }
-    
+    for(int j=0;j<expm0.size();j++) cout<<expm0[j]->getdescr()<<endl;
   return ts1;}
 
 vector<string> Ldistr::spli(stringstream& test,char a){
@@ -57,14 +57,14 @@ void Ldistr::defcol(int nucol[],vector<string> vstr){
   }
 }
 
-int Ldistr::findmet(string *s,int niso,data* mid) { int k(0);
+int Ldistr::findmet(string *s,int niso,data* mid) { int k(-1);
       for(int i=0;i<=lmet;i++){
       size_t imatch=(*s).find(met[i]->getdescr()); 
         if(imatch +1){ met[i]->setex0(); k=i;
          cout<<i<<": "<<met[i]->getdescr()<<" niso="<<niso<<" m0="<<mid[0].mean<<" sd0="<<mid[0].sd<<endl;
          met[i]->sex(niso,mid,1); expm0.push_back(met[i]); break;}
                              }
-   if(k==0){cout<<*s<<" k="<<k<<" no metabolite match?!?!?!\n";}
+   if(k==-1){cout<<*s<<" k="<<k<<" no metabolite match?!?!?!\n";}
      return k;}
 
 int Ldistr::c13pos(string& s,int& nc,int& nlab){

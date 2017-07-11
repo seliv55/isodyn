@@ -38,6 +38,7 @@ for(int i=0;i<expm0.size();i++) expm0[i]->percent(); glu.percent(1,1); glu25.per
 
 double Ldistr::xits(int its) {int itp=its-1; double xi=0;
 for(int i=0;i<expm0.size();i++) xi += expm0[i]-> chisq(its,expm0[i]->getmi());
+for(int i=0;i<expcon.size();i++) xi += expcon[i]-> chicon(its);
 return xi;}
 
 void Ldistr::wriconex(ostringstream& fo) {
@@ -60,12 +61,12 @@ fo<<"time "; for(int i=0;i<expm0.size();i++) fo<<expm0[i]->getdescr()<<" sd "; f
 void Ldistr::show(ostringstream& fo,double xfin) { fo<<setw(5)<<xfin;
 for(int i=0;i<expm0.size();i++) expm0[i]-> showm0(fo);}
 
-double Ldistr::consum() { double sum(0.);
+double Ldistr::consum() { double sum(0.); vector<Metab_data*> externcon = expcon;
  for(int i=0;i<=lmet;i++) { int j;
-   for(j=0;j<expcon.size();j++) if(met[i]->getdescr()==expcon[j]->getdescr()) break;
-     if(j==expcon.size()) {sum += met[i]->sumt(); cout<<met[i]->getdescr()<<"  ";}}
- for(int i=0;i<lmetb;i++) {sum += metb[i]->sumt(); cout<<metb[i]->getdescr()<<"  ";}
- for(int i=0;i<lmetk;i++) {sum += metk[i]->sumt(); cout<<metk[i]->getdescr()<<"  ";}cout<<endl;
+   for(j=0;j<externcon.size();j++) if(met[i]->getdescr()==externcon[j]->getdescr()) {externcon.erase(externcon.begin()+j); j=-1; break;}
+     if(j==externcon.size()) {sum += met[i]->sumt();}}
+ for(int i=0;i<lmetb;i++) {sum += metb[i]->sumt();}
+ for(int i=0;i<lmetk;i++) {sum += metk[i]->sumt();}
 return sum;}
 
 
