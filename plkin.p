@@ -2,7 +2,7 @@
 
 set t pngcairo enhanced dashed font "arial,12" size 1000,500;
 set output ARG1;
-set fn2 ARG2;
+fn2=ARG2;
 
 set multiplot layout 2,5
 set border 3;
