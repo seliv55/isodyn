@@ -81,20 +81,21 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
     vector<string> titl, strok, substrok;//  result.clear();
 //** 1. CONVERSION OF DATA FROM STRINGS
 // List of column Titles
-    getline(fi,aaa);
+    getline(fi,aaa);           // read first line
      stringstream test(aaa); 
-      titl=spli(test,',');
+      titl=spli(test,',');    // names and positions of columns
    defcol(cols,titl);
 //get rows
     while(getline(fi,aaa)) strok.push_back(aaa);
-    
          int nstrok(strok.size());
-   unordered_set<string> metka;
+    
+   unordered_set<string> metka;               // determining various labeled substrates
     for(int i=0;i<nstrok;i++){ size_t pos=strok[i].find("C13]-"); if(pos!=string::npos){
      string bbb=strok[i].substr(pos,10); metka.emplace(bbb); }       }
-    for(const string& it: metka) cout<<it<<"\n";
+    for(unordered_set<string>::iterator it=metka.begin(); it!=metka.end(); it++) cout<<*it<<" "<<*(++metka.begin())<<"\n";
     
-    for(int i=0;i<nstrok;i++) if(strok[i].find(*(metka.begin()))!=string::npos) substrok.push_back(strok[i]);
+//                              chosing strings corresponding to the first labeled substrate
+    for(int i=0;i<nstrok;i++) if(strok[i].find(*metka.begin())!=string::npos) substrok.push_back(strok[i]);
     nstrok=substrok.size();
     
 //  string Matrix of data for the analysis; segline[nstrok][columns #]
