@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #include <vector>
+#include <set>
 #include <cmath>
 const int tt=5;
 
@@ -450,6 +451,8 @@ class Ldistr {
  double fitm(double& xic,int ipar,double fac);
  double ser_gly (double v, double xthf);
  double gly_ser (double v);
+  std::set<std::string> findopt(std::string a, std::vector<std::string> strok);
+ void splitstrings(std::vector<std::string> segline[],int nstrok,std::vector<std::string> substrok);
 // void setmet(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
 // void setm0(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
  public:

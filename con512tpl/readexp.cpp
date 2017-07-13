@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
-#include <unordered_set>
 #include "nums.hh"
 #include "tk.hh"
 #include "nv.hh"
@@ -75,35 +74,20 @@ int Ldistr::c13pos(string& s,int& nc,int& nlab){
        }
   return ibin; }
       
-Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
-   string aaa;
-   int cols[nepar];
-    vector<string> titl, strok, substrok;//  result.clear();
-//** 1. CONVERSION OF DATA FROM STRINGS
-// List of column Titles
-    getline(fi,aaa);           // read first line
-     stringstream test(aaa); 
-      titl=spli(test,',');    // names and positions of columns
-   defcol(cols,titl);
-//get rows
-    while(getline(fi,aaa)) strok.push_back(aaa);
+set<string> Ldistr::findopt(string a, vector<string> strok){
          int nstrok(strok.size());
-    
-   unordered_set<string> metka;               // determining various labeled substrates
-    for(int i=0;i<nstrok;i++){ size_t pos=strok[i].find("C13]-"); if(pos!=string::npos){
-     string bbb=strok[i].substr(pos,10); metka.emplace(bbb); }       }
-    for(unordered_set<string>::iterator it=metka.begin(); it!=metka.end(); it++) cout<<*it<<" "<<*(++metka.begin())<<"\n";
-    
-//                              chosing strings corresponding to the first labeled substrate
-    for(int i=0;i<nstrok;i++) if(strok[i].find(*metka.begin())!=string::npos) substrok.push_back(strok[i]);
-    nstrok=substrok.size();
-    
-//  string Matrix of data for the analysis; segline[nstrok][columns #]
- vector<string> segline[nstrok]; int len;
+   set<string> metka;               // set labeled substrates
+    for(int i=0;i<nstrok;i++){ size_t pos=strok[i].find("C13]-");
+     if(pos!=string::npos){ metka.insert(strok[i].substr(pos,10)); }       }
+    for(set<string>::iterator it=metka.begin(); it!=metka.end(); it++) cout<<*it<<'\n';
+  return metka;
+}
+ void Ldistr::splitstrings(vector<string> segline[],int nstrok,vector<string> substrok){
+   int len;
    for(int j=0;j<nstrok;j++){
 
 // split rows by "
-   test.clear(); test.str(substrok[j]);
+  stringstream test; test.str(substrok[j]); 
       segline[j]=spli(test,'"'); len=segline[j].size();
 
 // split rows by ,      
@@ -125,6 +109,32 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
           }
           
    }
+ }
+    
+Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
+   string aaa;
+   int cols[nepar];
+    vector<string> titl, strok;//  result.clear();
+//** 1. CONVERSION OF DATA FROM STRINGS
+// List of column Titles
+    getline(fi,aaa);           // read first line
+     stringstream test(aaa); 
+      titl=spli(test,',');    // names and positions of columns
+   defcol(cols,titl);
+//get rows
+    while(getline(fi,aaa)) strok.push_back(aaa);
+    int nstrok=strok.size();
+    
+     set<string> metka=findopt("C13]-",strok);
+    
+//                              chosing strings corresponding to the first labeled substrate
+    vector<string> substrok;//  result.clear();
+    for(int i=0;i<nstrok;i++) if(strok[i].find(*metka.begin())+1) substrok.push_back(strok[i]);
+    nstrok=substrok.size(); cout<<"size="<<nstrok<<'\n';
+    
+//  string Matrix of data for the analysis; segline[nstrok][columns #]
+  vector<string> segline[nstrok];
+  splitstrings(segline, nstrok,substrok);
     cout<<"titles - data: "<< titl.size()<<" - "<<segline[5].size()<<"\n";
 //** 2. GETTING DATA IN APPROPRIATE FORMAT
 
@@ -137,7 +147,12 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
    Tracer labmet(nc,0.,segline[0][cols[trac]],markis,marfrac,nlab);
           labmet.setrac();
 //  tex: time points of measures during incubation
-    tex.clear(); tex.push_back(0.);
+
+    tex.clear(); tex.push_back(0.); set<string> stex;
+    for(int i=0;i<nstrok;i++) stex.insert(segline[i][cols[etime]]);
+    cout<<"stex="<<endl;
+     for(set<string>::iterator it= stex.begin();it!= stex.end(); ++it) cout<<*it<<" "; cout << endl;
+     
    double dis[nstrok];
 //convert MID from string to double in whole column
     int iro=0, // row #
