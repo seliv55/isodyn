@@ -21,7 +21,7 @@ class Iso {
  protected:
   int niso; double ttime;  std::string name; data *mid;
  public:
-    void showmid(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].mean<<" "; std::cout<<name+s<<" time="<<ttime<<"\n";}
+    void showmid(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].mean<<" "; std::cout<<name+s<<'\n';}
     void showsd(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].sd<<" "; std::cout<<name+s<<std::endl;}
     void calmesd(std::vector<Iso>& linj){
        int len=linj.size();

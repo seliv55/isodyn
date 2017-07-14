@@ -141,44 +141,37 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
 // set tracer
   int nc, nlab;
   if(segline[0][cols[trac]]!="") { markis=c13pos(segline[0][cols[lab]],nc,nlab);
-     marfrac=strtod(segline[0][cols[abund]].c_str(), NULL)/100.;
+     marfrac=stod(segline[0][cols[abund]])/100.;
       }
-       cout<<"Tracer="<<segline[0][cols[trac]]<<"; Isotopomers="<<markis<<"; Carbons="<<nc<<"; Labels="<<nlab<<"; Fraction="<<marfrac<<"\n";
+       cout<<"Tracer="<<segline[0][cols[trac]]<<"; Isotopomer="<<markis<<"; Carbons="<<nc<<"; Labels="<<nlab<<"; Fraction="<<marfrac<<'\n';
    Tracer labmet(nc,0.,segline[0][cols[trac]],markis,marfrac,nlab);
           labmet.setrac();
+          
 //  tex: time points of measures during incubation
-
-    tex.clear(); tex.push_back(0.); set<string> stex;
-    for(int i=0;i<nstrok;i++) stex.insert(segline[i][cols[etime]]);
-    cout<<"stex="<<endl;
-     for(set<string>::iterator it= stex.begin();it!= stex.end(); ++it) cout<<*it<<" "; cout << endl;
-     
-   double dis[nstrok];
-//convert MID from string to double in whole column
-    int iro=0, // row #
-     lef=(int)segline[0][cols[efrg]].at(4)-(int)segline[0][cols[efrg]].at(1)+2; // number of isotopomers in fragment
-    string metnm=segline[0][cols[emet]], //metabolite name
-           chinj=segline[iro][cols[isotopol]],//injection #
-           strac=segline[0][cols[trac]]; //13C tracer
-   cout<<"isotopologue="<<segline[iro][cols[isotopol]]<<endl;
-   vector<Iso> liso;   int iiso(0); Iso *iso;
-   
-    
-      for(int i=0;i<nstrok;i++){
-       if(segline[i][cols[trac]]!="") { int j;
-   double d=strtod(segline[i][cols[etime]].c_str(), NULL)*60.;
-    for(j=0;j<tex.size();j++) if(d==tex[j]) break;
-     if(j==tex.size()) tex.push_back(d);}
-     
-      dis[i]=0.; if(segline[i][cols[conc]].length()>2) 
-     dis[i]=strtod(segline[i][cols[conc]].c_str(), NULL);
-     }
+    tex.clear();
+     set<string> stex;
+    for(int i=0;i<nstrok;i++) stex.insert(segline[i][cols[etime]]); int itex=0;
+    cout<<"tex="; 
+   for(set<string>::iterator it=stex.begin();it!=stex.end();it++){
+     tex.push_back(stod(*it)*60);cout<<tex[itex]<<" ";++itex;} cout << endl;
           ntime=tex.size();
-       cout<<"incubation times (h): "; for(int i=0;i<ntime;i++) cout<<tex[i]/60.<<" "; cout<<"\n";
+     
+// Take values of some parameters
+ int lef=(int)segline[0][cols[efrg]].at(4)-(int)segline[0][cols[efrg]].at(1)+2; // number of isotopomers in fragment
+    string metnm=segline[0][cols[emet]], //metabolite name
+           chinj=segline[0][cols[isotopol]],//injection #
+           strac=segline[0][cols[trac]]; //13C tracer
+   vector<Iso> liso;   int iiso(0); Iso *iso;
+    double dis[nstrok];//convert MID from string to double in whole column
+      for(int i=0;i<nstrok;i++){
+         dis[i]=0.; if(segline[i][cols[conc]].length()>2) 
+     dis[i]=stod(segline[i][cols[conc]]);
+     }
+    int iro=0; // row #
    
-while(iro<(nstrok-1)){
+while(iro<(nstrok)){
    while(segline[iro][cols[emet]]==metnm){ // extract mid for each metabolite from all injections
-         if(iiso==0) {iso=new Iso(lef,strtod(segline[iro][cols[etime]].c_str(), NULL)*60.,segline[iro][cols[emet]]);
+         if(iiso==0) {iso=new Iso(lef,stod(segline[iro][cols[etime]])*60.,segline[iro][cols[emet]]);
           if(segline[iro][cols[isotopol]]==chinj) iro++;}
     while((segline[iro][cols[isotopol]]!=chinj)&&(iiso<lef)){  // ordenate mid for each injection
                    iso->setmid(iiso,dis[iro]); iiso++; iro++;}
@@ -191,11 +184,12 @@ while(iro<(nstrok-1)){
 // statistics grouping all injection for each metabolite
      for(int i=0;i<liso.size();i++) liso[i].showmid();
     iso=new Iso(lef,0.,segline[iro-2][cols[emet]]);
-    iso->calmesd(liso); iso->showmid("_mean");  iso->showsd("_sd"); cout<<"\n";
+    iso->calmesd(liso); iso->showmid("_mean");  iso->showsd("_sd"); cout<<'\n';
     if((*labmet.getname()).find(*iso->getname())+1) {marfrac=iso->getmid()[nlab].mean*0.01; }
      result.push_back(*iso);
     liso.clear();
 //   while(segline[iro][cols[trac]]=="") if(iro<nstrok) iro++;
+
    if(iro<(nstrok-1)){ iiso=0;
      lef=(int)segline[iro][cols[efrg]].at(4)-(int)segline[iro][cols[efrg]].at(1)+2;
      metnm=segline[iro][cols[emet]];
