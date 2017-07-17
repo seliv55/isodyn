@@ -28,7 +28,7 @@ for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
        l13c.setmid(markis,marfrac*100.);  l13c.setmid(0,100*(1-marfrac)); 
 //        itrac=findmet(l13c.getname(),l13c.getniso(),l13c.getmid());
 	 
-   for(int j=0;j<lres;j++){ findmet(result[j].getname(),result[j].getniso(),result[j].getmid());   }
+   for(int j=0;j<lres;j++){ findmet(result[j]);   }
     for(int j=0;j<expm0.size();j++) cout<<expm0[j]->getdescr()<<endl;
   return ts1;}
 
@@ -56,14 +56,15 @@ void Ldistr::defcol(int nucol[],vector<string> vstr){
   }
 }
 
-int Ldistr::findmet(string *s,int niso,data* mid) { int k(-1);
+int Ldistr::findmet(Iso& iso) { int k(-1);
       for(int i=0;i<=lmet;i++){
-      size_t imatch=(*s).find(met[i]->getdescr()); 
+      size_t imatch=(iso.getname())->find(met[i]->getdescr()); 
         if(imatch +1){ met[i]->setex0(); k=i;
-         cout<<i<<": "<<met[i]->getdescr()<<" niso="<<niso<<" m0="<<mid[0].mean<<" sd0="<<mid[0].sd<<endl;
-         met[i]->sex(niso,mid,1); expm0.push_back(met[i]); break;}
+         cout<<i<<": "<<met[i]->getdescr()<<" niso="<<iso.getniso()<<" m0="<<iso.getmid()[0].mean<<" sd0="<<iso.getmid()[0].sd<<endl;
+         int j(0); while(iso.gett()>(tex[j]+1e-7)) j++;
+         met[i]->sex(iso.getniso(),iso.getmid(),j); cout<<"j="<<j<<" t="<<iso.gett()<<endl; expm0.push_back(met[i]); break;}
                              }
-   if(k==-1){cout<<*s<<" k="<<k<<" no metabolite match?!?!?!\n";}
+   if(k==-1){cout<<(iso.getname())<<" k="<<k<<" no metabolite match?!?!?!\n";}
      return k;}
 
 int Ldistr::c13pos(string& s,int& nc,int& nlab){
@@ -161,14 +162,14 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
     string metnm=segline[0][cols[emet]], //metabolite name
            chinj=segline[0][cols[isotopol]],//injection #
            strac=segline[0][cols[trac]]; //13C tracer
-   vector<Iso> liso;   int iiso(0); Iso *iso;
     double dis[nstrok];//convert MID from string to double in whole column
       for(int i=0;i<nstrok;i++){
          dis[i]=0.; if(segline[i][cols[conc]].length()>2) 
      dis[i]=stod(segline[i][cols[conc]]);
      }
-    int iro=0; // row #
    
+    int iro=0; // row #
+   vector<Iso> liso,liso1;   int iiso(0); Iso *iso;
 while(iro<(nstrok)){
    while(segline[iro][cols[emet]]==metnm){ // extract mid for each metabolite from all injections
          if(iiso==0) {iso=new Iso(lef,stod(segline[iro][cols[etime]])*60.,segline[iro][cols[emet]]);
@@ -181,15 +182,24 @@ while(iro<(nstrok)){
          else { iiso=0; iro++;}
     if(iro>=nstrok)  {liso.push_back(*iso); break;}
    }
+   
 // statistics grouping all injection for each metabolite
-     for(int i=0;i<liso.size();i++) liso[i].showmid();
-    iso=new Iso(lef,0.,segline[iro-2][cols[emet]]);
-    iso->calmesd(liso); iso->showmid("_mean");  iso->showsd("_sd"); cout<<'\n';
-    if((*labmet.getname()).find(*iso->getname())+1) {marfrac=iso->getmid()[nlab].mean*0.01; }
+     for(int j=0;j<tex.size();j++){
+   for(int i=0;i<liso.size();i++) if(tex[j]==liso[i].gett()) liso1.push_back(liso[i]);
+     for(int i=0;i<liso1.size();i++) liso1[i].showmid();
+    if(liso1.size()){ iso=new Iso(lef,tex[j],segline[iro-2][cols[emet]]);
+    iso->calmesd(liso1);
+     iso->showmid("_mean");  iso->showsd("_sd"); cout<<'\n';
      result.push_back(*iso);
-    liso.clear();
-//   while(segline[iro][cols[trac]]=="") if(iro<nstrok) iro++;
-
+    liso1.clear();    
+//    correct labeled fraction
+    if(iso->gett()<1e-7){
+    if((*labmet.getname()).find(*iso->getname())+1){
+     cout<<"**label in "<<*iso->getname()<<" t="<<iso->gett()<<endl;
+    marfrac=iso->getmid()[nlab].mean*0.01;
+    }        } delete iso;    }
+     }
+         liso.clear();
    if(iro<(nstrok-1)){ iiso=0;
      lef=(int)segline[iro][cols[efrg]].at(4)-(int)segline[iro][cols[efrg]].at(1)+2;
      metnm=segline[iro][cols[emet]];

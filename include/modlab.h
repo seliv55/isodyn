@@ -21,13 +21,13 @@ class Iso {
  protected:
   int niso; double ttime;  std::string name; data *mid;
  public:
-    void showmid(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].mean<<" "; std::cout<<name+s<<'\n';}
+    void showmid(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].mean<<" "; std::cout<<name+s<<" time="<<ttime<<'\n';}
     void showsd(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].sd<<" "; std::cout<<name+s<<std::endl;}
     void calmesd(std::vector<Iso>& linj){
        int len=linj.size();
-         for(int ic=0;ic<niso;ic++) { mid[ic].mean=0.;
+         for(int ic=0;ic<niso;ic++) { mid[ic].mean=0.; mid[ic].sd=0.;
           for(int i=0;i<len;i++) mid[ic].mean+=linj[i].mid[ic].mean; mid[ic].mean/=(double)len; }
-         for(int ic=0;ic<niso;ic++){ 
+         if(len>1) for(int ic=0;ic<niso;ic++){ 
         for(int i=0;i<len;i++){ double a=mid[ic].mean-linj[i].mid[ic].mean; mid[ic].sd+=a*a; }
         mid[ic].sd/=(double)(len-1); mid[ic].sd=sqrt(mid[ic].sd); }
            }
@@ -36,6 +36,7 @@ class Iso {
     void delmid(){delete[] mid;}
     std::string* getname(){return &name;}
     int getniso(){return niso;}
+    double gett(){return ttime;}
     data* getmid(){return mid;}
     
   Iso(int n, double tti, std::string s){niso=n; ttime=tti; name=s;
@@ -476,7 +477,7 @@ class Ldistr {
       std::vector<std::string> spli(std::stringstream& test,char a);
       int c13pos(std::string& s,int& nc,int& nlab);
       void defcol(int nucol[],std::vector<std::string> vstr);
-      int findmet(std::string *s,int niso,data* mid);
+      int findmet(Iso&);
       Tracer rcsv(std::ifstream& fi,std::vector<Iso>& result );
         int diff(const double da,double st[], double *palpha) ;
         void show(std::ostringstream& fo,double xfin);
