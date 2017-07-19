@@ -52,14 +52,13 @@ void Ldistr::read_con(ifstream& fi, string& arg1){int kmet;
       fi>>isu>>aaa>>ntime>>aaa; double conc;
       while(!fi.eof()){getline(fi,aaa);  if((aaa.find(cell)+1)) break;}
       if(!fi.eof()){
-      for(int i=0;i<ntime;i++) {double ta; fi>>ta>>aaa; texcon.push_back(ta); cout<<"tex="<<texcon[i]<<endl;}
+      for(int i=0;i<ntime;i++) {double ta; fi>>ta>>aaa; texcon.push_back(ta); }
       for(int i=0;i<isu;i++){
-       fi>>aaa; cout<<aaa<<"  "; int k;
+       fi>>aaa; int k;
         for(k=0;k<=lmet;k++) if(aaa.find(met[k]->getdescr())+1) { kmet=k;
             for(int j=0;j<ntime;j++) {fi>>conc; met[kmet]->setconc(conc,j);}
-             expcon.push_back(met[kmet]);cout<<met[kmet]->getdescr()<<endl; break;}
+             expcon.push_back(met[kmet]); break;}
              if(k==lmet) for(int j=0;j<ntime;j++) fi>>aaa;
-//              cout<<expcon[i]->getdescr()<<endl;
                 }
    }   }
 

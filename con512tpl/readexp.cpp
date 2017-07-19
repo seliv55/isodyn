@@ -130,7 +130,8 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
     
 //                              chosing strings corresponding to the first labeled substrate
     vector<string> substrok;//  result.clear();
-    for(int i=0;i<nstrok;i++) if(strok[i].find(*metka.begin())+1) substrok.push_back(strok[i]);
+     set<string>::iterator it=metka.begin(); //it++;
+    for(int i=0;i<nstrok;i++) if(strok[i].find(*it)+1) substrok.push_back(strok[i]);
     nstrok=substrok.size(); cout<<"size="<<nstrok<<'\n';
     
 //  string Matrix of data for the analysis; segline[nstrok][columns #]
