@@ -487,7 +487,7 @@ class Ldistr {
         double integrbs();
 	double ddisolve();
         int stor(double st[]) ;
-	Ldistr(): gl(6,"Gluc"), lac(3,"Lac"), glu(5,"Glutamate2-4"), gln(5,"Glutamin"), rna(5,"Rib"), glycog(6,"Glycog"), pro(5,"Pro"), asp(4,"Asp"), ala(3,"Ala"), ser(3,"Ser"), agl(3,"Glycerol"), pyrm(3,"Pyr"), coa(2,"CoA"), coac(2), gly(2,"Gly"),  oa(4,"Oaa"), oac(4), cit(6,"Cit"), akg(5,"aKg"), fum(4,"Fum"), mal(4,"Mal"), glu25(5,"Glutamate2-5"),
+	Ldistr(): gl(6,"Gluc"), lac(3,"Lac"), glu(5,"glutamate2-4"), gln(5,"Glutamin"), rna(5,"Rib"), glycog(6,"Glycog"), pro(5,"Pro"), asp(4,"Asp"), ala(3,"Ala"), ser(3,"Ser"), agl(3,"Glycerol"), pyrm(3,"Pyr"), coa(2,"CoA"), coac(2), gly(2,"Gly"),  oa(4,"Oaa"), oac(4), cit(6,"Cit"), akg(5,"aKg"), fum(4,"Fum"), mal(4,"Mal"), glu25(5,"Glutamate2-5"),
 	 fbp(6), t3(3), pep(3), pyr(3), cthf(1), citc(6), akgc(5), e4(4),
 	  h6(6), s7(7), p5(5,"rib")  {setmet(); getN(); }
 	~Ldistr(void) { result.clear();}

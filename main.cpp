@@ -54,11 +54,13 @@ void Ldistr::read_con(ifstream& fi, string& arg1){int kmet;
       if(!fi.eof()){
       for(int i=0;i<ntime;i++) {double ta; fi>>ta>>aaa; texcon.push_back(ta); cout<<"tex="<<texcon[i]<<endl;}
       for(int i=0;i<isu;i++){
-       fi>>aaa; cout<<aaa<<"  ";
-        for(int k=0;k<=lmet;k++) if(aaa.find(met[k]->getdescr())+1) { kmet=k;
+       fi>>aaa; cout<<aaa<<"  "; int k;
+        for(k=0;k<=lmet;k++) if(aaa.find(met[k]->getdescr())+1) { kmet=k;
             for(int j=0;j<ntime;j++) {fi>>conc; met[kmet]->setconc(conc,j);}
-             expcon.push_back(met[kmet]); break;}
-              cout<<expcon[i]->getdescr()<<endl;  }
+             expcon.push_back(met[kmet]);cout<<met[kmet]->getdescr()<<endl; break;}
+             if(k==lmet) for(int j=0;j<ntime;j++) fi>>aaa;
+//              cout<<expcon[i]->getdescr()<<endl;
+                }
    }   }
 
 int main( int argc, char *argv[] ){ cout<<"Nn="<<horse.getN()<<endl;

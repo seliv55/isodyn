@@ -37,8 +37,7 @@ for(int i=0;i<expm0.size();i++) expm0[i]->percent(); glu.percent(1,1); glu25.per
 }
 
 double Ldistr::xits(int its) {int itp=its-1; double xi=0;
-for(int i=0;i<expm0.size();i++) xi += expm0[i]-> chisq(its,expm0[i]->getmi());
-for(int i=0;i<expcon.size();i++) xi += expcon[i]-> chicon(its);
+for(int i=0;i<expm0.size();i++) {xi += expm0[i]-> chisq(its,expm0[i]->getmi()); xi += expm0[i]-> chicon(its); cout<<expm0[i]->getdescr()<<" ";}cout<<endl;
 return xi;}
 
 void Ldistr::wriconex(ostringstream& fo) {
