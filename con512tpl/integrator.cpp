@@ -56,4 +56,4 @@ foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str();
       readExp(fex1); wrim0ex(fige1);
           fo.open("exm0"); fo<<fige1.str(); fo.close();
       }
-
+//Email: demin@insysbio.ru Tel: +7 910 4449284

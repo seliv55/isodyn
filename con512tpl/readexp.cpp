@@ -26,7 +26,7 @@ for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
 	 xx[ncthf]=0.5;	 lmet=nfbp;//sizeof(met)/sizeof(*met); 
 	 
        l13c.setmid(markis,marfrac*100.);  l13c.setmid(0,100*(1-marfrac)); 
-//        itrac=findmet(l13c.getname(),l13c.getniso(),l13c.getmid());
+        itrac=findmet(l13c);
 	 
    for(int j=0;j<lres;j++){ findmet(result[j]);   }
     for(int j=0;j<expm0.size();j++) cout<<expm0[j]->getdescr()<<endl;
@@ -128,11 +128,11 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
     
      set<string> metka=findopt("C13]-",strok);
     
-//                              chosing strings corresponding to the first labeled substrate
+//                              chosing strings corresponding to the labeled substrate
     vector<string> substrok;//  result.clear();
-     set<string>::iterator it=metka.begin(); //it++;
-    for(int i=0;i<nstrok;i++) if(strok[i].find(*it)+1) substrok.push_back(strok[i]);
-    nstrok=substrok.size(); cout<<"size="<<nstrok<<'\n';
+     set<string>::iterator itm=metka.begin();// itm++;
+    for(int i=0;i<nstrok;i++) if(strok[i].find(*itm)+1) substrok.push_back(strok[i]);
+    nstrok=substrok.size(); cout<<nstrok<<" strok\n";
     
 //  string Matrix of data for the analysis; segline[nstrok][columns #]
   vector<string> segline[nstrok];
@@ -151,7 +151,7 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
           
 //  tex: time points of measures during incubation
     tex.clear();
-     set<string> stex;
+     set<string> stex; stex.insert("0");
     for(int i=0;i<nstrok;i++) stex.insert(segline[i][cols[etime]]); int itex=0;
     cout<<"tex="; 
    for(set<string>::iterator it=stex.begin();it!=stex.end();it++){
