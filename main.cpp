@@ -46,10 +46,10 @@ inline void chekxi(char *efi){
 
     tuple<double,double,time_t> sol0;
     
-void Ldistr::read_con(ifstream& fi, string& arg1){int kmet;
+int Ldistr::read_con(ifstream& fi, string& arg1){int kmet;
        string cell=arg1.substr(arg1.find_last_of('/')+1); cout<<"cell="<<cell<<endl;
-      string aaa; int isu, ntime;
-      fi>>isu>>aaa>>ntime>>aaa; double conc;
+      string aaa; int isu, ntime,ntr;
+      fi>>isu>>aaa>>ntime>>aaa>>aaa>>ntr; double conc;
       while(!fi.eof()){getline(fi,aaa);  if((aaa.find(cell)+1)) break;}
       if(!fi.eof()){
       for(int i=0;i<ntime;i++) {double ta; fi>>ta>>aaa; texcon.push_back(ta); }
@@ -60,7 +60,7 @@ void Ldistr::read_con(ifstream& fi, string& arg1){int kmet;
              expcon.push_back(met[kmet]); break;}
              if(k==lmet) for(int j=0;j<ntime;j++) fi>>aaa;
                 }
-   }   }
+   }   return ntr;}
 
 int main( int argc, char *argv[] ){ cout<<"Nn="<<horse.getN()<<endl;
    double tmp,xi0;ofstream kkin("kinxx"); 
@@ -69,7 +69,7 @@ int main( int argc, char *argv[] ){ cout<<"Nn="<<horse.getN()<<endl;
          fex1=argv[1]; fex2=fex1;
          
      string arg1(argv[1]),name; ifstream fi("xconc");
-     horse.read_con(fi,arg1);
+     int ntr=horse.read_con(fi,arg1);
          
      Problem.setodir(argv[2]); //set output directory
       ifn=Problem.setnumofi(); //number of parameter files
@@ -79,7 +79,7 @@ int main( int argc, char *argv[] ){ cout<<"Nn="<<horse.getN()<<endl;
    else{
      cout.precision(3);
      sol0=Problem.read(argv[2]);    //read parameters
-        horse.readExp(argv[1]);            // read experimental data 
+        horse.readExp(argv[1],ntr);            // read experimental data 
 //      horse.setfige();                // set experimental data for figure
      for(int i=0;i<numx;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values
 	try{   ts=clock();

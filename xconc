@@ -1,4 +1,4 @@
-10 substrates 2 times
+9 substrates 2 times tracer# 1
 A549     
 0 h    24 h
 Glucose  8.636  5.282
@@ -10,7 +10,6 @@ Rib 1 1
 Malate 1 1
 Citrate 1 1
 Aspartate 1 1
-Glutamine 1 1
 
 BEAS2B     
 0 h    24 h
@@ -23,7 +22,6 @@ Rib 1 1
 Malate 1 1
 Citrate 1 1
 Aspartate 1 1
-Glutamine 1 1
 
 NCIH460     
 0 h    24 h
@@ -36,5 +34,4 @@ Rib 1 1
 Malate 1 1
 Citrate 1 1
 Aspartate 1 1
-Glutamine 1 1
 

@@ -33,7 +33,6 @@ class Iso {
            }
     void setname(std::string s){name=s;}
     void setmid(int mi, double d){mid[mi].mean=d;}
-    void delmid(){delete[] mid;}
     std::string* getname(){return &name;}
     int getniso(){return niso;}
     double gett(){return ttime;}
@@ -463,7 +462,7 @@ class Ldistr {
       std::vector<Metab_data*> expcon, expm0;
        void setmet();
     void setfige();
-    void read_con(std::ifstream& fi, std::string& arg1);
+    int read_con(std::ifstream& fi, std::string& arg1);
 //       double setLacInit(double fact){return lac.setInCon(fact);}
        void read (char *finame, int ndat);
        void flback();
@@ -473,12 +472,12 @@ class Ldistr {
        void distr(double *py,double *pdydt);
        double consum();
        void showmi(std::ostringstream& fo,int nt);
-      double readExp(char *fn);
+      double readExp(char *fn,int ntr=0);
       std::vector<std::string> spli(std::stringstream& test,char a);
       int c13pos(std::string& s,int& nc,int& nlab);
       void defcol(int nucol[],std::vector<std::string> vstr);
       int findmet(Iso&);
-      Tracer rcsv(std::ifstream& fi,std::vector<Iso>& result );
+      Tracer rcsv(std::ifstream& fi,std::vector<Iso>& result,int mar=0 );
         int diff(const double da,double st[], double *palpha) ;
         void show(std::ostringstream& fo,double xfin);
 //        void showval(std::ostringstream& fo,double xfin);
