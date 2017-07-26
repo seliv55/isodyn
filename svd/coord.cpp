@@ -13,7 +13,8 @@ double Analis::descent(double factor,int ip){
 	tuple<double,double,time_t> sol;
 	const double xili(0.9998);
 	int k, jfail(0); 
-  vector<int>parcp=Problem.getFitPar(); ifn++;
+  vector<int>parcp=Problem.getFitPar(), parstor; ifn++;
+  for(int iii=0;iii<5;iii++){
   int npf=parcp.size();
 //  if(ip>=0) {for(k=0;k<npf;k++) if(parcp[k] = ip) break;
 //   cout<<"Descent: par="<<Problem.rea[parcp[k]].getname()<<endl;
@@ -24,14 +25,20 @@ double Analis::descent(double factor,int ip){
     while (flag<2) { oval = Problem.rea[parcp[i]].v();
      Problem.rea[parcp[i]].setVm(oval*factor); cout << parcp[i] << ")";
       try{ sol =solve();  xi1 =get<0>(sol);
-    if(((xi1*tf/chimin/tmin)<1)&&(suxx<xmin)) {Problem.write(sol,ifn); Problem.storeVms(nrea,nv1);
-                   for(int i=0;i<numx;i++) xinit1[i]=xx[i]; chimin=xi1; tmin=tf; xmin=suxx;} 
+    if(((xi1*tf/chimin/tmin)<1)&&(suxx<xmin)) {
+      Problem.write(sol,ifn);
+       Problem.storeVms(nrea,nv1);
+         for(int i=0;i<numx;i++) xinit1[i]=xx[i];
+          chimin=xi1; tmin=tf; xmin=suxx; parstor.push_back(parcp[i]);
+          } 
      else {factor = 1./factor; ++flag; Problem.rea[parcp[i]].setVm(oval);}
     }  catch( char const* str ){cout << "Analis::descent: "<< str <<endl; Problem.restoreVm(nrea,nv2);
                  for(int i=0;i<numx;i++) xinit1[i]=xinit2[i];}
       
         }//end while flag
 	 parcp.erase(parcp.begin()+i); npf=parcp.size();}
+	   parcp=parstor;
+  }
  return x00;}
  
  void Analis::rconfint(ifstream& fi, double ami[],double ama[]){
@@ -57,6 +64,21 @@ double Analis::descent(double factor,int ip){
   catch( char const* str ){ cout << "Analis::stepdown: "<< str <<endl; chimin=x00+1000.; Problem.rea[i].setVm(oldp);}
        }
  
+//void Analis::confidence(double factor,double fdes){ 
+//	double a0mi[nrea], a0ma[nrea], a1mi[nrea], a1ma[nrea];
+//	 ifstream fi("statfl"); rconfint(fi,a0mi,a0ma); fi.close();
+//	   fi.open("statfl1");  rconfint(fi,a1mi,a1ma); fi.close();
+//	   vector<int> parcp; for(int i=0;i<nrea;i++) parcp.push_back(i);
+//	          Problem.storeVms(nrea,nv1);  chimin=x00;
+//  while (npf>0)  {   int i = rand() % npf;
+//   if((a0ma[parcp[i]]<a1mi[parcp[i]])&&(parcp[i]>7.e-7)){
+//       stepdown(factor,parcp[i],fdes);}
+//   else if((a0mi[parcp[i]]>a1ma[parcp[i]])&&(parcp[i]>7.e-7)) {
+//       stepdown(1./factor,parcp[i],fdes);}
+//   npf--; for (int k=i;k<npf;k++) parcp[k]=parcp[k+1];
+//        Problem.restoreVm(nrea,nv1);  }
+//   }
+   
 void Analis::confidence(double factor,double fdes){ 
 	double a0mi[nrea], a0ma[nrea], a1mi[nrea], a1ma[nrea];
 	 ifstream fi("statfl"); rconfint(fi,a0mi,a0ma); fi.close();

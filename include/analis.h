@@ -4,6 +4,7 @@ extern double ystart[];
 class Analis {
 double chimin, xmin, tmin, dif1, xm, x00;
 static double nv1[],nv2[];
+vector<int> parstor, parcp;
 double descent(double, int ip=(-1)); 
  void rconfint(ifstream& fi, double ami[],double ama[]);
  void stepdown(double oldp, int& i,double fdes);
