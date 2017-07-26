@@ -29,7 +29,7 @@ for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
         itrac=findmet(l13c); cout<<"tracer="<<met[itrac]->getdescr()<<'\n';
 	 
    for(int j=0;j<lres;j++){ findmet(result[j]);   }
-    for(int j=0;j<expm0.size();j++) cout<<expm0[j]->getdescr()<<endl;
+//    for(int j=0;j<expm0.size();j++) cout<<expm0[j]->getdescr()<<endl;
   return ts1;}
 
 vector<string> Ldistr::spli(stringstream& test,char a){
@@ -142,6 +142,7 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result,int mar ){
     cout<<"titles - data: "<< titl.size()<<" - "<<segline[5].size()<<"\n";
 //** 2. GETTING DATA IN APPROPRIATE FORMAT
 
+   vector<Iso> liso,liso1;   int iiso(0); Iso *iso;
 // set tracer
   int nc, nlab;
   if(segline[0][cols[trac]]!="") { markis=c13pos(segline[0][cols[lab]],nc,nlab);
@@ -172,7 +173,6 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result,int mar ){
      }
    
     int iro=0; // row #
-   vector<Iso> liso,liso1;   int iiso(0); Iso *iso;
 while(iro<(nstrok)){
    while(segline[iro][cols[emet]]==metnm){ // extract mid for each metabolite from all injections
          if(iiso==0) {iso=new Iso(lef,stod(segline[iro][cols[etime]])*60.,segline[iro][cols[emet]]);

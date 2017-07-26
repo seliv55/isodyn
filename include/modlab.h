@@ -39,7 +39,8 @@ class Iso {
     data* getmid(){return mid;}
     
   Iso(int n, double tti, std::string s){niso=n; ttime=tti; name=s;
-   mid=new data[n]; for(int i=0;i<niso;i++){ mid[i].mean=0.; mid[i].sd=0.1; }}
+   mid=new data[n]; mid[0].mean=1.; mid[0].sd=0.1;
+   for(int i=1;i<niso;i++){ mid[i].mean=0.; mid[i].sd=0.1; }}
   virtual ~Iso(){}
 };
 
@@ -210,12 +211,14 @@ class Metab_data:public Metab {
    for(int i=0;i<niso;i++) exper[nt][i].mean=mid[i].mean*0.01;
    for(int i=0;i<niso;i++) {exper[nt][i].sd=mid[i].sd*0.01; if(exper[nt][i].sd<0.01) exper[nt][i].sd=0.01;}
 	}
+	
  void read(std::ifstream& fi,int nt){
 	unsigned i; std::string aaa;//i: isotopomer; j: time
        fi >> mi;
    for(i=0;i<=mi;i++) { fi>>exper[nt][i].mean;} fi>>aaa; fi>>aaa;
    for(i=0;i<=mi;i++) {fi>>exper[nt][i].sd; if(exper[nt][i].sd<0.01) exper[nt][i].sd=0.01;}
 	}
+	
  void readc(std::ifstream& fi,  int nt){ std::string aaa;
      fi>>aaa;
      for(int i=0;i<nt;i++) fi>>conc[i].mean;
@@ -260,18 +263,15 @@ class Metab_data:public Metab {
 
  void wrikinc(std::ostringstream& so, int nt) {
   so.precision(3);
-    so<<std::setw(12)<<descr<<"_c: ";
+    so<<"\n"<<std::setw(12)<<descr<<"_c: ";
     for(int i=0;i<nt;i++) so<<std::setw(9)<<this->kinc[i];
-    so<<"** "<<std::setw(7)<<conc[nt-1].mean<<" -> "<<xicon[nt-1]<<std::endl;
+    so<<"** "<<std::setw(7)<<conc[nt-1].mean<<" -> "<<xicon[nt-1];
  }
  void wrikinm0(std::ostringstream& so, int nt) {
      if(xi[nt-1]>0){ so.precision(3);
       so<<"\n"<<std::setw(12)<<descr<<"_m0: ";
     for(int i=0;i<nt;i++)  so<<std::setw(9)<<this->kinm0[i];
-    so<<" : "<<std::setw(7)<<exper[nt-1][0].mean<<" -> "<<xi[nt-1]<<std::endl;
-   so<<std::setw(12)<<descr<<"_c: ";
-     for(int i=0;i<nt;i++) so<<std::setw(9)<<this->kinc[i];
-    so<<" * "<<std::setw(7)<<conc[nt-1].mean<<" -> "<<xicon[nt-1]<<std::endl;
+    so<<" : "<<std::setw(7)<<exper[nt-1][0].mean<<" -> "<<xi[nt-1];
  }
  }
 
@@ -439,8 +439,8 @@ class Ldistr {
    for(int i=0;i<expm0.size();i++) expm0[i]->wrikinm0(so,nt);
  }
  
- void wricon(std::ostringstream& so, int nt){
-   for(int i=0;i<expcon.size();i++) expcon[i]->wrikinc(so,nt);
+ void wricon(std::ostringstream& so, int nt){ so<<"\n";
+   for(int i=0;i<expcon.size();i++) expcon[i]->wrikinc(so,nt); so<<"\n";
  }
 
        void setdiso(double *pyinit);
@@ -482,11 +482,12 @@ class Ldistr {
         void show(std::ostringstream& fo,double xfin);
 //        void showval(std::ostringstream& fo,double xfin);
         double xits(int its);
+        double xicon(int its);
         void massfr();
         double integrbs();
 	double ddisolve();
         int stor(double st[]) ;
-	Ldistr(): gl(6,"Gluc"), lac(3,"Lac"), glu(5,"glutamate2-4"), gln(5,"Glutamin"), rna(5,"Rib"), glycog(6,"Glycog"), pro(5,"Pro"), asp(4,"Asp"), ala(3,"Ala"), ser(3,"Ser"), agl(3,"Glycerol"), pyrm(3,"Pyr"), coa(2,"CoA"), coac(2), gly(2,"Gly"),  oa(4,"Oaa"), oac(4), cit(6,"Cit"), akg(5,"aKg"), fum(4,"Fum"), mal(4,"Mal"), glu25(5,"Glutamate2-5"),
+	Ldistr(): gl(6,"Gluc"), lac(3,"Lac"), glu(5,"Glutamate2-5"), gln(5,"Glutamin"), rna(5,"Rib"), glycog(6,"Glycog"), pro(5,"Pro"), asp(4,"Asp"), ala(3,"Ala"), ser(3,"Ser"), agl(3,"Glycerol"), pyrm(3,"Pyr"), coa(2,"CoA"), coac(2,"coac"), gly(2,"Gly"),  oa(4,"Oaa"), oac(4,"oac"), cit(6,"Cit"), akg(5,"aKg"), fum(4,"Fum"), mal(4,"Mal"), glu25(5,"glutamate2-5"),
 	 fbp(6), t3(3), pep(3), pyr(3), cthf(1), citc(6), akgc(5), e4(4),
 	  h6(6), s7(7), p5(5,"rib")  {setmet(); getN(); }
 	~Ldistr(void) { result.clear();}
