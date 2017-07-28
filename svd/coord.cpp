@@ -14,8 +14,8 @@ double Analis::descent(double factor,int ip){
 	const double xili(0.9998);
 	int k, jfail(0); 
   vector<int>parcp=Problem.getFitPar(), parstor; ifn++;
-  for(int iii=0;iii<5;iii++){
-  int npf=parcp.size();
+  for(int iii=0;iii<2;iii++){
+  int npf=parcp.size(); parstor.clear();
 //  if(ip>=0) {for(k=0;k<npf;k++) if(parcp[k] = ip) break;
 //   cout<<"Descent: par="<<Problem.rea[parcp[k]].getname()<<endl;
 //                 for(int i=k;i<npf;i++) parcp[i] = parcp[i+1]; npf--;}
