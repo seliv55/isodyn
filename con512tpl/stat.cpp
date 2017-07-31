@@ -43,10 +43,10 @@ void Fit::write (tuple<double,double,time_t> sol, int& ifn,bool flg) const {
 cout <<"File saved: "<<ifn << ": xi=" << get<0>(sol) << "; xm=" << get<1>(sol) <<"; time="<<((float)get<2>(sol)/CLOCKS_PER_SEC)<<endl;	
 }
 
-void Fit::wstorefl (const char fn1[],int numpar,const double** m,string name[]) {
+void Fit::wstorefl (int numpar,const double** m,string name[]) {
      stringstream finame; finame<<outdir<<"names"; ifstream fii(finame.str().c_str());
      rnames(fii);
-        stringstream fn; fn<<outdir<<fn1;  ofstream fi(fn.str().c_str());
+        ofstream fi(flmain.c_str());
    fi << "Confidence_level: 0.99\n Reaction_id Lower_bound Upper_bound name scheme\n";
 //	        for (int j=0;j<parsets;j++) fi<<" "<<j; fi <<endl;
 	        for (int i=0;i<numpar;i++) {
@@ -97,10 +97,8 @@ mfl[iset][nadhf]=mfl[iset][pdh]+mfl[iset][akgfum]+(mfl[iset][citakg]+mfl[iset][r
                 mpar[iset][nrea+2]= mfl[iset][nflx+2];
 	fi.close();
  } cout<<fid[0]<<endl;
-//    cout<<"Parameters:"<<setw(11)<<"mean"<<setw(11)<<"SD"<<setw(11)<<"SE"<<endl;
-         wstorefl("statpar", nrea, pmp,fid);
 //    cout<<"\nFluxes:    "<<setw(11)<<"mean"<<setw(11)<<"SD"<<setw(11)<<"SE"<<endl;
-         wstorefl("statfl", nflx, pmf,fid);
+         wstorefl(nflx, pmf,fid);
 }
 void Fit::stat(const int NP ){
         Vec_DP a(NP), conc(NP); Vec_INT b(NP),t(NP);

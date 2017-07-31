@@ -53,7 +53,7 @@ int Ldistr::read_con(ifstream& fi, string& arg1){
      Problem.read(spar.c_str());    //read parameters
 // extract cell_type/conditions, numbers: of substrates, time points
    string cell=arg1.substr(arg1.find_last_of('/')+1); cout<<"cell="<<cell<<endl;
-     Problem.setodir(sout); //set output directory
+     Problem.setodir(sout,sflmain,sflcomp); //set output directory
      int isu, ntime;
       fi>>isu>>aaa>>ntime>>aaa; 
 // localize cell_type/conditions
@@ -72,6 +72,7 @@ int Ldistr::read_con(ifstream& fi, string& arg1){
 
 int main( int argc, char *argv[] ){
 // run: ./isodyn.out  experim_MID-lile concentr_and_param_info_file [sx_NumOfFileSavedInFitting]
+// 's'-statistics; 'x'- check χ²
  cout<<"Nn="<<horse.getN()<<endl;
    double tmp,xi0;ofstream kkin("kinxx"); 
 //   int a[][3]={{1,2,3},{4,5,6}}}; cout<<"a11="<<a[1][1]<<endl;
@@ -79,15 +80,16 @@ int main( int argc, char *argv[] ){
          fex1=argv[1]; fex2=fex1;
          
          
+     string arg1(argv[1]),name; ifstream fi(argv[2]);
+     int ntr=horse.read_con(fi,arg1); if(*Problem.getodir()=="glut/") ntr=1; 
       ifn=Problem.setnumofi(); //number of parameter files
+      cout<<ntr<<"=ntr "<<ifn<<"=ifn\n";
      
   if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
    else{
      cout.precision(3);
 //     sol0=Problem.read(argv[2]);    //read parameters
-     string arg1(argv[1]),name; ifstream fi("xconc");
-     int ntr=horse.read_con(fi,arg1); if(*Problem.getodir()=="glut/") ntr=1;
         horse.readExp(argv[1],ntr);            // read experimental data 
 //      horse.setfige();                // set experimental data for figure
      for(int i=0;i<numx;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values

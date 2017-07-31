@@ -1,7 +1,7 @@
-input_parameters glc/1
-output_dir  glc/
-fluxes_main glc/statfl
-fluxes_compare glut/statfl
+input_parameters glut/1
+output_dir  glut/
+fluxes_main glut/statfl
+fluxes_compare glc/statfl
 
 9 substrates 2 times
 A549     

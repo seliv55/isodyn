@@ -58,13 +58,13 @@ public:
 };
 class Fit: public Parray{
 	int i68, i90, i95, i99, fnfin;
-	std::string outdir;
+	std::string outdir, flmain,flcomp;
     public:	
       void stat(const int NP );
       std::tuple<double,double,time_t> read(std::string fn);
       void readst( int* );
       void setfnfin(int ia){fnfin=ia;}
-      void wstorefl (const char fn1[], int numpar, const double** m,std::string n[]);
+      void wstorefl (int numpar, const double** m,std::string n[]);
       void write (std::tuple<double,double,time_t> sol, int& ifn,bool flg=true) const ;
       void perturb(const double f1);
       void cont(const int,const  double,const double);
@@ -78,9 +78,11 @@ class Fit: public Parray{
       void ff(const double *y,double *dydx);
       int getparsize(){for(unsigned i=0;i<par.size();i++) std::cout<<par[i]<<" "; std::cout<<"\n"; return par.size();}
  
-    std::string setodir(std::string filo){  outdir=filo; return outdir;}
+    void setodir(std::string outd,std::string flm,std::string flc){ outdir=outd; flmain=flm; flcomp=flc;}
          
     std::string* getodir(){return &outdir;}
+    std::string* getflm(){return &flmain;}
+    std::string* getflc(){return &flcomp;}
          
     int setnumofi()const{ for(int i=1;;i++) {std::stringstream fn;
        fn<<outdir<<i;   std::ifstream checkfi(fn.str().c_str()); checkfi.close(); 

@@ -66,8 +66,8 @@ double Analis::descent(double factor,int ip){
  
 void Analis::confidence(double factor,double fdes){ 
 	double a0mi[nrea], a0ma[nrea], a1mi[nrea], a1ma[nrea];
-	 ifstream fi("statfl"); rconfint(fi,a0mi,a0ma); fi.close();
-	   fi.open("statfl1");  rconfint(fi,a1mi,a1ma); fi.close();
+	 ifstream fi((*Problem.getflm()).c_str()); rconfint(fi,a0mi,a0ma); fi.close();
+	   fi.open((*Problem.getflc()).c_str());  rconfint(fi,a1mi,a1ma); fi.close();
 	int npf =Problem.getparsize(),  parcp[npf];
 	 Problem.getListFit(parcp);
 	          Problem.storeVms(nrea,nv1);  chimin=x00;
