@@ -3,18 +3,13 @@ output_dir  glut/
 fluxes_main glut/statfl
 fluxes_compare glc/statfl
 
-9 substrates 2 times
+4 substrates 2 times
 A549     
 0 h    24 h
 Glucose  8.636  5.282
 Glutamine  2.915  2.167
 Lactate  0.807  7.850
 Glutamate2-5  0.101 0.5
-Glycogen 3 2.3
-Rib  0.25  0.67
-Malate 0.2 0.2
-Citrate 0.7 0.598
-Aspartate 0.1 0.148
 
 BEAS2B     
 0 h    24 h
@@ -22,11 +17,6 @@ Glucose  10.107  7.489
 Glutamine  3.809  3.666
 Lactate  0.001  5.950
 Glutamate2-5  0.001  0.230
-Glycogen 3 3
-Rib  0.7  0.7
-Malate 0.2 0.2
-Citrate 0.7 0.7
-Aspartate 0.1 0.1
 
 NCIH460     
 0 h    24 h
@@ -34,9 +24,4 @@ Glucose  9.003 3.063
 Glutamine  2.955, 1.903
 Lactate  0.920  12.517
 Glutamate2-5  0.105, 0.419
-Glycogen 3 3
-Rib  0.7  0.7
-Malate 0.2 0.2
-Citrate 0.7 0.7
-Aspartate 0.1 0.1
 
