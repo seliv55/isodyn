@@ -46,39 +46,48 @@ inline void chekxi(char *efi){
 
     tuple<double,double,time_t> sol0;
     
-int Ldistr::read_con(ifstream& fi, string& arg1){int kmet;
-       string cell=arg1.substr(arg1.find_last_of('/')+1); cout<<"cell="<<cell<<endl;
-      string aaa; int isu, ntime;
-      fi>>isu>>aaa>>ntime>>aaa; double cc;
+int Ldistr::read_con(ifstream& fi, string& arg1){
+// read par-file, output dir, flux conf. inter: main and to compare
+ string aaa, spar, sout, sflmain, sflcomp; 
+ fi>>aaa>>spar>>aaa>>sout>>aaa>>sflmain>>aaa>>sflcomp;
+     Problem.read(spar.c_str());    //read parameters
+// extract cell_type/conditions, numbers: of substrates, time points
+   string cell=arg1.substr(arg1.find_last_of('/')+1); cout<<"cell="<<cell<<endl;
+     Problem.setodir(sout); //set output directory
+     int isu, ntime;
+      fi>>isu>>aaa>>ntime>>aaa; 
+// localize cell_type/conditions
       while(!fi.eof()){getline(fi,aaa);  if((aaa.find(cell)+1)) break;}
       if(!fi.eof()){
       for(int i=0;i<ntime;i++) {double ta; fi>>ta>>aaa; texcon.push_back(ta); }
       for(int i=0;i<isu;i++){
        fi>>aaa; int k;
-        for(k=0;k<=lmet;k++) if(aaa.find(met[k]->getdescr())+1) { kmet=k;
-         for(int j=0;j<ntime;j++) {fi>>cc; met[k]->setconc(cc,j);  xx[k]=met[k]->getconc()[0].mean;}
+        for(k=0;k<=lmet;k++) if(aaa.find(met[k]->getdescr())+1) {
+     for(int j=0;j<ntime;j++) {
+       double cc;fi>>cc; met[k]->setconc(cc,j); xx[k]=met[k]->getconc()[0].mean;}
              expcon.push_back(met[k]);  break;}
              if(k==lmet) for(int j=0;j<ntime;j++) fi>>aaa;
                 }
    }   return 0;}
 
-int main( int argc, char *argv[] ){ cout<<"Nn="<<horse.getN()<<endl;
+int main( int argc, char *argv[] ){
+// run: ./isodyn.out  experim_MID-lile concentr_and_param_info_file [sx_NumOfFileSavedInFitting]
+ cout<<"Nn="<<horse.getN()<<endl;
    double tmp,xi0;ofstream kkin("kinxx"); 
 //   int a[][3]={{1,2,3},{4,5,6}}}; cout<<"a11="<<a[1][1]<<endl;
    int itmp; bool check;
          fex1=argv[1]; fex2=fex1;
          
          
-     string diro=Problem.setodir(argv[2]); //set output directory
       ifn=Problem.setnumofi(); //number of parameter files
      
   if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
    else{
      cout.precision(3);
-     sol0=Problem.read(argv[2]);    //read parameters
+//     sol0=Problem.read(argv[2]);    //read parameters
      string arg1(argv[1]),name; ifstream fi("xconc");
-     int ntr=horse.read_con(fi,arg1); if(diro=="glut/") ntr=1;
+     int ntr=horse.read_con(fi,arg1); if(*Problem.getodir()=="glut/") ntr=1;
         horse.readExp(argv[1],ntr);            // read experimental data 
 //      horse.setfige();                // set experimental data for figure
      for(int i=0;i<numx;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values
@@ -121,7 +130,7 @@ int main( int argc, char *argv[] ){ cout<<"Nn="<<horse.getN()<<endl;
 {  stringstream stx(argv[3]); int ia; stx>>ia; cout<<ia<<endl; Problem.setfnfin(ifn+ia);
    
 // 	cout<<"parameter set="<<ia<<endl;
-           try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<ia<<" files saved!\n"; return 0;}
+     try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<ia<<" files saved!\n"; return 0;}
 	         Problem.stat(ifn-1);
                   sol0=Problem.read("1");
                    for(int i=0;i<numx;i++) xinit1[i]=xx[i];

@@ -1,3 +1,8 @@
+input_parameters glc/1
+output_dir  glc/
+fluxes_main glc/statfl
+fluxes_compare glut/statfl
+
 9 substrates 2 times
 A549     
 0 h    24 h

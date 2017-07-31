@@ -64,21 +64,6 @@ double Analis::descent(double factor,int ip){
   catch( char const* str ){ cout << "Analis::stepdown: "<< str <<endl; chimin=x00+1000.; Problem.rea[i].setVm(oldp);}
        }
  
-//void Analis::confidence(double factor,double fdes){ 
-//	double a0mi[nrea], a0ma[nrea], a1mi[nrea], a1ma[nrea];
-//	 ifstream fi("statfl"); rconfint(fi,a0mi,a0ma); fi.close();
-//	   fi.open("statfl1");  rconfint(fi,a1mi,a1ma); fi.close();
-//	   vector<int> parcp; for(int i=0;i<nrea;i++) parcp.push_back(i);
-//	          Problem.storeVms(nrea,nv1);  chimin=x00;
-//  while (npf>0)  {   int i = rand() % npf;
-//   if((a0ma[parcp[i]]<a1mi[parcp[i]])&&(parcp[i]>7.e-7)){
-//       stepdown(factor,parcp[i],fdes);}
-//   else if((a0mi[parcp[i]]>a1ma[parcp[i]])&&(parcp[i]>7.e-7)) {
-//       stepdown(1./factor,parcp[i],fdes);}
-//   npf--; for (int k=i;k<npf;k++) parcp[k]=parcp[k+1];
-//        Problem.restoreVm(nrea,nv1);  }
-//   }
-   
 void Analis::confidence(double factor,double fdes){ 
 	double a0mi[nrea], a0ma[nrea], a1mi[nrea], a1ma[nrea];
 	 ifstream fi("statfl"); rconfint(fi,a0mi,a0ma); fi.close();
