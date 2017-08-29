@@ -18,17 +18,16 @@ double Ldistr::readExp (char fn[],int ntr) {
 for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
  mu /= ((double)(ntime-1)*1.0);
            for(int i=0;i<nfbp;i++)  met[i]->setconc(xx[i]);
-	 gl.setex0(); gln.setex0();
 	  glu.setconc(xx[nglu]); glu25.setconc(xx[nglu]);
-	  
 
 	 xx[nagl]=1.0;
 	 xx[ncthf]=0.5;	 lmet=nfbp;//sizeof(met)/sizeof(*met); 
 	 
-       l13c.setmid(markis,marfrac*100.);  l13c.setmid(0,100*(1-marfrac)); 
+       l13c.setmid(markis,marfrac);  l13c.setmid(0,(1-marfrac)); 
         itrac=findmet(l13c); cout<<"tracer="<<met[itrac]->getdescr()<<'\n';
 	 
    for(int j=0;j<lres;j++){ findmet(result[j]);   }
+//	 gl.setex0(); gln.setex0();
 //    for(int j=0;j<expm0.size();j++) cout<<expm0[j]->getdescr()<<endl;
   return ts1;}
 
@@ -60,11 +59,11 @@ int Ldistr::findmet(Iso& iso) { int k(-1);
 //find met[i] for which there are experimental data presented in the unit iso
    for(int i=0;i<=lmet;i++)  if(iso.getname()->find(met[i]->getdescr())+1){ k=i;
      int j(0); while(iso.gett()>(tex[j]+1e-7)) j++;
+     for(int iex=0;iex<expm0.size();iex++) if(met[i]->getdescr()==expm0[iex]->getdescr()){k=-2; break;}
+          if(k>=0) {met[i]->setexper(ntime);  expm0.push_back(met[i]);} //if met[i] was not present in expm0, add met[i]
        met[i]->sex(iso.getniso(),iso.getmid(),j); //set experimental mid for a given met & time
 //   find repetitions in expm0:
-     for(int iex=0;iex<expm0.size();iex++) if(met[i]->getdescr()==expm0[iex]->getdescr()){k=-2; break;}
-          if(k>=0) expm0.push_back(met[i]); //if met[i] was not present in expm0, add met[i]
-           cout<<met[i]->getdescr()<<" m0="<<iso.getmid()[0].mean<<" t="<<iso.gett()<<'\n';
+           cout<<met[i]->getdescr()<<" m0="<<iso.getmid()[0].mean<<" t="<<iso.gett()<<endl;
            break;   }
      if(k==-1)cout<<(*iso.getname())<<" no metabolite match?!?!?!\n";
      return k;}
@@ -169,7 +168,7 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result,int mar ){
            strac=segline[0][cols[trac]]; //13C tracer
     double dis[nstrok];//convert MID from string to double in whole column
       for(int i=0;i<nstrok;i++){ dis[i]=0.;
-       if(segline[i][cols[conc]].length()>2)  dis[i]=stod(segline[i][cols[conc]]);
+       if(segline[i][cols[conc]].length()>2)  dis[i]=stod(segline[i][cols[conc]])*0.01;
      }
    
     int iro=0; // row #

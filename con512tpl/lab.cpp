@@ -54,16 +54,19 @@ void Ldistr::wriconex(ostringstream& fo) {
       fo<<"\n";         }
 }
 
-void Ldistr::wrim0ex(ostringstream& fo) {
+void Ldistr::wrim0ex(string fn) {
 //t=1;  lac=t+1; lacsd=lac+1; glu=lacsd+1; glusd=glu+1; ala=glusd+1; alasd=ala=+1; gly=alasd+1; glysd=gly+1; ser=glysd+1; sersd=ser+1; pro=sersd+1; prosd=pro+1; cit=prosd+1; citsd=cit+1; agl=citsd+1; aglsd=agl+1; asp=aglsd+1; aspsd=asp+1; fum=aspsd+1; fumsd=fum+1; mal=fumsd+1; malsd=mal+1; coa=malsd+1; coasd=coa+1;
-  data *b;
+  data *b; ofstream fo(fn);
 fo<<"time "; for(int i=0;i<expm0.size();i++) fo<<expm0[i]->getdescr()<<" sd "; fo<<endl;
    for(int its=0;its<ntime;its++) {  fo<<tex[its];
        for(int i=0;i<expm0.size();i++){ b=expm0[i]->getexper(its);   fo<<" "<<b[0].mean<<" "<<b[0].sd; }
       fo<<"\n";         }
        }
 void Ldistr::show(ostringstream& fo,double xfin) { fo<<setw(5)<<xfin;
-for(int i=0;i<expm0.size();i++) expm0[i]-> showm0(fo);}
+for(int i=0;i<expm0.size();i++) expm0[i]-> showm0(fo); fo<<'\n';}
+
+void Ldistr::showdescr(ostringstream& fo) { fo<<"time ";
+for(int i=0;i<expm0.size();i++) fo<<expm0[i]-> getdescr()<<" "; fo<<'\n';}
 
 double Ldistr::consum() { double sum(0.); vector<Metab_data*> externcon = expcon;
  for(int i=0;i<=lmet;i++) { int j;

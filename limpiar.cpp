@@ -7,7 +7,7 @@ using namespace std;
 int main( int argc, char *argv[] ){
    int iflast=2;
    string fidir;
-   cout<<"directory="; cin>>fidir;
+   cout<<"directory="; cin>>fidir; fidir += '/';
    cout<<"How many files to keep="; cin>>iflast;
 for(int i=iflast+1;;i++) {std::stringstream fn;
        fn<<fidir<<i;   std::ifstream checkfi(fn.str().c_str()); checkfi.close(); 

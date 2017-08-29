@@ -207,9 +207,10 @@ class Metab_data:public Metab {
       for(int i=0;i<=N;i++){ exper[nt1][i].mean=exper[nt2][i].mean; exper[nt1][i].sd=exper[nt2][i].sd;  }
                          }
    
- void sex(int niso, data mid[],int nt){ exper[nt]=mid;
-   for(int i=0;i<niso;i++) exper[nt][i].mean=mid[i].mean*0.01;
-   for(int i=0;i<niso;i++) {exper[nt][i].sd=mid[i].sd*0.01; if(exper[nt][i].sd<0.01) exper[nt][i].sd=0.01;}
+ void sex(int niso, data mid[],int nt){ //exper[nt]=mid;
+   for(int i=0;i<niso;i++) exper[nt][i].mean=mid[i].mean;
+   for(int i=0;i<niso;i++) {exper[nt][i].sd=mid[i].sd; if(exper[nt][i].sd<0.01) exper[nt][i].sd=0.01;}
+//   for(int i=0;i<niso;i++) { if(mid[i].sd<0.01) mid[i].sd=0.01;}
 	}
 	
  void read(std::ifstream& fi,int nt){
@@ -274,9 +275,10 @@ class Metab_data:public Metab {
     so<<" : "<<std::setw(7)<<exper[nt-1][0].mean<<" -> "<<xi[nt-1];
  }
  }
-
-  Metab_data(int n,std::string simya=" "):Metab(n,simya){for(int i=0;i<tt;i++) exper[i]=new data[N+1];}
-  ~Metab_data(){for(int i=0;i<tt;i++) delete[] exper[i];}
+void setexper(int nt){for(int i=0;i<nt;i++) exper[i]=new data[N+1]; exper[0][0].mean=1.; }
+void delexper(int nt){for(int i=0;i<nt;i++) delete[] exper[i];}
+  Metab_data(int n,std::string simya=" "):Metab(n,simya){}
+  ~Metab_data(){}
 };
 
 class ketose:public Metab_data {
@@ -445,7 +447,6 @@ class Ldistr {
 
        void setdiso(double *pyinit);
        void setiso(double *pyinit);
-   void wrim0ex(std::ostringstream& fo);
  void wriconex(std::ostringstream& fo);
  void fitmet(double& xic,int iout,int iin,double fac);
  double fitm(double& xic,int ipar,double fac);
@@ -456,6 +457,7 @@ class Ldistr {
 // void setmet(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
 // void setm0(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
  public:
+   void wrim0ex(std::string );
       static Metab_data *met[];
       static Metab *metb[];
       static ketose *metk[];
@@ -480,7 +482,7 @@ class Ldistr {
       Tracer rcsv(std::ifstream& fi,std::vector<Iso>& result,int mar=0 );
         int diff(const double da,double st[], double *palpha) ;
         void show(std::ostringstream& fo,double xfin);
-//        void showval(std::ostringstream& fo,double xfin);
+        void showdescr(std::ostringstream& fo);
         double xits(int its);
         double xicon(int its);
         void massfr();
@@ -490,7 +492,7 @@ class Ldistr {
 	Ldistr(): gl(6,"Gluc"), lac(3,"Lac"), glu(5,"Glutamate2-5"), gln(5,"Glutamin"), rna(5,"Rib"), glycog(6,"Glycog"), pro(5,"Pro"), asp(4,"Asp"), ala(3,"Ala"), ser(3,"Ser"), agl(3,"Glycerol"), pyrm(3,"Pyr"), coa(2,"CoA"), coac(2,"coac"), gly(2,"Gly"),  oa(4,"Oaa"), oac(4,"oac"), cit(6,"Cit"), akg(5,"aKg"), fum(4,"Fum"), mal(4,"Mal"), glu25(5,"glutamate2-5"),
 	 fbp(6), t3(3), pep(3), pyr(3), cthf(1), citc(6), akgc(5), e4(4),
 	  h6(6), s7(7), p5(5,"rib")  {setmet(); getN(); }
-	~Ldistr(void) { result.clear();}
+	~Ldistr(void) { result.clear(); for(int i=0;i<expm0.size();i++) expm0[i]->delexper(ntime);}
 };
 
 extern Ldistr horse;

@@ -27,8 +27,8 @@ double Ldistr::integrbs(){
          for(int i=0;i<ntime;i++) ppotok[i]=&potok[i*icol];
     int nbad,nok; nrhs=0; kmax=KMAX;
           ostringstream foc1, kinet, flxkin;
-    foc1.precision(4); kinet.precision(4);
- massfr(); 
+    foc1.precision(4); kinet.precision(4); showdescr(kinet);
+ massfr(); show(kinet,0);
  double xfin; sklad(0);
   for(int j=0;j<nflx;j++) ppotok[0][j]=flx[j]*1000.*dt;
         for(int i=1;i<(ntime);i++) {tm=(tex[i]-x1)/10.;
@@ -53,9 +53,9 @@ foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str();
 
       void Ldistr::setfige()   {
   ostringstream fige1,fige2;
-      readExp(fex2); wriconex(fige2);
-        ofstream fo("excon"); fo<<fige2.str(); fo.close();      
-      readExp(fex1); wrim0ex(fige1);
-          fo.open("exm0"); fo<<fige1.str(); fo.close();
+//      readExp(fex2); wriconex(fige2);
+//        ofstream fo("excon"); fo<<fige2.str(); fo.close();      
+//      readExp(fex1); wrim0ex(fige1);
+//          fo.open("exm0"); fo<<fige1.str(); fo.close();
       }
 //Email: demin@insysbio.ru Tel: +7 910 4449284

@@ -54,7 +54,7 @@ int Ldistr::read_con(ifstream& fi, string& arg1){
 // extract cell_type/conditions, numbers: of substrates, time points
    string cell=arg1.substr(arg1.find_last_of('/')+1); cout<<"cell="<<cell<<endl;
      Problem.setodir(sout,sflmain,sflcomp); //set output directory
-     int isu, ntime;
+     int isu;
       fi>>isu>>aaa>>ntime>>aaa; 
 // localize cell_type/conditions
       while(!fi.eof()){getline(fi,aaa);  if((aaa.find(cell)+1)) break;}
@@ -91,7 +91,7 @@ int main( int argc, char *argv[] ){
      cout.precision(3);
 //     sol0=Problem.read(argv[2]);    //read parameters
         horse.readExp(argv[1],ntr);            // read experimental data 
-//      horse.setfige();                // set experimental data for figure
+      horse.wrim0ex("edata");                // set experimental data for figure
      for(int i=0;i<numx;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values
 	try{   ts=clock();
     tsolve(37000.);                     //solve ODEs for total concentrations
@@ -108,7 +108,7 @@ int main( int argc, char *argv[] ){
        Problem.shownx(numx,xx);         // print concentrations on screen
      cout<<" Σxi²="<<get<0>(sol0) <<"\n";        //final results
      cout<<setw(9)<<"*"<<"*Metab   *   init    Final : "<<setw(17)<<"exper -> xi²\n" <<foc; 
-//        kkin.open("kinGlc"); kkin<<kin<<endl; kkin.close();
+        kkin.open("kinGlc"); kkin<<kin<<endl; kkin.close();
 //        kkin.open("kinflx"); kkin<<kinflx<<endl; kkin.close();
         
 //        horse.readExp(fex2);
@@ -126,7 +126,7 @@ int main( int argc, char *argv[] ){
                 int ifn0=250002; Problem.write(sol0,ifn0,0);
 //	Problem.cont(121,0.0001, 0.015);
 //chekxi(1,33);
-//          int sys=system("gnuplot xplt.p");//gnuplot -e 'var=value' script.gp
+          int sys=system("gnuplot xplt.p");//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
  if (argc>3) //if(argv[3][0]=='g') analis.grad(1000); else 
 {  stringstream stx(argv[3]); int ia; stx>>ia; cout<<ia<<endl; Problem.setfnfin(ifn+ia);
