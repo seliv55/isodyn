@@ -2,15 +2,14 @@ input_parameters glc/4
 output_dir  glc/
 fluxes_main glc/statfl
 fluxes_compare glut/statfl
-gnuplot  -e "con=4;m0=4" xplt.p
 
 4 substrates 2 times
 A549     
 0 h    24 h
 Glucose  8.636  5.282
-Glutamine  2.915  2.637
+Glutamine  2.915  2.167
 Lactate  0.807  7.850
-Glutamate2-5  0.101 0.03
+Glutamate2-5  0.101 0.5
 
 BEAS2B     
 0 h    24 h

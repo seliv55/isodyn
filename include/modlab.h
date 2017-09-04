@@ -447,7 +447,6 @@ class Ldistr {
 
        void setdiso(double *pyinit);
        void setiso(double *pyinit);
- void wriconex(std::ostringstream& fo);
  void fitmet(double& xic,int iout,int iin,double fac);
  double fitm(double& xic,int ipar,double fac);
  double ser_gly (double v, double xthf);
@@ -457,14 +456,15 @@ class Ldistr {
 // void setmet(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
 // void setm0(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
  public:
-   void wrim0ex(std::string );
+   int wrim0ex(std::string );
+   int wriconex(std::string fn);
       static Metab_data *met[];
       static Metab *metb[];
       static ketose *metk[];
       std::vector<Metab_data*> expcon, expm0;
        void setmet();
     void setfige();
-    int read_con(std::ifstream& fi, std::string& arg1);
+    std::string read_con(std::ifstream& fi, std::string& arg1);
 //       double setLacInit(double fact){return lac.setInCon(fact);}
        void read (char *finame, int ndat);
        void flback();
@@ -482,7 +482,8 @@ class Ldistr {
       Tracer rcsv(std::ifstream& fi,std::vector<Iso>& result,int mar=0 );
         int diff(const double da,double st[], double *palpha) ;
         void show(std::ostringstream& fo,double xfin);
-        void showdescr(std::ostringstream& fo);
+        void showcon(std::ostringstream& fo,double xfin);
+        void showdescr(std::ostringstream& fo,std::vector<Metab_data*>);
         double xits(int its);
         double xicon(int its);
         void massfr();

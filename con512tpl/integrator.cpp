@@ -8,7 +8,7 @@
 #include "solvers.h"
 //---------------------------------------------------------------------------
 using namespace std;
-    string foc, kin, kinflx;
+    string foc, kin, kinflx, kinc;
 void derivsl(const DP x, Vec_IO_DP &y, Vec_O_DP &dydx){
 	double *py=&y[0]; 
 	DP *pdydt=&dydx[0];
@@ -26,16 +26,18 @@ double Ldistr::integrbs(){
         double *potok=new double [ntime*icol]; double *ppotok[ntime];
          for(int i=0;i<ntime;i++) ppotok[i]=&potok[i*icol];
     int nbad,nok; nrhs=0; kmax=KMAX;
-          ostringstream foc1, kinet, flxkin;
-    foc1.precision(4); kinet.precision(4); showdescr(kinet);
- massfr(); show(kinet,0);
+          ostringstream foc1, kinet, kicon, flxkin;
+    foc1.precision(4); kinet.precision(4);
+ massfr();
+    showdescr(kinet,expm0);  show(kinet,0);
+    showdescr(kicon,expcon);  showcon(kicon,0);
  double xfin; sklad(0);
   for(int j=0;j<nflx;j++) ppotok[0][j]=flx[j]*1000.*dt;
         for(int i=1;i<(ntime);i++) {tm=(tex[i]-x1)/10.;
         dxsav = tm/((double)(KMAX-1));
         for(int k=0;k<10;k++){ xfin=x1+tm;
     NR::odeint(yy,x1,xfin,eps,h1,hmin,nok,nbad,derivsl,NR::rkqs);
-massfr();   show(kinet,xfin); 
+massfr();   show(kinet,xfin);  showcon(kicon,xfin);
     x1=xfin;
     }
 xi += xits(i);
@@ -45,7 +47,7 @@ xi += xicon(i);  sklad(i);
 wrikin(foc1,ntime);
 wricon(foc1,ntime);
   for(int j=0;j<nflx;j++) { flxkin<<Problem.fid[j]<<" "; for(int i=0;i<ntime;i++) flxkin<<ppotok[i][j]<<" "; flxkin<<"\n";}
-foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str();
+foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str(); kinc=kicon.str();
         delete yp_p;
         delete xp_p;
         delete[] potok;

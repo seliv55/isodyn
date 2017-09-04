@@ -8,7 +8,7 @@ extern const double thft;
 extern double dt,dif,dif0, mader, suxx, Vi,Vt, mu, xthf, xx[], fluxes[], flx[],ystart[];
 extern double nv1[],nv2[],xinit1[],xinit2[];
 extern time_t ts,tf,tcal;
-extern std::string foc, kin;
+extern std::string foc, kin, kinc;
 extern char *fex1, *fex2;
 extern int ifn;
 

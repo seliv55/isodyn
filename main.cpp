@@ -46,10 +46,12 @@ inline void chekxi(char *efi){
 
     tuple<double,double,time_t> sol0;
     
-int Ldistr::read_con(ifstream& fi, string& arg1){
+string Ldistr::read_con(ifstream& fi, string& arg1){
 // read par-file, output dir, flux conf. inter: main and to compare
- string aaa, spar, sout, sflmain, sflcomp; 
+ string aaa, spar, sout, sflmain, sflcomp, gpl; 
  fi>>aaa>>spar>>aaa>>sout>>aaa>>sflmain>>aaa>>sflcomp;
+ getline(fi,aaa); 
+ getline(fi,gpl); cout<<gpl<<endl;
      Problem.read(spar.c_str());    //read parameters
 // extract cell_type/conditions, numbers: of substrates, time points
    string cell=arg1.substr(arg1.find_last_of('/')+1); cout<<"cell="<<cell<<endl;
@@ -68,7 +70,7 @@ int Ldistr::read_con(ifstream& fi, string& arg1){
              expcon.push_back(met[k]);  break;}
              if(k==lmet) for(int j=0;j<ntime;j++) fi>>aaa;
                 }
-   }   return 0;}
+   }   return gpl;}
 
 int main( int argc, char *argv[] ){
 // run: ./isodyn.out  experim_MID-lile concentr_and_param_info_file [sx_NumOfFileSavedInFitting]
@@ -80,8 +82,8 @@ int main( int argc, char *argv[] ){
          fex1=argv[1]; fex2=fex1;
          
          
-     string arg1(argv[1]),name; ifstream fi(argv[2]);
-     int ntr=horse.read_con(fi,arg1); if(*Problem.getodir()=="glut/") ntr=1; 
+     string arg1(argv[1]),name; ifstream fi(argv[2]);  int ntr(0);
+     string gpl=horse.read_con(fi,arg1); if(*Problem.getodir()=="glut/") ntr=1; 
       ifn=Problem.setnumofi(); //number of parameter files
       cout<<ntr<<"=ntr "<<ifn<<"=ifn\n";
      
@@ -91,7 +93,8 @@ int main( int argc, char *argv[] ){
      cout.precision(3);
 //     sol0=Problem.read(argv[2]);    //read parameters
         horse.readExp(argv[1],ntr);            // read experimental data 
-      horse.wrim0ex("edata");                // set experimental data for figure
+      int m0len=horse.wrim0ex("exm0");                // set experimental data for figure
+      int conlen=horse.wriconex("excon");                // set experimental data for figure
      for(int i=0;i<numx;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values
 	try{   ts=clock();
     tsolve(37000.);                     //solve ODEs for total concentrations
@@ -109,6 +112,7 @@ int main( int argc, char *argv[] ){
      cout<<" Σxi²="<<get<0>(sol0) <<"\n";        //final results
      cout<<setw(9)<<"*"<<"*Metab   *   init    Final : "<<setw(17)<<"exper -> xi²\n" <<foc; 
         kkin.open("kinGlc"); kkin<<kin<<endl; kkin.close();
+         kkin.open("kincon"); kkin<<kinc<<endl; kkin.close();
 //        kkin.open("kinflx"); kkin<<kinflx<<endl; kkin.close();
         
 //        horse.readExp(fex2);
@@ -126,7 +130,7 @@ int main( int argc, char *argv[] ){
                 int ifn0=250002; Problem.write(sol0,ifn0,0);
 //	Problem.cont(121,0.0001, 0.015);
 //chekxi(1,33);
-          int sys=system("gnuplot xplt.p");//gnuplot -e 'var=value' script.gp
+          int sys=system(gpl.c_str());//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
  if (argc>3) //if(argv[3][0]=='g') analis.grad(1000); else 
 {  stringstream stx(argv[3]); int ia; stx>>ia; cout<<ia<<endl; Problem.setfnfin(ifn+ia);

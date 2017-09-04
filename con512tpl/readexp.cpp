@@ -199,7 +199,7 @@ while(iro<(nstrok)){
     if(iso->gett()<1e-7){
     if((*labmet.getname()).find(*iso->getname())+1){
      cout<<"**label in "<<*iso->getname()<<" t="<<iso->gett()<<endl;
-    marfrac=iso->getmid()[nlab].mean*0.01;
+    marfrac=iso->getmid()[nlab].mean;
     }        } delete iso;    }
      }
          liso.clear();
