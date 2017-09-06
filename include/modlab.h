@@ -464,7 +464,7 @@ class Ldistr {
       std::vector<Metab_data*> expcon, expm0;
        void setmet();
     void setfige();
-    std::string read_con(std::ifstream& fi, std::string& arg1);
+    std::string read_con(std::ifstream& fi, std::string& arg1,int& nfi);
 //       double setLacInit(double fact){return lac.setInCon(fact);}
        void read (char *finame, int ndat);
        void flback();

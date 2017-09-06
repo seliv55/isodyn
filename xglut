@@ -1,5 +1,6 @@
 input_parameters glut/1
 output_dir  glut/
+max_fi_saved  33
 fluxes_main glut/statfl
 fluxes_compare glc/statfl
 gnuplot  -e "con=4;m0=5" xplt.p

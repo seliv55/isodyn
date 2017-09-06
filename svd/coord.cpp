@@ -81,8 +81,8 @@ void Analis::confidence(double factor,double fdes){
    }
 
 void Fit::perturb(const double f1){
-   int i=1; double sign,fact;
-     while(par[i]>=0){// cout<<"par["<<i<<"]="<<par[i]<<endl;
+    double sign,fact;
+     for(int i=1;i<par.size();i++){// cout<<"par["<<i<<"]="<<par[i]<<endl;
       sign = (double)rand() / (double)RAND_MAX;
 	fact = 1.- f1*(0.5 - sign);
 	rea[par[i]].setVm(rea[par[i]].v()*fact);
@@ -179,7 +179,7 @@ cout<< "\nPerturbation+CoordinateDescent:\nPar#\txi2con\txi2iso\tParValue\tdif:"
 //       xi=horse.fitcon(); Problem.write(tf,ifn,xi,suxx); ifn++;
 //       horse.setcon(); 
      for(;;){
-      for(int i=0;i<99;i++) {
+      for(int i=0;i<3;i++) {
         Problem.perturb(f1);
   try {
 //   while(xmax()>xlim) ; 

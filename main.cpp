@@ -46,10 +46,10 @@ inline void chekxi(char *efi){
 
     tuple<double,double,time_t> sol0;
     
-string Ldistr::read_con(ifstream& fi, string& arg1){
+string Ldistr::read_con(ifstream& fi, string& arg1,int& nfi){
 // read par-file, output dir, flux conf. inter: main and to compare
  string aaa, spar, sout, sflmain, sflcomp, gpl; 
- fi>>aaa>>spar>>aaa>>sout>>aaa>>sflmain>>aaa>>sflcomp;
+ fi>>aaa>>spar>>aaa>>sout>>aaa>>nfi>>aaa>>sflmain>>aaa>>sflcomp;
  getline(fi,aaa); 
  getline(fi,gpl); cout<<gpl<<endl;
      Problem.read(spar.c_str());    //read parameters
@@ -82,8 +82,8 @@ int main( int argc, char *argv[] ){
          fex1=argv[1]; fex2=fex1;
          
          
-     string arg1(argv[1]),name; ifstream fi(argv[2]);  int ntr(0);
-     string gpl=horse.read_con(fi,arg1); if(*Problem.getodir()=="glut/") ntr=1; 
+     string arg1(argv[1]),name; ifstream fi(argv[2]);  int ntr(0),Nfi;
+     string gpl=horse.read_con(fi,arg1,Nfi); if(*Problem.getodir()=="glut/") ntr=1; 
       ifn=Problem.setnumofi(); //number of parameter files
       cout<<ntr<<"=ntr "<<ifn<<"=ifn\n";
      
@@ -132,15 +132,14 @@ int main( int argc, char *argv[] ){
 //chekxi(1,33);
           int sys=system(gpl.c_str());//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
- if (argc>3) //if(argv[3][0]=='g') analis.grad(1000); else 
-{  stringstream stx(argv[3]); int ia; stx>>ia; cout<<ia<<endl; Problem.setfnfin(ifn+ia);
-   
-// 	cout<<"parameter set="<<ia<<endl;
-     try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<ia<<" files saved!\n"; return 0;}
+ if (argc>3) {  Problem.setfnfin(ifn+Nfi);
+  if(argv[3][0]=='f') analis.coord(0.03,1.07); else {
+     try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<Nfi<<" files saved!\n"; return 0;}
 	         Problem.stat(ifn-1);
                   sol0=Problem.read("1");
                    for(int i=0;i<numx;i++) xinit1[i]=xx[i];
                   }
+ }
 //               analis.sensitiv(tmax);
 //               analis.swarm(tmax,111);
 //               analis.grad(tmax);
