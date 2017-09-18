@@ -207,17 +207,10 @@ class Metab_data:public Metab {
       for(int i=0;i<=N;i++){ exper[nt1][i].mean=exper[nt2][i].mean; exper[nt1][i].sd=exper[nt2][i].sd;  }
                          }
    
- void sex(int niso, data mid[],int nt){ //exper[nt]=mid;
+ void sex(int niso, data mid[],int nt){ mi=niso;//exper[nt]=mid;
    for(int i=0;i<niso;i++) exper[nt][i].mean=mid[i].mean;
    for(int i=0;i<niso;i++) {exper[nt][i].sd=mid[i].sd; if(exper[nt][i].sd<0.01) exper[nt][i].sd=0.01;}
 //   for(int i=0;i<niso;i++) { if(mid[i].sd<0.01) mid[i].sd=0.01;}
-	}
-	
- void read(std::ifstream& fi,int nt){
-	unsigned i; std::string aaa;//i: isotopomer; j: time
-       fi >> mi;
-   for(i=0;i<=mi;i++) { fi>>exper[nt][i].mean;} fi>>aaa; fi>>aaa;
-   for(i=0;i<=mi;i++) {fi>>exper[nt][i].sd; if(exper[nt][i].sd<0.01) exper[nt][i].sd=0.01;}
 	}
 	
  void readc(std::ifstream& fi,  int nt){ std::string aaa;
@@ -228,7 +221,7 @@ class Metab_data:public Metab {
 
  data * getconc(){return conc;}
  
- int getmi(){return mi;}
+ int getmi(){ return mi;}
  
  void setconc(double a, int nt=0){ conc[nt].mean=a; conc[nt].sd=a*0.1; }
  data * getexper(int nt){return &exper[nt][0];}
@@ -490,6 +483,7 @@ class Ldistr {
         double integrbs();
 	double ddisolve();
         int stor(double st[]) ;
+        int getmicon();
 	Ldistr(): gl(6,"Gluc"), lac(3,"Lac"), glu(5,"Glutamate2-5"), gln(5,"Glutamin"), rna(5,"Rib"), glycog(6,"Glycog"), pro(5,"Pro"), asp(4,"Asp"), ala(3,"Ala"), ser(3,"Ser"), agl(3,"Glycerol"), pyrm(3,"Pyr"), coa(2,"CoA"), coac(2,"coac"), gly(2,"Gly"),  oa(4,"Oaa"), oac(4,"oac"), cit(6,"Cit"), akg(5,"aKg"), fum(4,"Fum"), mal(4,"Mal"), glu25(5,"glutamate2-5"),
 	 fbp(6), t3(3), pep(3), pyr(3), cthf(1), citc(6), akgc(5), e4(4),
 	  h6(6), s7(7), p5(5,"rib")  {setmet(); getN(); }

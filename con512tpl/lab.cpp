@@ -32,8 +32,12 @@ void Ldistr::sklad(int itime){
  for(int i=0;i<expcon.size();i++) expcon[i]->skladc(itime);
  }
 
+int Ldistr::getmicon(){ int n=expcon.size();
+ for(int i=0;i<expm0.size();i++) { n += expm0[i]->getmi();}
+ return n;}
+
 void Ldistr::massfr() {
-for(int i=0;i<expm0.size();i++) expm0[i]->percent(); glu.percent(1,1); glu25.percent(1,0);
+for(int i=0;i<expm0.size();i++) expm0[i]->percent(); 
 for(int i=0;i<expcon.size();i++) expcon[i]->percent(); glu.percent(1,1); glu25.percent(1,0);
 }
 
@@ -73,8 +77,9 @@ for(int i=0;i<em0con.size();i++) fo<<em0con[i]-> getdescr()<<" "; fo<<'\n';}
 
 double Ldistr::consum() { double sum(0.); vector<Metab_data*> externcon = expcon;
  for(int i=0;i<=lmet;i++) { int j;
-   for(j=0;j<externcon.size();j++) if(met[i]->getdescr()==externcon[j]->getdescr()) {externcon.erase(externcon.begin()+j); j=-1; break;}
-     if(j==externcon.size()) {sum += met[i]->sumt();}}
+   for(j=0;j<externcon.size();j++) if(met[i]->getdescr()==externcon[j]->getdescr()) {
+                                  externcon.erase(externcon.begin()+j); j=-1; break;}
+     if(j==externcon.size()) sum += met[i]->sumt(); }
  for(int i=0;i<lmetb;i++) {sum += metb[i]->sumt();}
  for(int i=0;i<lmetk;i++) {sum += metk[i]->sumt();}
 return sum;}

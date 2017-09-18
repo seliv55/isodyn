@@ -132,7 +132,9 @@ int main( int argc, char *argv[] ){
 //chekxi(1,33);
           int sys=system(gpl.c_str());//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
+                cout<<"niso="<<horse.getmicon()<<'\n';
  if (argc>3) {  Problem.setfnfin(ifn+Nfi);
+//               analis.grad(tmax);
   if(argv[3][0]=='f') analis.coord(0.03,1.07); else {
      try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<Nfi<<" files saved!\n"; return 0;}
 	         Problem.stat(ifn-1);
@@ -142,7 +144,6 @@ int main( int argc, char *argv[] ){
  }
 //               analis.sensitiv(tmax);
 //               analis.swarm(tmax,111);
-//               analis.grad(tmax);
 }
 return 0;}
 
