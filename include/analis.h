@@ -12,7 +12,7 @@ double xmax();
 double minx(){double mx=xx[0]; for(int i=1;i<numx;i++) if(xx[i]<mx)mx=xx[i]; return mx;}
 void revsvd(Mat_I_DP &aa,Vec_I_DP &w, Mat_I_DP &ai,Mat_O_DP &u);
 void matmult(Mat_I_DP &aa, Mat_I_DP &ai,Mat_O_DP &u);
-void hessian(int ndim,int np,int nex,double xi0,double st[], Mat_DP& aa,Vec_DP& b,int par1[],double tmax);
+void hessian(int ndim,int np,int nex,double xi0,double st[], Mat_DP& aa,Vec_DP& b,int par1[],int nt);
 void cross(double p1[],double p2[]);
 void mutate(int npf,int par[]);
 public:
@@ -22,7 +22,7 @@ void fitm0(const double tmax);
 void sensitiv(const double tmax);
 void coord(const double f1, double);
 void confidence(double,double);
-void grad(double tmax);
+void grad(int );
 void swarm(const double tmax,const int ngen);
 void genetic(const double tmax,const int ngen);
 Analis(){}

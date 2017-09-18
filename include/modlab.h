@@ -198,7 +198,8 @@ class Metab_data:public Metab {
   double xicon[tt], xi[tt];
   int mi;
 	public:
- void setex0(){
+  bool flcon;
+  void setex0(){
      exper[0][0].mean=1.; exper[0][0].sd=0.01;
       for(int i=1;i<=mi;i++){ exper[0][i].mean=0.; exper[0][i].sd=0.01;  }
                          }
@@ -223,6 +224,13 @@ class Metab_data:public Metab {
  
  int getmi(){ return mi;}
  
+ int storc(double dis[],int nt) {if(conc[nt].mean>1e-5) dis[0]=this->calc[N+1]/conc[nt].mean; else dis[0]=0.; return 1;}
+ 
+ int stormi(double dis[],int nt) {for(int i=0;i<mi;i++)
+     if(exper[nt][i].mean>1e-3) dis[i]=this->calc[i]/exper[nt][i].mean; else dis[i]=0.; return mi;}
+ 
+ void rizeflcon(){flcon=1;}
+  
  void setconc(double a, int nt=0){ conc[nt].mean=a; conc[nt].sd=a*0.1; }
  data * getexper(int nt){return &exper[nt][0];}
 
@@ -270,7 +278,7 @@ class Metab_data:public Metab {
  }
 void setexper(int nt){for(int i=0;i<nt;i++) exper[i]=new data[N+1]; exper[0][0].mean=1.; }
 void delexper(int nt){for(int i=0;i<nt;i++) delete[] exper[i];}
-  Metab_data(int n,std::string simya=" "):Metab(n,simya){}
+  Metab_data(int n,std::string simya=" "):Metab(n,simya){flcon=0;}
   ~Metab_data(){}
 };
 
@@ -473,7 +481,8 @@ class Ldistr {
       void defcol(int nucol[],std::vector<std::string> vstr);
       int findmet(Iso&);
       Tracer rcsv(std::ifstream& fi,std::vector<Iso>& result,int mar=0 );
-        int diff(const double da,double st[], double *palpha) ;
+ void diff(double da,double dd[],double st[],int nex){for(int i=0;i<nex;i++) dd[i] -= st[i]/da;}
+
         void show(std::ostringstream& fo,double xfin);
         void showcon(std::ostringstream& fo,double xfin);
         void showdescr(std::ostringstream& fo,std::vector<Metab_data*>);
@@ -482,7 +491,8 @@ class Ldistr {
         void massfr();
         double integrbs();
 	double ddisolve();
-        int stor(double st[]) ;
+        int stor(double dist[],int nt) ;
+        void setflcon();
         int getmicon();
 	Ldistr(): gl(6,"Gluc"), lac(3,"Lac"), glu(5,"Glutamate2-5"), gln(5,"Glutamin"), rna(5,"Rib"), glycog(6,"Glycog"), pro(5,"Pro"), asp(4,"Asp"), ala(3,"Ala"), ser(3,"Ser"), agl(3,"Glycerol"), pyrm(3,"Pyr"), coa(2,"CoA"), coac(2,"coac"), gly(2,"Gly"),  oa(4,"Oaa"), oac(4,"oac"), cit(6,"Cit"), akg(5,"aKg"), fum(4,"Fum"), mal(4,"Mal"), glu25(5,"glutamate2-5"),
 	 fbp(6), t3(3), pep(3), pyr(3), cthf(1), citc(6), akgc(5), e4(4),

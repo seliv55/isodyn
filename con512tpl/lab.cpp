@@ -32,13 +32,19 @@ void Ldistr::sklad(int itime){
  for(int i=0;i<expcon.size();i++) expcon[i]->skladc(itime);
  }
 
+int Ldistr::stor(double dist[],int nt){int n(0);
+ for(int i=0;i<expcon.size();i++) {n +=expcon[i]->storc(&dist[n],nt);}
+ for(int i=0;i<expm0.size();i++) {n += expm0[i]->stormi(&dist[n],nt);}
+ return n;}
+ 
 int Ldistr::getmicon(){ int n=expcon.size();
  for(int i=0;i<expm0.size();i++) { n += expm0[i]->getmi();}
  return n;}
 
 void Ldistr::massfr() {
 for(int i=0;i<expm0.size();i++) expm0[i]->percent(); 
-for(int i=0;i<expcon.size();i++) expcon[i]->percent(); glu.percent(1,1); glu25.percent(1,0);
+for(int i=0;i<expcon.size();i++) if(expcon[i]->flcon) expcon[i]->percent();
+ glu.percent(1,1); glu25.percent(1,0);
 }
 
 double Ldistr::xits(int its) {int itp=its-1; double xi=0;

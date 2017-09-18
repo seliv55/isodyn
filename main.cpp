@@ -65,12 +65,20 @@ string Ldistr::read_con(ifstream& fi, string& arg1,int& nfi){
       for(int i=0;i<isu;i++){
        fi>>aaa; int k;
         for(k=0;k<=lmet;k++) if(aaa.find(met[k]->getdescr())+1) {
-     for(int j=0;j<ntime;j++) {
-       double cc;fi>>cc; met[k]->setconc(cc,j); xx[k]=met[k]->getconc()[0].mean;}
+           for(int j=0;j<ntime;j++) {
+       double cc; fi>>cc; met[k]->setconc(cc,j); xx[k]=met[k]->getconc()[0].mean;}
              expcon.push_back(met[k]);  break;}
              if(k==lmet) for(int j=0;j<ntime;j++) fi>>aaa;
                 }
    }   return gpl;}
+void Ldistr::setflcon(){ int i, ifound;
+       for(int j=0;j<expcon.size();j++){
+        for(i=0;i<expm0.size();i++){
+       ifound=expcon[j]->getdescr().find(expm0[i]->getdescr())+1; if(ifound) break; }
+       if(!ifound) {expcon[j]->rizeflcon(); cout<<expcon[j]->getdescr()<<" flcon=1\n";}
+         else cout<<expcon[j]->getdescr()<<" flcon=0\n";
+       }
+}
 
 int main( int argc, char *argv[] ){
 // run: ./isodyn.out  experim_MID-lile concentr_and_param_info_file [sx_NumOfFileSavedInFitting]
@@ -93,6 +101,7 @@ int main( int argc, char *argv[] ){
      cout.precision(3);
 //     sol0=Problem.read(argv[2]);    //read parameters
         horse.readExp(argv[1],ntr);            // read experimental data 
+        horse.setflcon();
       int m0len=horse.wrim0ex("exm0");                // set experimental data for figure
       int conlen=horse.wriconex("excon");                // set experimental data for figure
      for(int i=0;i<numx;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values
@@ -133,8 +142,8 @@ int main( int argc, char *argv[] ){
           int sys=system(gpl.c_str());//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
                 cout<<"niso="<<horse.getmicon()<<'\n';
+               analis.grad(1);
  if (argc>3) {  Problem.setfnfin(ifn+Nfi);
-//               analis.grad(tmax);
   if(argv[3][0]=='f') analis.coord(0.03,1.07); else {
      try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<Nfi<<" files saved!\n"; return 0;}
 	         Problem.stat(ifn-1);
