@@ -9,7 +9,7 @@ Version: 1.0
 
 ## Description
 
-“Isodyn” is a C++-program that performs an analysis of stable isotope tracer data to assess metabolic flux profiles in living cells. Isodyn simulates the dynamics of isotopic isomer (isotopomer) distribution in central metabolic pathways, and, by changing its parameters, which reflect the characteristics of corresponding biochemical reactions, fit the simulated dynamics of mass isotopomers to that observed experimentally. The simulated metabolic fluxes that correspond to the best fit are assumed to reproduce the real fluxes in the analyzed biological object and conditions. Isodyn contains tools that check the goodness of fit and perform a statistical analysis of obtained metabolic fluxes.
+“Isodyn” is a C++-program that performs an analysis of stable isotope tracer data to assess metabolic flux profiles in living cells. Isodyn simulates propagation of 13C label from artificially 13C enriched substrates into isotopic isomers (isotopomers) of metabolites of central metabolic pathways. It performs fitting the simulated dynamics of mass isotopomers to that observed experimentally, thus finding the parameters, which reflect the characteristics of corresponding biochemical reactions, and metabolic fluxes that correspond to the real fluxes under the analyzed biological object and conditions. Isodyn contains tools that check the goodness of fit and perform a statistical analysis of obtained metabolic fluxes.
 
 ## Key features
 
@@ -58,40 +58,58 @@ Version: 1.0
 
 Isodyn can run in several modes:
 
-- The following command forces Isodyn to perform just one simulation of the data presented in "experimental_data_file" with a set of parameters presented in "parameters_file" and stop:
+- The following command forces Isodyn to perform just one simulation of the metabolite labeling data presented in "labeling_data_file" and external concentrations and other input information (path to the file with model parameters; path to output directory; max number of parameter files saved during optimization; path to the file where statistical data are saved) presented in "additional_info_file" and stop:
  
 ```
-  ./isodyn.out experimental_data_file parameters_file 
+  ./isodyn.out [labeling_data_file] [additional_info_file] 
 ```
 
 - The addition of parameter "s" forces to calculate the confidence intervals for all fluxes, based on the previously saved in the output directory files with model parameters and metabolic fluxes, and save the results in file "statfl":
  
 ```
- ./isodyn.out experimental_data_file parameters_file s 
+ ./isodyn.out [labeling_data_file] [additional_info_file] s 
 ```
 
 - The addition of parameter "x" forces to recalculate the χ2 for the parameters sets previously saved in the output directory as files "1", "2", etc:
  
 ```
- ./isodyn.out experimental_data_file parameters_file x 
+ ./isodyn.out [labeling_data_file] [additional_info_file] x 
 ```
 
 - The addition of integer forces to perform optimization using Simulated Annealing algorithm minimizing χ2 and stop after saving "int_number" of files with optimized parameters in the output directory:
  
 ```
- ./isodyn.out experimental_data_file parameters_file int_number 
+ ./isodyn.out [labeling_data_file] [additional_info_file] [int] 
+```
+
+- find a set of parameters, which change produces linearly independent changes iin the output corresponding to the experimental data:
+ 
+```
+ ./isodyn.out [labeling_data_file] [additional_info_file] g 
+```
+
+- optimise parameters for transketolase reaction:
+ 
+```
+ ./isodyn.out [labeling_data_file] [additional_info_file] tk 
+```
+
+- optimise parameters for transaldoase reaction:
+ 
+```
+ ./isodyn.out [labeling_data_file] [additional_info_file] ta 
 ```
 
 
  
 ## The provided examples:
  
-The provided set of multipeak CDF files contain the mass isotopomer distributions measured for various metabolites for three cell lines A549, BEAS2B, and NCIH460. Moreover the presented set of monopeak CDF files contains the mass isotopomer distributions measured for HUBEC cells. All these data, extracted by RaMID and corrected by midcor serve as examples of data that Isodyn uses for simulations. An initial set of parameters presented in the file "out/1". Below are the examples of commands to run Isodyn in several modes.
+The provided file "A549", is obtained applying tools supporting a workflow of primary analysis of raw data machine written in multipeak CDF files (R-programs RaMID or CDF2MID, and MIDcor). It contains the mass isotopomer distributions measured for various metabolites of central pathways. The other infrmation necessary for simulations with Isodyn (path to the file with model parameters; path to output directory; max number of parameter files saved during optimization; path to the file where statistical data are saved) is presented in the file "xglc". Below are the examples of commands to run Isodyn in several modes.
 
 Single simulation:
 
 ```
- ./isodyn.out A549 out/1 
+ ./isodyn.out A549 xglc 
 ```
 
 screenshot of a simulation of input data, shown only for unlabeled fraction (m0)
@@ -99,23 +117,7 @@ screenshot of a simulation of input data, shown only for unlabeled fraction (m0)
 ![screenshot](Screenshot.png)
 
  
-- Statistics for fluxes, saved in the files  "1", "2", etc, in the directory /out:
-
-```
- ./isodyn.out A549 out/1 s 
-```
- 
-- recalculating χ2 for the parameters sets previously saved in the output directory out/1 as files "1", "2", etc:
- 
-```
- ./isodyn.out  A549 out/1 x 
-```
-
-- performing optimization using Simulated Annealing algorithm minimizing χ2 and stop after saving 33 files with optimized parameters in the output directory:
- 
-```
- ./isodyn.out  A549 out/1 33 
-```
+- the other modes of Isodyn functioning are achieved by addition of one more parameter to the above command as described in "Usage instruction"
 
 ## Publications
 
