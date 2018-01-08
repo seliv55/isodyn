@@ -1,0 +1,8 @@
+y1: p1f - (v[1]+p2f*v0[2])/(v[1]+v0[2]);
+y2: p2f - (p1f*v[2])/(v[2]+v0[3]);
+sol: algsys([y1,y2],[p1f,p2f]);
+y1: p1f - (p2f*v0[2])/(v[1]+v0[2]);
+y2: p2f - (v0[3]+p1f*v[2])/(v[2]+v0[3]);
+sol1: algsys([y1,y2],[p1f,p2f]);
+stringout("ald","sol",sol,"sol1",sol1);
+

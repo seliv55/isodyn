@@ -18,9 +18,9 @@ void derivsl(const DP x, Vec_IO_DP &y, Vec_O_DP &dydx){
 }
 
 double Ldistr::integrbs(){
-  DP eps=1.0e-6,h1=0.00001,hmin=1.0e-11,x1=0.0, tm,xi=0., xii;
-   const int KMAX(2),icol(nflx);  Vec_DP yy(Nn);  DP *pyinit = &yy[0];
-     ssc(pyinit);
+  DP eps=1.0e-6,h1=0.00001,hmin=1.0e-11,t=0.0, tm,xi=0., xii;
+     Vec_DP yy(Nn); DP *pyinit = &yy[0];
+   const int KMAX(2),icol(nflx);
       xp_p=new Vec_DP(KMAX); yp_p=new Mat_DP(Nn,KMAX);
         Vec_DP &xp=*xp_p;  Mat_DP &yp=*yp_p;
         double *potok=new double [ntime*icol]; double *ppotok[ntime];
@@ -28,22 +28,24 @@ double Ldistr::integrbs(){
     int nbad,nok; nrhs=0; kmax=KMAX;
           ostringstream foc1, kinet, kicon, flxkin;
     foc1.precision(4); kinet.precision(4);
- massfr();
-    showdescr(kinet,expm0);  show(kinet,0);
-    showdescr(kicon,expcon);  showcon(kicon,0);
- double xfin; sklad(0);
+   ssc(pyinit);
+    massfr();
+     showdescr(kinet,expm0);  show(kinet,0);
+     showdescr(kicon,expcon);  showcon(kicon,0);
+ double tout; sklad(0);
   for(int j=0;j<nflx;j++) ppotok[0][j]=flx[j]*1000.*dt;
-        for(int i=1;i<(ntime);i++) {tm=(tex[i]-x1)/10.;
+        for(int i=1;i<(ntime);i++) {tm=(tex[i]-t)/10.;
         dxsav = tm/((double)(KMAX-1));
-        for(int k=0;k<10;k++){ xfin=x1+tm;
-    NR::odeint(yy,x1,xfin,eps,h1,hmin,nok,nbad,derivsl,NR::rkqs);
-massfr();   show(kinet,xfin);  showcon(kicon,xfin);
-    x1=xfin;
+        for(int k=0;k<10;k++){ tout=t+tm;
+         setiso(pyinit);
+    NR::odeint(yy,t,tout,eps,h1,hmin,nok,nbad,derivsl,NR::rkqs);
+  massfr();   show(kinet,tout);  showcon(kicon,tout);
+    t=tout;
     }
 xi += xits(i);
 xi += xicon(i);  sklad(i);
-     x1=tex[i];  for(int j=0;j<nflx;j++) ppotok[i][j]=flx[j]*1000.*dt;
-    }
+      for(int j=0;j<nflx;j++) ppotok[i][j]=flx[j]*1000.*dt;
+    } 
 wrikin(foc1,ntime);
 wricon(foc1,ntime);
   for(int j=0;j<nflx;j++) { flxkin<<Problem.fid[j]<<" "; for(int i=0;i<ntime;i++) flxkin<<ppotok[i][j]<<" "; flxkin<<"\n";}

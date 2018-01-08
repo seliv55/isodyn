@@ -1,0 +1,37 @@
+ketose<6> h6;
+Metab_data<6> fbp;
+Metab_data<3> t3;
+Metab_data<3> pep;
+Metab_data<3> pyr;
+Metab_data<3> pyrm;
+Metab_data<2> coa;
+Metab_data<2> coac;
+Metab_data<3> agl;
+Metab_data<4> oa;
+Metab_data<4> oac;
+Metab_data<6> cit;
+Metab_data<6> citc;
+Metab_data<5> akg;
+Metab_data<5> akgc;
+Metab_data<4> fum;
+Metab_data<4> mal;
+ketose<5> p5;
+Metab_data<4> e4;
+ketose<7> s7;
+Metab<1> cthf;
+Metab<3> dhe;
+Metab<2> gae;
+Metab_data<6> gl;
+Metab_data<3> lac;
+Metab_data<5> glu;
+Metab_data<5> gln;
+Metab_data<3> ala;
+Metab_data<4> asp;
+Metab_data<3> ser;
+Metab_data<2> gly;
+Metab_data<5> pro;
+Metab_data<5> rna;
+void sklad(int itime){
+pyr.skladm0(itime); agl.skladm0(itime); oac.skladm0(itime); cit.skladm0(itime); akg.skladm0(itime); fum.skladm0(itime); mal.skladm0(itime); gl.skladc(itime); gl.skladm0(itime); lac.skladc(itime); gln.skladm0(itime); }
+void wrikin(std::ostringstream& so, int nt){
+pyr.wrikinm0("npyr",so,nt); agl.wrikinm0("nagl",so,nt); oac.wrikinm0("noac",so,nt); cit.wrikinm0("ncit",so,nt); akg.wrikinm0("nakg",so,nt); fum.wrikinm0("nfum",so,nt); mal.wrikinm0("nmal",so,nt); gl.wrikinc("ngl",so,nt); gl.wrikinm0("ngl",so,nt); lac.wrikinc("nlac",so,nt); gln.wrikinm0("ngln",so,nt); }

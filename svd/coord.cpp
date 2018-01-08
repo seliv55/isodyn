@@ -19,7 +19,7 @@ double Analis::descent(double factor,int ip){
 //  if(ip>=0) {for(k=0;k<npf;k++) if(parcp[k] = ip) break;
 //   cout<<"Descent: par="<<Problem.rea[parcp[k]].getname()<<endl;
 //                 for(int i=k;i<npf;i++) parcp[i] = parcp[i+1]; npf--;}
-  while (npf>0)  {int j(0), flag(0);
+  while (npf>0)  {int flag(0);
    cout<<"N(pars)="<<npf<<endl;
    int i = rand() % npf; npf--;  cout << i << endl;
     while (flag<2) { oval = Problem.rea[parcp[i]].v();
@@ -39,7 +39,33 @@ double Analis::descent(double factor,int ip){
 	 parcp.erase(parcp.begin()+i); npf=parcp.size();}
 	   parcp=parstor;
   }
- return x00;}
+ return chimin;}
+ 
+double Analis::desK(double factor,int ip){ 
+	double xi1, oval, sens, dp=factor-1.;
+ int npf=Problem.rea[ip].genpar(); ifn++;
+ double *par=Problem.rea[ip].getpar(),parcp[npf];
+  for(int i=0;i<npf;i++) parcp[i]=par[i];
+  for(int iii=0;iii<2;iii++){
+  for(int i=1;i<npf;i++)  {int flag(0);
+    while (flag<2) { 
+     oval = Problem.rea[ip].chanVm(factor,i);
+      cout << "i=" << i<<" old="<<oval<<" new="<<oval*factor<<endl;
+      try{ tuple<double,double,time_t> sol =solve();  xi1 =get<0>(sol);
+    if((tf/tmin)<1) {//xi1*tf*suxx/xmin/chimin/
+      Problem.write(sol,ifn);
+  
+//         for(int i=0;i<numx;i++) xinit1[i]=xx[i];
+          chimin=xi1; tmin=tf; xmin=suxx;
+          } 
+     else {factor = 1./factor; ++flag; Problem.rea[ip].setVm(oval,i);}
+    }  catch( char const* str ){cout << "Analis::desK: "<< str <<endl;
+                              for(int i=0;i<npf;i++) par[i]=parcp[i];}
+      
+        }//end while flag
+	 }
+  }
+ return chimin;}
  
  void Analis::rconfint(ifstream& fi, double ami[],double ama[]){
   string aaa; getline(fi,aaa);

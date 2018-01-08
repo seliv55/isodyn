@@ -22,7 +22,7 @@ class Iso {
   int niso; double ttime;  std::string name; data *mid;
  public:
     void showmid(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].mean<<" "; std::cout<<name+s<<" time="<<ttime<<'\n';}
-    void showsd(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].sd<<" "; std::cout<<name+s<<std::endl;}
+    void showsd(std::string s=""){for(int i=0;i<niso;i++) std::cout<<mid[i].sd<<" "; std::cout<<name+s<<'\n';}
     void calmesd(std::vector<Iso>& linj){
        int len=linj.size();
          for(int ic=0;ic<niso;ic++) { mid[ic].mean=0.; mid[ic].sd=0.;
@@ -60,11 +60,13 @@ class Metab{
       const int N, len;
       bool flag;
       double fc,tcon, *calc, kinc[tt],kinm0[tt];
+      data conc[tt];
   std::string descr;
  public:
 	double *iso, *diso;
 	int ny;
  double* getcalc(){return &calc[0];}
+ int getN(){return N;}
  std::string getdescr(){return descr;}
 	
  double percent(const int left=0,const int riht=0){
@@ -80,6 +82,8 @@ class Metab{
 		return calc[N+1]=tot;
 	}
 	
+ void setconc(double a, int nt=0){ conc[nt].mean=a; conc[nt].sd=a*0.1; }
+ 
  void skladc(int itime){  kinc[itime]=calc[N+1]; }
  
  void skladm0(int itime){ kinm0[itime]=calc[0]/calc[N+1]; }
@@ -89,7 +93,7 @@ class Metab{
 		for (i=0;i<len;i++) sum += iso[i];
 		return calc[N+1]=sum;
 	}
- double input(Metab& s2,const double& vi,const double& vo){
+ double input(Metab& s2,const double& vi,const double& vo=0.){
 		double x, sum=0.;
 		for(int i=0;i<len;i++) {
 			x=(vi*(iso[i])-vo*(s2.iso[i]));
@@ -101,6 +105,7 @@ class Metab{
 		for(int i=0;i<len;i++) {
 			x=vi*iso[i];	diso[i] -= x;}
 	}
+ 
  void set0(const double& s0){
 		iso[0]=s0;
 		for(int i=1;i<len;i++) iso[i]=0.;
@@ -111,8 +116,8 @@ class Metab{
  void showsum(Metab& s2,std::ostringstream& fo){
    fo<<" "<<std::setw(7)<<(this->calc[0]+s2.calc[0])/(this->calc[N+1]+s2.calc[N+1]);
  }
- void showm0(std::ostringstream& fo){
-   fo<<" "<<std::setw(7)<<(this->calc[0]/this->calc[N+1]);
+ void showm0(std::ostringstream& fo){ double m0=this->calc[0]/this->calc[N+1];
+   fo<<" "<<std::setw(7)<<m0;
  }
 
  void showcon(std::ostringstream& fo){
@@ -187,14 +192,45 @@ class Metab{
 		}
 	return sum;}
        void sett(){ tcon= this->sumt();}
+       
         double getcon() const {return tcon;}
+        
+ void split(Metab& pr1, Metab& pr2,const double v){
+  int l1=pr1.getlen()-1, n1=pr1.getN();
+   for(int i=0;i<this->len;i++) {
+    int ip1=(i&l1), ip2=(i>>n1);
+    double x=this->iso[i]*v;
+    this->diso[i] -= x;
+    pr1.diso[ip1] += x; pr2.diso[ip2] += x;
+    }
+ }
+ 
+ void splinverse(Metab& pr1, Metab& pr2,const double vf,const double vr){
+  int l1=pr1.getlen()-1, n1=pr1.getN(), n2=pr2.getN();
+   for(int i=0;i<this->len;i++) {
+    int ip1(i&l1), ip(i>>n1),ip2(0);
+    for(int i=0;i<n2;i++) if(ip&(1<<i)) ip2=(ip2|(1<<(n2-i-1)));
+    double x=this->iso[i]*vf-pr1.iso[ip1]*pr2.iso[ip2]*vr;
+    this->diso[i] -= x;
+    pr1.diso[ip1] += x; pr2.diso[ip2] += x;
+    }
+ }
+ 
+ void condence(Metab& s1, Metab& s2,const double v){
+  int n1=s1.getN(),ip,ip1; double x, dx;
+   for(int i=0;i<s2.getlen();i++) { x=s2.iso[i]*v; ip=(i<<n1); 
+        for(int j=0;j<s1.getlen();j++){dx=x*s1.iso[j]; ip1=(ip|j);
+//     std::cout<<"ip="<<ip1<<" i="<<i<<" j="<<j<<std::endl;
+    this->diso[ip1] += dx;
+    s1.diso[j] -= dx; s2.diso[i] -= dx; }}
+ }
         
 	Metab(int n,std::string simya=""): N(n), len(1<<n), descr(simya) { calc=new double[N+2];} //
 	virtual ~Metab(){ delete[] calc;}
 };
 
 class Metab_data:public Metab {
-  data conc[tt], *exper[tt];
+  data  *exper[tt]; double *calstor[tt];
   double xicon[tt], xi[tt];
   int mi;
 	public:
@@ -226,12 +262,12 @@ class Metab_data:public Metab {
  
  int storc(double dis[],int nt) {if(conc[nt].mean>1e-5) dis[0]=this->calc[N+1]/conc[nt].mean; else dis[0]=0.; return 1;}
  
- int stormi(double dis[],int nt) {for(int i=0;i<mi;i++)
-     if(exper[nt][i].mean>1e-3) dis[i]=this->calc[i]/exper[nt][i].mean; else dis[i]=0.; return mi;}
+ int stormi(double dis[],int nt) {
+     for(int j=1;j<nt;j++) for(int i=0;i<mi;i++) dis[i+(j-1)*mi]=this->calstor[j][i];
+      return mi*(nt-1);}
  
  void rizeflcon(){flcon=1;}
   
- void setconc(double a, int nt=0){ conc[nt].mean=a; conc[nt].sd=a*0.1; }
  data * getexper(int nt){return &exper[nt][0];}
 
  void showmi(std::ostringstream& fo,int nt){
@@ -239,23 +275,19 @@ class Metab_data:public Metab {
    fo<<"Data";for (int k=0;k<=N;k++) fo<<" "<<std::setw(7)<<exper[nt][k].mean; fo<<"\n";
  }
 
- double chisq(int nt,int nl, double add=0.,double a0=0.) {
-	double a, b=this->calc[N+1]+add, b0=this->calc[0]+a0;
-	 xi[nt]=0; 
-    if(exper[nt][0].mean>1.e-5){
-       if(exper[nt][0].sd>1.e-5){
-     a=(exper[nt][0].mean-b0/b)/(exper[nt][0].sd); xi[nt] += a*a;
-  for(int k=1;k<nl;k++) {
-     a=(exper[nt][k].mean-this->calc[k]/b)/(exper[nt][k].sd); xi[nt] += a*a;
-                         } }    }	
-  return xi[nt];}
+ double chisq(int nt) {     xi[nt]=0.; double a; 
+  for(int k=0;k<mi;k++) if(exper[nt][k].sd>5.e-3){
+   calstor[nt][k]=calc[k]/calc[N+1];
+    a=(exper[nt][k].mean - calstor[nt][k])/(exper[nt][k].sd); xi[nt] += a*a;}
+       else calstor[nt][k]=0.;
+         return xi[nt];}
   
  double chisqsum(Metab& s2,int nt,int nl) {
 	double a, b=this->calc[N+1]+s2.getcalc()[N+1];
 	 xi[nt]=0; 
   if(exper[nt][0].sd>1.e-5) for(int k=0;k<nl;k++) {
-     a=(exper[nt][k].mean-(this->calc[k]+s2.getcalc()[k])/b)/(exper[nt][k].sd); xi[nt] += a*a;
-     }
+     a=(exper[nt][k].mean-(this->calc[k]+s2.getcalc()[k])/b)/(exper[nt][k].sd);
+      xi[nt] += a*a; }
   return xi[nt];}
 
  double chicon(int nt) {
@@ -273,11 +305,10 @@ class Metab_data:public Metab {
      if(xi[nt-1]>0){ so.precision(3);
       so<<"\n"<<std::setw(12)<<descr<<"_m0: ";
     for(int i=0;i<nt;i++)  so<<std::setw(9)<<this->kinm0[i];
-    so<<" : "<<std::setw(7)<<exper[nt-1][0].mean<<" -> "<<xi[nt-1];
+    so<<" : "<<std::setw(7)<<exper[nt-1][0].mean<<" -> "<<xi[nt-1]; }
  }
- }
-void setexper(int nt){for(int i=0;i<nt;i++) exper[i]=new data[N+1]; exper[0][0].mean=1.; }
-void delexper(int nt){for(int i=0;i<nt;i++) delete[] exper[i];}
+void setexper(int nt){for(int i=0;i<nt;i++) {exper[i]=new data[N+1]; calstor[i]=new double[N+1];} exper[0][0].mean=1.; }
+void delexper(int nt){for(int i=0;i<nt;i++) {delete[] exper[i]; delete[] calstor[i];}}
   Metab_data(int n,std::string simya=" "):Metab(n,simya){flcon=0;}
   ~Metab_data(){}
 };
@@ -424,11 +455,10 @@ class ketose:public Metab_data {
 
 class Ldistr {
 	int ntime,lmet,lmetb, lmetk, itrac,markis,Nn;
-  Metab_data gl, lac, glu, gln, rna, glycog, pro, asp, ala, ser, agl, pyrm, coa, coac, gly, oa, oac, cit, akg, fum, mal, glu25;
-  Metab fbp, t3, pep, pyr, cthf, citc, akgc, e4;
+  Metab_data gl, lac, glu, gln, rna, glycog, pro, asp, ala, ser, agl, pyrm, coa, coac, gly, oa, oac, cit, akg, fum, mal, glu25, fbp, t3, pep, pyr, citc, akgc, e4;
+  Metab cthf,dhe,gae;
   ketose h6, s7, p5;
   double lacout,coaefl,tca,fpdh,marfrac;
-  std::vector<double> tex, texcon;
   std::vector<Iso> result;
       void symm (double *s);
  void csyn(double *coai,double *dcoai,double *oai,double *doai,double *dciti,const double v);
@@ -436,8 +466,14 @@ class Ldistr {
  void spInvsl(double *h6,double *dh6,double *t1,double *dt1,const double vf,const double tsum);
  void ast (double vf,double vr);
 
- void sklad(int itime);
 
+ void fitmet(double& xic,int iout,int iin,double fac);
+ double fitm(double& xic,int ipar,double fac);
+ double ser_gly (double v, double xthf);
+ double gly_ser (double v);
+  std::set<std::string> findopt(std::string a, std::vector<std::string> strok);
+ void splitstrings(std::vector<std::string> segline[],int nstrok,std::vector<std::string> substrok);
+ public:
  void wrikin(std::ostringstream& so, int nt){
    for(int i=0;i<expm0.size();i++) expm0[i]->wrikinm0(so,nt);
  }
@@ -446,24 +482,19 @@ class Ldistr {
    for(int i=0;i<expcon.size();i++) expcon[i]->wrikinc(so,nt); so<<"\n";
  }
 
+  std::vector<double> tex, texcon;
        void setdiso(double *pyinit);
        void setiso(double *pyinit);
- void fitmet(double& xic,int iout,int iin,double fac);
- double fitm(double& xic,int ipar,double fac);
- double ser_gly (double v, double xthf);
- double gly_ser (double v);
-  std::set<std::string> findopt(std::string a, std::vector<std::string> strok);
- void splitstrings(std::vector<std::string> segline[],int nstrok,std::vector<std::string> substrok);
-// void setmet(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
-// void setm0(Metab& met,data cmet[],data emet[][l+1],std::string sname,int vin,int vout);
- public:
+   void sklad(int itime);
    int wrim0ex(std::string );
    int wriconex(std::string fn);
       static Metab_data *met[];
       static Metab *metb[];
       static ketose *metk[];
       std::vector<Metab_data*> expcon, expm0;
+      std::vector<ketose*> kexpm0;
        void setmet();
+       void setcon();
     void setfige();
     std::string read_con(std::ifstream& fi, std::string& arg1,int& nfi);
 //       double setLacInit(double fact){return lac.setInCon(fact);}
@@ -471,6 +502,7 @@ class Ldistr {
        void flback();
        int getN();
        int getNn(){return (Nn);}
+       int getntime(){return (ntime);}
        void ssc(double *);
        void distr(double *py,double *pdydt);
        double consum();
@@ -481,8 +513,6 @@ class Ldistr {
       void defcol(int nucol[],std::vector<std::string> vstr);
       int findmet(Iso&);
       Tracer rcsv(std::ifstream& fi,std::vector<Iso>& result,int mar=0 );
- void diff(double da,double dd[],double st[],int nex){for(int i=0;i<nex;i++) dd[i] -= st[i]/da;}
-
         void show(std::ostringstream& fo,double xfin);
         void showcon(std::ostringstream& fo,double xfin);
         void showdescr(std::ostringstream& fo,std::vector<Metab_data*>);
@@ -491,11 +521,11 @@ class Ldistr {
         void massfr();
         double integrbs();
 	double ddisolve();
-        int stor(double dist[],int nt) ;
+        int stor(double dist[]);
         void setflcon();
         int getmicon();
 	Ldistr(): gl(6,"Gluc"), lac(3,"Lac"), glu(5,"Glutamate2-5"), gln(5,"Glutamin"), rna(5,"Rib"), glycog(6,"Glycog"), pro(5,"Pro"), asp(4,"Asp"), ala(3,"Ala"), ser(3,"Ser"), agl(3,"Glycerol"), pyrm(3,"Pyr"), coa(2,"CoA"), coac(2,"coac"), gly(2,"Gly"),  oa(4,"Oaa"), oac(4,"oac"), cit(6,"Cit"), akg(5,"aKg"), fum(4,"Fum"), mal(4,"Mal"), glu25(5,"glutamate2-5"),
-	 fbp(6), t3(3), pep(3), pyr(3), cthf(1), citc(6), akgc(5), e4(4),
+	 fbp(6), t3(3), pep(3), pyr(3), cthf(1),dhe(3),gae(2), citc(6), akgc(5), e4(4),
 	  h6(6), s7(7), p5(5,"rib")  {setmet(); getN(); }
 	~Ldistr(void) { result.clear(); for(int i=0;i<expm0.size();i++) expm0[i]->delexper(ntime);}
 };

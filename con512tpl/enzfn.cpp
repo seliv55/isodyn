@@ -1,4 +1,5 @@
 #include <iostream>
+#include "nr.h"
 #include "nums.hh"
 #include "modlab.h"
 
@@ -23,24 +24,14 @@ void Ldistr::split(double *h6,double *dh6,double *t1,double *dt1,const double vf
 void Ldistr::spInvsl(double *h6,double *dh6,double *t1,double *dt1,const double vf,const double tsum) {
 	int k,k1,i,ifr,j; double x,xb,xt;
 	for(i=0;i<64;i++) {
-		ifr = (i >> 3); k = (i&7);
-		if (ifr==1) k1=4;
-		else if (ifr==3) k1=6;
-		else if (ifr==4) k1=1;
-		else if (ifr==6) k1=3;
-		else k1=ifr;
+		ifr = ((i >> 3)<<3); k = (i&7);
             x = vf*(h6[i]);
 		dh6[i] -= x; 
-		dt1[k1] += x;
+		dt1[k] += x;
 		xb = x/tsum;
 		for (j=0;j<8;j++) {
 			xt = xb*t1[j];
-		if (j==1) k1=4;
-		else if (j==3) k1=6;
-		else if (j==4) k1=1;
-		else if (j==6) k1=3;
-		else k1=j;
-		ifr = ((k1<<3)|k);
+		ifr = (ifr|j);
 		dt1[j] -= xt;
 		dh6[ifr] += xt;
 		}
@@ -51,10 +42,10 @@ void Ldistr::csyn(double *coai,double *dcoai,double *oaai,double *doaai,double *
 	for(i=0;i<4;i++) {
 		i1=(i<<4); x=coai[i]*v;
                 j=0;
-		while(j<16) {
+		for(j=0;j<16;j++) {
 	 		dx=x*oaai[j];
 			dcoai[i] -= dx; doaai[j] -= dx;
-			ic=(j|i1); dciti[ic] += dx;j++;
+			ic=(j|i1); dciti[ic] += dx;
 		}
 	}
 }

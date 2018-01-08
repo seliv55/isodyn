@@ -11,7 +11,7 @@
 //#pragma package(smart_init)
 using namespace std;
  Ldistr horse;
-  int  ifn=0;  int Nn;
+  int  ifn=0; 
    double dlt, dif, suxx, mader;
 //   const double flf=60.*1000.*5./7.;
     time_t ts,tf; char *fex1, *fex2;
@@ -19,18 +19,15 @@ using namespace std;
     
 tuple<double,double,time_t> solve(){
 //solving the kinetic model:
-   ts=clock(); 
- for(int i=0;i<numx;i++) xx[i]=xinit1[i]; //take initial values
-    tsolve(37000.); mader=Problem.dermax();
-//  for(int i=0;i<10;i++)   ddsolve(3700.);
+   ts=clock(); double xi;
+ for(int i=0;i<nmet;i++) xx[i]=xinit1[i]; //take initial values
+    tsolve(1400.); mader=Problem.dermax();
+//   xi=horse.ddisolve();
     // Problem.jacobian(xx);  tsolve(37000.); for(int i=0;i<numx;i++) xinit1[i]=xx[i];
-      double xi=horse.integrbs();
-//horse.readExp(fex2);for(int i=0;i<numx;i++) xx[i]=xinit1[i];
-//      tsolve(37000.); 
-//      xi += horse.integrbs();
+      xi=horse.integrbs();
   tf=clock()-ts;
    suxx=horse.consum(); // suxx += dif;
-   for(int i=0;i<numx;i++) xx[i]=xinit1[i]; //set iv for a case of saving them
+   for(int i=0;i<nmet;i++) xx[i]=xinit1[i]; //set iv for a case of saving them
    return make_tuple(xi,suxx,tf);}
    
 inline void chekxi(char *efi){
@@ -51,7 +48,8 @@ string Ldistr::read_con(ifstream& fi, string& arg1,int& nfi){
  string aaa, spar, sout, sflmain, sflcomp, gpl; 
  fi>>aaa>>spar>>aaa>>sout>>aaa>>nfi>>aaa>>sflmain>>aaa>>sflcomp;
  getline(fi,aaa); 
- getline(fi,gpl); cout<<gpl<<endl;
+ getline(fi,gpl);
+     cout<<"*** Read_con: "<<spar<<" ***\n";
      Problem.read(spar.c_str());    //read parameters
 // extract cell_type/conditions, numbers: of substrates, time points
    string cell=arg1.substr(arg1.find_last_of('/')+1); cout<<"cell="<<cell<<endl;
@@ -60,7 +58,7 @@ string Ldistr::read_con(ifstream& fi, string& arg1,int& nfi){
       fi>>isu>>aaa>>ntime>>aaa; 
 // localize cell_type/conditions
       while(!fi.eof()){getline(fi,aaa);  if((aaa.find(cell)+1)) break;}
-      if(!fi.eof()){
+      if(!fi.eof()){ fi>>aaa>>dt;
       for(int i=0;i<ntime;i++) {double ta; fi>>ta>>aaa; texcon.push_back(ta); }
       for(int i=0;i<isu;i++){
        fi>>aaa; int k;
@@ -81,9 +79,9 @@ void Ldistr::setflcon(){ int i, ifound;
 }
 
 int main( int argc, char *argv[] ){
-// run: ./isodyn.out  experim_MID-lile concentr_and_param_info_file [sx_NumOfFileSavedInFitting]
+// run: ./isodyn.out  experim_MID-file concentr_and_param_info_file [sx_NumOfFileSavedInFitting]
 // 's'-statistics; 'x'- check χ²
- cout<<"Nn="<<horse.getN()<<endl;
+ cout<<"Nn="<<horse.getNn()<<endl;
    double tmp,xi0;ofstream kkin("kinxx"); 
 //   int a[][3]={{1,2,3},{4,5,6}}}; cout<<"a11="<<a[1][1]<<endl;
    int itmp; bool check;
@@ -93,7 +91,6 @@ int main( int argc, char *argv[] ){
      string arg1(argv[1]),name; ifstream fi(argv[2]);  int ntr(0),Nfi;
      string gpl=horse.read_con(fi,arg1,Nfi); if(*Problem.getodir()=="glut/") ntr=1; 
       ifn=Problem.setnumofi(); //number of parameter files
-      cout<<ntr<<"=ntr "<<ifn<<"=ifn\n";
      
   if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
@@ -104,9 +101,9 @@ int main( int argc, char *argv[] ){
         horse.setflcon();
       int m0len=horse.wrim0ex("exm0");                // set experimental data for figure
       int conlen=horse.wriconex("excon");                // set experimental data for figure
-     for(int i=0;i<numx;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values
+     for(int i=0;i<nmet;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values
 	try{   ts=clock();
-    tsolve(37000.);                     //solve ODEs for total concentrations
+    tsolve(1405);                     //solve ODEs for total concentrations
 //     mader=Problem.dermax(); Problem.jacobian(xx);  tsolve(37000.);
 //    tsolve(35000.); Problem.jacobian(xx); 
 //         cout<<"aldf="<<flx[aldf]<<"; aldr="<<flx[aldf+1]<<endl;
@@ -117,7 +114,7 @@ int main( int argc, char *argv[] ){
         int sys=system("gnuplot plkin.p");//gnuplot -e 'var=value' script.gp
 //  xi0=horse.integrbs();                 //solve ODEs for isotopomers
   sol0=solve();//horse.integrbs();                 //solve ODEs for isotopomers
-       Problem.shownx(numx,xx);         // print concentrations on screen
+       Problem.shownx(numx,xx);  // print concentrations on screen
      cout<<" Σxi²="<<get<0>(sol0) <<"\n";        //final results
      cout<<setw(9)<<"*"<<"*Metab   *   init    Final : "<<setw(17)<<"exper -> xi²\n" <<foc; 
         kkin.open("kinGlc"); kkin<<kin<<endl; kkin.close();
@@ -141,10 +138,13 @@ int main( int argc, char *argv[] ){
 //chekxi(1,33);
           int sys=system(gpl.c_str());//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
-                cout<<"niso="<<horse.getmicon()<<'\n';
-               analis.grad(1);
- if (argc>3) {  Problem.setfnfin(ifn+Nfi);
-  if(argv[3][0]=='f') analis.coord(0.03,1.07); else {
+            
+ if (argc>3) {  if(argv[3][0]=='g') analis.grad(); 
+                if(argv[3][1]=='k') analis.desK(1.05,rtk); 
+                if(argv[3][1]=='a') analis.desK(1.05,rta); 
+   Problem.setfnfin(ifn+Nfi);
+  if(argv[3][0]=='f') analis.coord(0.03,1.07);
+   else {
      try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<Nfi<<" files saved!\n"; return 0;}
 	         Problem.stat(ifn-1);
                   sol0=Problem.read("1");

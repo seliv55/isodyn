@@ -19,9 +19,9 @@ tuple<double,double,time_t> Fit::read(string fn){
  int i, ip; string aaa;  ifstream fi(fn.c_str()); string ppp;
  static int flg=0; tuple<double,double,time_t> sol(1.e12,0.,0);
   if(!fi.good()) return sol;
-    for (i=0;i<nrea;i++) rea[i].read(fi,flg); 
-	for(i=0;;i++) {fi>>ip; if(ip<0) break; par.push_back(ip);}
-	for (i=0;i<numx;i++) {fi>>aaa>>namex[i]>>xx[i];}
+    for (i=0;i<nrea;i++) rea[i].read(fi,flg);// cout<<"Nreact="<<nrea<<"; last="<<rea[nrea-1].v()<<endl;
+	for(i=0;;i++) {fi>>ip; if(ip<0) break; par.push_back(ip);} getline(fi,spar);
+	for (i=0;i<nmet;i++) {fi>>aaa>>namex[i]>>xx[i];} //cout<<aaa<<" "<<namex[nmet-1]<<" "<<xx[nmet-1]<<endl;
         for (i=0;i<nflx;i++) fi>>aaa>>fid[i]>>flx[i]; if(flx[pfk]<1e-7) cout<<fn<<"!!!: hk=0"<<endl; 
 		fi >> get<0>(sol) >> get<2>(sol) >> get<1>(sol);// if((flx[0]<0.1)||(flx[0]>0.2)) xi += 100.;
 	fi.close(); flg++; //cout<<fn<<"; xi="<<xi<<endl;
@@ -33,8 +33,8 @@ void Fit::write (tuple<double,double,time_t> sol, int& ifn,bool flg) const {
     fn<<outdir<<ifn; //sprintf(fn,"%i",ifn);
   ofstream fi(fn.str().c_str());
     for (i=0;i<nrea;i++) rea[i].write(fi,i); 
-	for (i=0;i<par.size();i++) fi << par[i]<<" "; fi << "-1\n";
-  for (i=0;i<numx;i++) fi<<i<<") "<<setw(9)<<left<<namex[i]<<" "<<xx[i]<<"\n";
+	for (i=0;i<par.size();i++) fi << par[i]<<" "; fi << "-1"<<spar<<"\n";
+  for (i=0;i<nmet;i++) fi<<i<<") "<<setw(9)<<left<<namex[i]<<" "<<xx[i]<<"\n";
 	for (i=0;i<nflx;i++) fi<<i<<") "<<setw(9)<<left<<fid[i]<< " "<<(flx[i]*1000.*dt)<<"\n";
 		fi << get<0>(sol) <<"\n";
 		fi << get<2>(sol) <<"\n";
@@ -42,6 +42,11 @@ void Fit::write (tuple<double,double,time_t> sol, int& ifn,bool flg) const {
 	fi.close();
 cout <<"File saved: "<<ifn << ": xi=" << get<0>(sol) << "; xm=" << get<1>(sol) <<"; time="<<((float)get<2>(sol)/CLOCKS_PER_SEC)<<endl;	
 }
+ 
+void Parray::rnames(ifstream& fi){
+   for (int i=0;i<nflx;i++)
+        fi>>fid[i]>>fid[i]>>fname[i]>>fschem[i];
+        }
 
 void Fit::wstorefl (int numpar,const double** m,string name[]) {
      stringstream finame; finame<<outdir<<"names"; ifstream fii(finame.str().c_str());
@@ -101,7 +106,7 @@ mfl[iset][nadhf]=mfl[iset][pdh]+mfl[iset][akgfum]+(mfl[iset][citakg]+mfl[iset][r
          wstorefl(nflx, pmf,fid);
 }
 void Fit::stat(const int NP ){
-        Vec_DP a(NP), conc(NP); Vec_INT b(NP),t(NP);
+        Vec_DP a(NP), conc(NP), *ac; Vec_INT b(NP),t(NP);
         int i,sys;
  for ( i=1;i<=NP;i++) {
 	  stringstream fn; fn<<outdir<<i; cout<<fn.str().c_str()<<endl;
@@ -109,7 +114,9 @@ void Fit::stat(const int NP ){
 //       a[i-1] = read(t[i-1],conc[i-1],fn.str().c_str());
        b[i-1] = i;
  }
-        NR::sort2a(a,b);
+        ac=&a;
+//        ac=&conc;
+        NR::sort2a(*ac,b);
         cout << endl << "After sorting, Parameter file (xi2) are:" << endl;
 	cout.precision(4);
 	for (i=0;i<NP;i++) {

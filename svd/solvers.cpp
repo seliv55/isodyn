@@ -10,7 +10,7 @@
 #include "solvers.h"
 //---------------------------------------------------------------------------
 using namespace std;
-   extern string foc, kin, kinflx;
+   extern string foc, kin, kinflx, kinc;
 DP dxsav;  
 int kmax,kount;
 Vec_DP *xp_p;
@@ -75,33 +75,45 @@ void isores(const double& T, double y[],const double yprime[], double delta[], i
 }
 
 double Ldistr::ddisolve() {
-        int i,info[15],idid=0,lrw=800000,liw=1190,iwork[1190],ipar[2],ires=0,ikin=25;
-double t=0.,xi=0., ystart[Nn],yprime[Nn],rtol=0.000075,atol=1.0e-5,h0=0.1e-7, hmax=15.2, rpar[2], rwork[800000];
+        int i,info[15],idid=0,lrw=800000,liw=1190,iwork[1190],ipar[2],ires=0,ikin=55;
+double t=0.,xi=0.,rtol=0.0075,atol=1.0e-9,h0=0.1e-5, hmax=25.2, rpar[2], *rwork=new double[800000];
         for(i=0;i<15;i++)   info[i]=0;
-      info[6]=1; rwork[1]=hmax; rwork[2]=h0; info[10]=1;
-        horse.ssc(ystart);
-        horse.distr(ystart, yprime);
-          ostringstream foc1, kinet, flxkin;
+      info[6]=1; rwork[1]=hmax;//set max step
+//      info[7]=1;  rwork[2]=h0; 
+//       info[9]=1;//non-negativity constrain
+       info[10]=1;//set initial yprime
+    double *ys=new double[888],*yprime=new double[888];
+        ssc(ys);
+          ostringstream foc1, kinet, kicon, flxkin;
     foc1.precision(4); kinet.precision(4);
-	const int KMAX(2);
-         double *potok=new double [ntime*nflx]; double *ppotok[ntime];
-         for(int i=0;i<ntime;i++) ppotok[i]=&potok[i*nflx];
- massfr(); 
+ massfr();
+    showdescr(kinet,expm0);  show(kinet,0);
+    showdescr(kicon,expcon);  showcon(kicon,0);
+         double *potok=new double [getntime()*nflx]; double *ppotok[getntime()];
+         for(int i=0;i<getntime();i++) ppotok[i]=&potok[i*nflx];
  double tout;
+    sklad(0);
   for(int j=0;j<nflx;j++) ppotok[0][j]=flx[j]*1000.*dt;
-        for(int i=1;i<(ntime);i++) {double tm=(tex[i]-t)/(double)ikin;
+        for(int i=1;i<(getntime());i++) {double tm=(tex[i]-t)/(double)ikin;
         for(int k=0;k<ikin;k++){ tout=t+tm;
-ddassl_(isores,Nn,t,ystart,yprime,tout,info,rtol,atol,idid,rwork,lrw,iwork, liw,  rpar, ipar, jac);
+        distr(ys, yprime);
+ddassl_(isores,getNn(),t,ys,yprime,tout,info,rtol,atol,idid,rwork,lrw,iwork, liw,  rpar, ipar, jac);
+cout<<"y[0]="<<ys[35]<<endl;
  if(idid<0) {  throw("dassl problem"); }
-massfr();   show(kinet,tout); 
-    t=tout;
+massfr();
+   show(kinet,tout);  showcon(kicon,tout);
+    t=tout; cout<<"t="<<t<<endl;
     }
 xi += xits(i);
-     t=tex[i];  for(int j=0;j<nflx;j++) ppotok[i][j]=flx[j]*1000.*dt;
+xi += xicon(i);  sklad(i);
+      for(int j=0;j<nflx;j++) ppotok[i][j]=flx[j]*1000.*dt;
     }
-  for(int j=0;j<nflx;j++) { flxkin<<Problem.fid[j]<<" "; for(int i=0;i<ntime;i++) flxkin<<ppotok[i][j]<<" "; flxkin<<"\n";}
-foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str();
+wrikin(foc1,getntime());
+wricon(foc1,getntime());
+  for(int j=0;j<nflx;j++) { flxkin<<Problem.fid[j]<<" "; for(int i=0;i<getntime();i++) flxkin<<ppotok[i][j]<<" "; flxkin<<"\n";}
+foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str(); kinc=kicon.str();
             delete[] potok;
+             delete[] rwork; delete[] ys; delete[] yprime;
 return xi;}
 
 /**/
@@ -148,9 +160,9 @@ void tsolve(const double tmax){
 	// rtoler and atoler are scalars
 	int itoler(0);
 	// relative tolerance
-	double *rtoler = new double(1.0e-7);
+	double *rtoler = new double(1.0e-3);
 	// absolute tolerance
-	double *atoler = new double(1.0e-7);
+	double *atoler = new double(1.0e-5);
 	// use SolutionOutput routine
 	const int iout(0);
 	// initial step size

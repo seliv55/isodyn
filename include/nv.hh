@@ -24,10 +24,11 @@ class Reapar{
  void write(std::ofstream& fo,int ir){fo<<ir<<std::setw(9)<<name<<std::setw(4)<<npar;
   for(int i=0;i<npar;i++) fo<<"  "<<this->spar[i]<<" "<<this->par[i]; fo<<"\n";}
   
-	void setVm(double a) {par[0] = a;}
-	double chanVm(double ff) {double old=par[0]; par[0] *= ff; return old;}
+	void setVm(double a,int np=0) {par[np] = a;}
+	double chanVm(double ff,int np=0) {double old=par[np]; par[np] *= ff; return old;}
 	double *getpar(){return par;}
 	std::string& getname(){return name;}
+	int genpar(){return npar;}
 		Reapar() {}
 	virtual ~Reapar(){delete[] par; delete[] spar; }
 };
@@ -58,7 +59,7 @@ public:
 };
 class Fit: public Parray{
 	int i68, i90, i95, i99, fnfin;
-	std::string outdir, flmain,flcomp;
+	std::string outdir, flmain,flcomp, spar;
     public:	
       void stat(const int NP );
       std::tuple<double,double,time_t> read(std::string fn);

@@ -5,24 +5,26 @@
 using namespace std;
 
 int Ldistr::getN() {
-met[0]->ny=numx;
-for(int i=1;i<lmet;i++) met[i]->ny=met[i-1]->ny+met[i-1]->getlen();
+met[0]->ny=nmet; cout<<met[0]->ny<<'\n';
+for(int i=1;i<lmet;i++) met[i]->ny=met[i-1]->ny+met[i-1]->getlen(); cout<<met[lmet-1]->ny<<'\n';
   glu25.ny=glu.ny;
-metb[0]->ny= met[lmet-1]->ny+met[lmet-1]->getlen();
+metb[0]->ny= met[lmet-1]->ny+met[lmet-1]->getlen(); cout<<metb[0]->ny<<'\n';
 for(int i=1;i<lmetb;i++) metb[i]->ny=metb[i-1]->ny+metb[i-1]->getlen();
-metk[0]->ny= metb[lmetb-1]->ny+metb[lmetb-1]->getlen();
+metk[0]->ny= metb[lmetb-1]->ny+metb[lmetb-1]->getlen(); cout<<metk[0]->ny<<'\n';
 for(int i=1;i<lmetk;i++) metk[i]->ny=metk[i-1]->ny+metk[i-1]->getlen();
 return (Nn=metk[lmetk-1]->ny+metk[lmetk-1]->getlen());
 }
 
 void Ldistr::setdiso(double *pyinit) {
-for(int i=0;i<=lmet;i++) met[i]->diso= &pyinit[met[i]->ny]; 
+for(int i=0;i<lmet;i++) met[i]->diso= &pyinit[met[i]->ny]; 
+  glu25.diso= &pyinit[glu.ny];
 for(int i=0;i<lmetb;i++) metb[i]->diso= &pyinit[metb[i]->ny];
 for(int i=0;i<lmetk;i++) metk[i]->diso= &pyinit[metk[i]->ny];
 }
 
 void Ldistr::setiso(double *pyinit) {
-for(int i=0;i<=(lmet);i++) met[i]->iso= &pyinit[met[i]->ny]; 
+for(int i=0;i<(lmet);i++) met[i]->iso= &pyinit[met[i]->ny];
+  glu25.iso= &pyinit[glu.ny];
 for(int i=0;i<(lmetb);i++) metb[i]->iso= &pyinit[metb[i]->ny];
 for(int i=0;i<(lmetk);i++) metk[i]->iso= &pyinit[metk[i]->ny];
 }
@@ -32,13 +34,12 @@ void Ldistr::sklad(int itime){
  for(int i=0;i<expcon.size();i++) expcon[i]->skladc(itime);
  }
 
-int Ldistr::stor(double dist[],int nt){int n(0);
- for(int i=0;i<expcon.size();i++) {n +=expcon[i]->storc(&dist[n],nt);}
- for(int i=0;i<expm0.size();i++) {n += expm0[i]->stormi(&dist[n],nt);}
+int Ldistr::stor(double dist[]){int n(0);
+ for(int i=0;i<expm0.size();i++) {n += expm0[i]->stormi(&dist[n],ntime);}
  return n;}
  
-int Ldistr::getmicon(){ int n=expcon.size();
- for(int i=0;i<expm0.size();i++) { n += expm0[i]->getmi();}
+int Ldistr::getmicon(){ int n=0;//=expcon.size()*(ntime-1);
+ for(int i=0;i<expm0.size();i++) { n += expm0[i]->getmi()*(ntime-1);}
  return n;}
 
 void Ldistr::massfr() {
@@ -48,7 +49,7 @@ for(int i=0;i<expcon.size();i++) if(expcon[i]->flcon) expcon[i]->percent();
 }
 
 double Ldistr::xits(int its) {int itp=its-1; double xi=0;
-for(int i=0;i<expm0.size();i++) xi += expm0[i]-> chisq(its,expm0[i]->getmi()); 
+for(int i=0;i<expm0.size();i++) xi += expm0[i]-> chisq(its);
 return xi;}
 
 double Ldistr::xicon(int its) {int itp=its-1; double xi=0;
@@ -81,13 +82,15 @@ for(int i=0;i<expcon.size();i++) expcon[i]-> showcon(fo); fo<<'\n';}
 void Ldistr::showdescr(ostringstream& fo, vector<Metab_data*> em0con) { fo<<"time ";
 for(int i=0;i<em0con.size();i++) fo<<em0con[i]-> getdescr()<<" "; fo<<'\n';}
 
-double Ldistr::consum() { double sum(0.); vector<Metab_data*> externcon = expcon;
- for(int i=0;i<=lmet;i++) { int j;
-   for(j=0;j<externcon.size();j++) if(met[i]->getdescr()==externcon[j]->getdescr()) {
-                                  externcon.erase(externcon.begin()+j); j=-1; break;}
-     if(j==externcon.size()) sum += met[i]->sumt(); }
+double Ldistr::consum() { double sum(0.), sumex(0.); vector<Metab_data*> externcon = expcon;
+// for(int i=0;i<=lmet;i++) { int j;
+//   for(j=0;j<externcon.size();j++) if(met[i]->getdescr()==externcon[j]->getdescr()) {
+//                                  externcon.erase(externcon.begin()+j); j=-1; break;}
+//     if(j==externcon.size()) sum += met[i]->sumt(); }
+ for(int i=0;i<lmet;i++) {sum += met[i]->sumt();}
+  for(int j=0;j<externcon.size();j++) sumex += externcon[j]->sumt(); 
  for(int i=0;i<lmetb;i++) {sum += metb[i]->sumt();}
  for(int i=0;i<lmetk;i++) {sum += metk[i]->sumt();}
-return sum;}
+return sum-sumex;}
 
 
