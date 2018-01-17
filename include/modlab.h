@@ -455,9 +455,9 @@ class ketose:public Metab_data {
 
 class Ldistr {
 	int ntime,lmet,lmetb, lmetk, itrac,markis,Nn;
-  Metab_data gl, lac, glu, gln, rna, glycog, pro, asp, ala, ser, agl, pyrm, coa, coac, gly, oa, oac, cit, akg, fum, mal, glu25, fbp, t3, pep, pyr, citc, akgc, e4;
-  Metab cthf,dhe,gae;
-  ketose h6, s7, p5;
+Metab_data fbp, t3, pep, pyr, pyrm, coa, coac, agl, oa, oac, cit, citc, akg, akgc, fum, mal, e4, gl, lac, glu, gln, ala, asp, ser, gly, pro, rna;
+ketose s7, h6, p5;
+Metab cthf, gae, dhe;
   double lacout,coaefl,tca,fpdh,marfrac;
   std::vector<Iso> result;
       void symm (double *s);
@@ -524,9 +524,7 @@ class Ldistr {
         int stor(double dist[]);
         void setflcon();
         int getmicon();
-	Ldistr(): gl(6,"Gluc"), lac(3,"Lac"), glu(5,"Glutamate2-5"), gln(5,"Glutamin"), rna(5,"Rib"), glycog(6,"Glycog"), pro(5,"Pro"), asp(4,"Asp"), ala(3,"Ala"), ser(3,"Ser"), agl(3,"Glycerol"), pyrm(3,"Pyr"), coa(2,"CoA"), coac(2,"coac"), gly(2,"Gly"),  oa(4,"Oaa"), oac(4,"oac"), cit(6,"Cit"), akg(5,"aKg"), fum(4,"Fum"), mal(4,"Mal"), glu25(5,"glutamate2-5"),
-	 fbp(6), t3(3), pep(3), pyr(3), cthf(1),dhe(3),gae(2), citc(6), akgc(5), e4(4),
-	  h6(6), s7(7), p5(5,"rib")  {setmet(); getN(); }
+	Ldistr(): fbp(6, "fbp"), t3(3, "t3"), pep(3, "pep"), pyr(3, "pyr"), pyrm(3, "Pyr"), coa(2, "CoA"), coac(2, "coac"), agl(3, "Glycerol"), oa(4, "Oaa"), oac(4, "oac"), cit(6, "Cit"), citc(6, "citc"), akg(5, "aKg"), akgc(5, "akgc"), fum(4, "Fum"), mal(4, "Mal"), e4(4, "ne4"), gl(6, "Gluc"), lac(3, "Lac"), glu(5, "Glutamate2-5"), gln(5, "Glutamin"), ala(3, "Ala"), asp(4, "Asp"), ser(3, "Ser"), gly(2, "Gly"), pro(5, "Pro"), rna(5, "Rib"), s7(7, "s7"), h6(6, "h6"), p5(5, "rib"), cthf(1, "cthf"), gae(2, "gae"), dhe(3, "dhe")  {setmet();  }
 	~Ldistr(void) { result.clear(); for(int i=0;i<expm0.size();i++) expm0[i]->delexper(ntime);}
 };
 

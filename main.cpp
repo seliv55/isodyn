@@ -22,6 +22,7 @@ tuple<double,double,time_t> solve(){
    ts=clock(); double xi;
  for(int i=0;i<nmet;i++) xx[i]=xinit1[i]; //take initial values
     tsolve(1400.); mader=Problem.dermax();
+//    ddsolve(1400.); mader=Problem.dermax();
 //   xi=horse.ddisolve();
     // Problem.jacobian(xx);  tsolve(37000.); for(int i=0;i<numx;i++) xinit1[i]=xx[i];
       xi=horse.integrbs();
@@ -81,7 +82,7 @@ void Ldistr::setflcon(){ int i, ifound;
 int main( int argc, char *argv[] ){
 // run: ./isodyn.out  experim_MID-file concentr_and_param_info_file [sx_NumOfFileSavedInFitting]
 // 's'-statistics; 'x'- check χ²
- cout<<"Nn="<<horse.getNn()<<endl;
+ cout<<"Nn="<<horse.getN()<<endl;
    double tmp,xi0;ofstream kkin("kinxx"); 
 //   int a[][3]={{1,2,3},{4,5,6}}}; cout<<"a11="<<a[1][1]<<endl;
    int itmp; bool check;
@@ -104,6 +105,7 @@ int main( int argc, char *argv[] ){
      for(int i=0;i<nmet;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values
 	try{   ts=clock();
     tsolve(1405);                     //solve ODEs for total concentrations
+//    ddsolve(1405);                     //solve ODEs for total concentrations
 //     mader=Problem.dermax(); Problem.jacobian(xx);  tsolve(37000.);
 //    tsolve(35000.); Problem.jacobian(xx); 
 //         cout<<"aldf="<<flx[aldf]<<"; aldr="<<flx[aldf+1]<<endl;

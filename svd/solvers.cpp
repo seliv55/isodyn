@@ -31,8 +31,8 @@ void res(const double& T, double y[],const double yprime[], double delta[], int&
 void jac(const double& time,  double y[], const double yPrime[], double **PD, double& CJ, const double rPar[], const int iPar[]){}
 
 void ddsolve(const double tout) {
-        int i,info[15],idid=0,lrw=450,liw=450,iwork[450],ipar[2],ires=0;
-double t=0.,y[numx],yprime[numx],rtol=0.005,atol=1.0e-7, rwork[450], rpar[2];
+        int i,info[15],idid=0,lrw=1700,liw=1700,iwork[1700],ipar[2],ires=0;
+double t=0.,y[numx],yprime[numx],rtol=0.005,atol=1.0e-7, rwork[1700], rpar[2];
         Problem.init();
   for(i=0;i<numx;i++) y[i]=xx[i];
   Problem.f(xx,yprime);
@@ -40,7 +40,7 @@ double t=0.,y[numx],yprime[numx],rtol=0.005,atol=1.0e-7, rwork[450], rpar[2];
 //        info[1]=1;
 //        info[2]=1;
 //        info[4]=1;
-        info[10]=1;
+//        info[10]=1;
 	//	printf("infohere ");
 	//	printf("%i %i %i %i\n",info[0], info[6], info[10],info[14]);
 	//printf("herenow \n");
@@ -235,7 +235,7 @@ void tisolve(const double tmax){
 	int mujac(0);
 	// Mass matrix routine is identity
 	const int imas(0);
-	int mlmas(numx);
+	int mlmas(nmet);
 	int mumas(0);
 	// Use default values (see header files) for these parameters:
 	double hmax(0.0);

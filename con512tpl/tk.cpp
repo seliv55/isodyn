@@ -9,7 +9,6 @@
 //---------------------------------------------------------------------------
 using namespace std;
 //#pragma package(smart_init)
-//         enum {nh6=1,nt3,npep=5,npyr,ncoa,noaa,ncit,nglgn,np5=14,ne4,ns7,nmal};
 void TK::setk( double *pv) {
      const double kdX5 = 0.055*pv[1],kdG3 = 0.0344*pv[2],kdR5 = 0.27*pv[3],
            kdF6 = 0.9*pv[4], diss = 5000, kefg = 29.7, kexr = 0.48;

@@ -11,12 +11,14 @@ const int hk=0, pfk=hk+1, fbpase=pfk+1, t3pep=fbpase+1, pept3=t3pep+1, pk=pept3+
 
 const int aldfl=rald, aldrev=aldfl+1, aldfli=aldrev+1, aldi1=aldfli+1, tafl=aldi1+1, s7f6a=tafl+1, f6g3a=s7f6a+1, s7e4a=f6g3a+1, tkfl=s7e4a+1, s7p5=tkfl+1, f6p5=s7p5+1, p5f6=f6p5+1, f6s7=p5f6+1, s7f6=f6s7+1, p5g3i=s7f6+1, f6e4i=p5g3i+1, s7p5i=f6e4i+1, nflx=s7p5i+1;
 
-const int nh6=0, nfbp=nh6+1, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, ncoa=npyrm+1, ncoac=ncoa+1, nagl=ncoac+1, noa=nagl+1, noac=noa+1, ncit=noac+1, ncitc=ncit+1, nakg=ncitc+1, nakgc=nakg+1, nfum=nakgc+1, nmal=nfum+1, np5=nmal+1, ne4=np5+1, ns7=ne4+1, ncthf=ns7+1, ndhe=ncthf+1, ngae=ndhe+1, n_atp=ngae+1, n_nad=n_atp+1, numx=n_nad+1, ngl=numx+1, nlac=ngl+1, nglu=nlac+1, ngln=nglu+1, nala=ngln+1, nasp=nala+1, nser=nasp+1, ngly=nser+1, npro=ngly+1, nrna=npro+1, nmet=nrna+1;
+const int nfbp=0, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, ncoa=npyrm+1, ncoac=ncoa+1, nagl=ncoac+1, noa=nagl+1, noac=noa+1, ncit=noac+1, ncitc=ncit+1, nakg=ncitc+1, nakgc=nakg+1, nfum=nakgc+1, nmal=nfum+1, ne4=nmal+1, ns7=ne4+1, nh6=ns7+1, np5=nh6+1, ncthf=np5+1, ngae=ncthf+1, ndhe=ngae+1, n_atp=ndhe+1, n_nad=n_atp+1, ngl=n_nad+1, nlac=ngl+1, nglu=nlac+1, ngln=nglu+1, nala=ngln+1, nasp=nala+1, nser=nasp+1, ngly=nser+1, npro=ngly+1, nrna=npro+1, nmet=nrna+1;
+
+const int numx=ngl;
 
 	Fit Problem;
 	const double thft(1.);
 	double dt,xx[nmet],flx[nflx],fluxes[nflx];
-	double xm0, xinit1[nmet],xinit2[nmet];
+	double xinit1[nmet],xinit2[nmet];
 	string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[numx];
 	Reapar Parray::rea[nrea];
 	double Analis::nv1[nrea], Analis::nv2[nrea];
@@ -24,9 +26,9 @@ Metab_data *Ldistr::met[27];
 Metab *Ldistr::metb[3];
  ketose *Ldistr::metk[3];
 
- void Ldistr::setmet(){met[0]=&fbp; met[1]=&t3; met[2]=&pep; met[3]=&pyr; met[4]=&pyrm; met[5]=&coa; met[6]=&coac; met[7]=&agl; met[8]=&oa; met[9]=&oac; met[10]=&cit; met[11]=&citc; met[12]=&akg; met[13]=&akgc; met[14]=&fum; met[15]=&mal; met[16]=&e4; met[17]=&gl; met[18]=&lac; met[19]=&glu; met[20]=&gln; met[21]=&ala; met[22]=&asp; met[23]=&ser; met[24]=&gly; met[25]=&pro; met[26]=&rna; metb[0]=&cthf; metb[1]=&dhe; metb[2]=&gae; metk[0]=&h6; metk[1]=&p5; metk[2]=&s7; 
+ void Ldistr::setmet(){met[0]=&fbp; met[1]=&t3; met[2]=&pep; met[3]=&pyr; met[4]=&pyrm; met[5]=&coa; met[6]=&coac; met[7]=&agl; met[8]=&oa; met[9]=&oac; met[10]=&cit; met[11]=&citc; met[12]=&akg; met[13]=&akgc; met[14]=&fum; met[15]=&mal; met[16]=&e4; met[17]=&gl; met[18]=&lac; met[19]=&glu; met[20]=&gln; met[21]=&ala; met[22]=&asp; met[23]=&ser; met[24]=&gly; met[25]=&pro; met[26]=&rna; metb[0]=&cthf; metb[1]=&gae; metb[2]=&dhe; metk[0]=&s7; metk[1]=&h6; metk[2]=&p5; 
  lmet=27; lmetb=3; lmetk=3;  }
- void Ldistr::setcon(){met[0]->setconc(xx[nfbp]); met[1]->setconc(xx[nt3]); met[2]->setconc(xx[npep]); met[3]->setconc(xx[npyr]); met[4]->setconc(xx[npyrm]); met[5]->setconc(xx[ncoa]); met[6]->setconc(xx[ncoac]); met[7]->setconc(xx[nagl]); met[8]->setconc(xx[noa]); met[9]->setconc(xx[noac]); met[10]->setconc(xx[ncit]); met[11]->setconc(xx[ncitc]); met[12]->setconc(xx[nakg]); met[13]->setconc(xx[nakgc]); met[14]->setconc(xx[nfum]); met[15]->setconc(xx[nmal]); met[16]->setconc(xx[ne4]); met[17]->setconc(xx[ngl]); met[18]->setconc(xx[nlac]); met[19]->setconc(xx[nglu]); met[20]->setconc(xx[ngln]); met[21]->setconc(xx[nala]); met[22]->setconc(xx[nasp]); met[23]->setconc(xx[nser]); met[24]->setconc(xx[ngly]); met[25]->setconc(xx[npro]); met[26]->setconc(xx[nrna]); metb[0]->setconc(xx[ncthf]); metb[1]->setconc(xx[ndhe]); metb[2]->setconc(xx[ngae]); metk[0]->setconc(xx[nh6]); metk[1]->setconc(xx[np5]); metk[2]->setconc(xx[ns7]);  }
+ void Ldistr::setcon(){met[0]->setconc(xx[nfbp]); met[1]->setconc(xx[nt3]); met[2]->setconc(xx[npep]); met[3]->setconc(xx[npyr]); met[4]->setconc(xx[npyrm]); met[5]->setconc(xx[ncoa]); met[6]->setconc(xx[ncoac]); met[7]->setconc(xx[nagl]); met[8]->setconc(xx[noa]); met[9]->setconc(xx[noac]); met[10]->setconc(xx[ncit]); met[11]->setconc(xx[ncitc]); met[12]->setconc(xx[nakg]); met[13]->setconc(xx[nakgc]); met[14]->setconc(xx[nfum]); met[15]->setconc(xx[nmal]); met[16]->setconc(xx[ne4]); met[17]->setconc(xx[ngl]); met[18]->setconc(xx[nlac]); met[19]->setconc(xx[nglu]); met[20]->setconc(xx[ngln]); met[21]->setconc(xx[nala]); met[22]->setconc(xx[nasp]); met[23]->setconc(xx[nser]); met[24]->setconc(xx[ngly]); met[25]->setconc(xx[npro]); met[26]->setconc(xx[nrna]); metb[0]->setconc(xx[ncthf]); metb[1]->setconc(xx[ngae]); metb[2]->setconc(xx[ndhe]); metk[0]->setconc(xx[ns7]); metk[1]->setconc(xx[nh6]); metk[2]->setconc(xx[np5]);  }
 void Fit::f(const double *y,double *dydx) {
 	for(int i=0;i<numx;i++) dydx[i]=0.;
 	 for(int i=0;i<nflx;i++) flx[i]=0.;

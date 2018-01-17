@@ -6,8 +6,6 @@
 #include "modlab.h"
 using namespace std;
 
-/*double Parray::sumx() {
- return (xx[nh6]+xx[nt3]+xx[nfbp]+xx[npep]+xx[npyr]+xx[noa]+ xx[noa1]+ xx[nmal]+ xx[nakg]+ xx[nakg1]+ xx[ncit]+ xx[ncit1]+ xx[ncoa]+ xx[np5]+ xx[ne4]+ xx[ns7]);}*/
  inline double positive(double a){return sqrt(a*a);};
  
 double Fit::dermax(){    double dx[numx];     f(xx,dx);

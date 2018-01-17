@@ -5,26 +5,26 @@
 using namespace std;
 
 int Ldistr::getN() {
-met[0]->ny=nmet; cout<<met[0]->ny<<'\n';
-for(int i=1;i<lmet;i++) met[i]->ny=met[i-1]->ny+met[i-1]->getlen(); cout<<met[lmet-1]->ny<<'\n';
-  glu25.ny=glu.ny;
-metb[0]->ny= met[lmet-1]->ny+met[lmet-1]->getlen(); cout<<metb[0]->ny<<'\n';
-for(int i=1;i<lmetb;i++) metb[i]->ny=metb[i-1]->ny+metb[i-1]->getlen();
-metk[0]->ny= metb[lmetb-1]->ny+metb[lmetb-1]->getlen(); cout<<metk[0]->ny<<'\n';
-for(int i=1;i<lmetk;i++) metk[i]->ny=metk[i-1]->ny+metk[i-1]->getlen();
+met[0]->ny=nmet; cout<<met[0]->ny<<" "<<met[0]->getdescr()<<'\n';
+for(int i=1;i<lmet;i++) {met[i]->ny=met[i-1]->ny+met[i-1]->getlen(); cout<<met[i]->ny<<" "<<met[i]->getdescr()<<'\n';}
+//  glu25.ny=glu.ny;
+metb[0]->ny= met[lmet-1]->ny+met[lmet-1]->getlen(); cout<<metb[0]->ny<<" "<<metb[0]->getdescr()<<'\n';
+for(int i=1;i<lmetb;i++) {metb[i]->ny=metb[i-1]->ny+metb[i-1]->getlen(); cout<<metb[i]->ny<<" "<<metb[i]->getdescr()<<'\n';}
+metk[0]->ny= metb[lmetb-1]->ny+metb[lmetb-1]->getlen(); cout<<metk[0]->ny<<" "<<metk[0]->getdescr()<<'\n';
+for(int i=1;i<lmetk;i++) {metk[i]->ny=metk[i-1]->ny+metk[i-1]->getlen(); cout<<metk[i]->ny<<" "<<metk[i]->getdescr()<<endl;}
 return (Nn=metk[lmetk-1]->ny+metk[lmetk-1]->getlen());
 }
 
 void Ldistr::setdiso(double *pyinit) {
 for(int i=0;i<lmet;i++) met[i]->diso= &pyinit[met[i]->ny]; 
-  glu25.diso= &pyinit[glu.ny];
+//  glu25.diso= &pyinit[glu.ny];
 for(int i=0;i<lmetb;i++) metb[i]->diso= &pyinit[metb[i]->ny];
 for(int i=0;i<lmetk;i++) metk[i]->diso= &pyinit[metk[i]->ny];
 }
 
 void Ldistr::setiso(double *pyinit) {
 for(int i=0;i<(lmet);i++) met[i]->iso= &pyinit[met[i]->ny];
-  glu25.iso= &pyinit[glu.ny];
+//  glu25.iso= &pyinit[glu.ny];
 for(int i=0;i<(lmetb);i++) metb[i]->iso= &pyinit[metb[i]->ny];
 for(int i=0;i<(lmetk);i++) metk[i]->iso= &pyinit[metk[i]->ny];
 }
@@ -45,7 +45,7 @@ int Ldistr::getmicon(){ int n=0;//=expcon.size()*(ntime-1);
 void Ldistr::massfr() {
 for(int i=0;i<expm0.size();i++) expm0[i]->percent(); 
 for(int i=0;i<expcon.size();i++) if(expcon[i]->flcon) expcon[i]->percent();
- glu.percent(1,1); glu25.percent(1,0);
+// glu.percent(1,1); glu25.percent(1,0);
 }
 
 double Ldistr::xits(int its) {int itp=its-1; double xi=0;

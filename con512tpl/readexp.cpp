@@ -18,7 +18,7 @@ double Ldistr::readExp (char fn[],int ntr) {
 for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
  mu /= ((double)(ntime-1)*1.0);
            setcon();
-	  glu.setconc(xx[nglu]); glu25.setconc(xx[nglu]);
+	  glu.setconc(xx[nglu]);// glu25.setconc(xx[nglu]);
 
 	 
        l13c.setmid(markis,marfrac);  l13c.setmid(0,(1-marfrac)); 

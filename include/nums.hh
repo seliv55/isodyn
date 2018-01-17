@@ -2,11 +2,11 @@ extern const int hk, pfk, fbpase, t3pep, pept3, pk, pyrlac, lacpyr, pyrdcm, pyrd
 
 extern const int aldfl, aldrev, aldfli, aldi1, tafl, s7f6a, f6g3a, s7e4a, tkfl, s7p5, f6p5, p5f6, f6s7, s7f6, p5g3i, f6e4i, s7p5i, nflx;
 
-extern const int nh6, nfbp, nt3, npep, npyr, npyrm, ncoa, ncoac, nagl, noa, noac, ncit, ncitc, nakg, nakgc, nfum, nmal, np5, ne4, ns7, ncthf, ndhe, ngae, n_atp, n_nad, numx, ngl, nlac, nglu, ngln, nala, nasp, nser, ngly, npro, nrna, nmet;
+extern const int nfbp, nt3, npep, npyr, npyrm, ncoa, ncoac, nagl, noa, noac, ncit, ncitc, nakg, nakgc, nfum, nmal, ne4, ns7, nh6, np5, ncthf, ngae, ndhe, n_atp, n_nad, ngl, nlac, nglu, ngln, nala, nasp, nser, ngly, npro, nrna, numx, nmet;
 
-extern int Nn;
+
 extern const double thft;
-extern double mader, dt,dif,dif0, suxx, Vi,Vt, mu, xx[], fluxes[], flx[],ystart[];
+extern double mader, dt,dif,dif0, suxx, Vi,Vt, mu, xx[], fluxes[], flx[];
 extern double nv1[],nv2[],xinit1[],xinit2[];
 extern time_t ts,tf,tcal;
 extern std::string foc, kin, kinc;
