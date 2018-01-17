@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include <cstdlib>
 #include <vector>
-#include <tuple> 
 
 //---------------------------------------------------------------------------
 using namespace std;
@@ -85,54 +84,39 @@ inline string listint(vector<string> sname,string sfin,string sin="0"){
    for(int i=1;i<inum;i++)   aaa+=sname[i]+"="+sname[i-1]+"+1, ";
      aaa+=sfin+"="+sname[inum-1]+"+1;\n\n";
  return aaa;}
- 
 inline string listname(vector<string> sname, string sfin){
   string aaa="extern const int "; int inum=sname.size();
    for(int i=0;i<inum;i++)   aaa+=sname[i]+", ";   aaa+=sfin+";\n\n";
  return aaa;}
- 
-inline string setvals(vector<string> snames, string sval){ string aaa=""; int nelem=snames.size();
+  inline string setvals(vector<string> snames, string sval){ string aaa=""; int nelem=snames.size();
     for(int i=0;i<nelem;i++) {ostringstream snum; snum<<i; aaa+=snum.str()+") "+snames[i]+"\t"+sval+"\n";}
       return aaa;}
 
 int main ( int argc, char *argv[] ) {
-   ifstream fi("model");  int  nxin(0); bool bx(0);
-     string aaa="", siso,snx;
+   ifstream fi("model");  int knkin;
+     string aaa="", stri, siso;
      int lmet=0, lmetb=0, lmetk=0;
      ostringstream smeta,smetb,smetk;
      ostringstream scona,sconb,sconk;
-     ostringstream sdata,sket,sMe;
 // variables of kinetic model   
-       vector<tuple<int, string, string>> mdat, mdatb, mdatk;
-       vector<string> mname;
+       vector<string> stype, mname, edata, xi;// metabolite type, name, edata(conc,lab,0), chi(yes,no)
          getline(fi,aaa);
    for(int i=0; ;i++) {
     fi>> aaa; if(aaa=="fin") break;
-         else if(aaa.find("intern_")+1) {nxin=i; bx=1;}
-         else {tuple<int, string, string> namc; int nc; string sss, snm;
-          fi>>nc>>sss>>snm; mname.push_back(sss); namc=make_tuple(nc,sss,snm);
-               if(bx) {snx="const int numx="+sss+";\n\n"; bx=0;}
-           if(aaa.find("Metab_d")+1) { mdat.push_back(namc);
-              smeta <<"met["<<lmet<<"]=&"<<get<1>(namc).substr(1)<<"; ";
-              scona <<"met["<<lmet<<"]->setconc(xx["<<get<1>(namc)<<"]); ";
-              sdata<<" Ldistr::"<<sss.substr(1)<<"("<<nc<<","<<snm<<"),";
-                  lmet++; }
-           else if(aaa.find("keto")+1) { mdatk.push_back(namc);
-              smetk <<"metk["<<lmetk<<"]=&"<<get<1>(namc).substr(1)<<"; ";
-              sconk <<"metk["<<lmetk<<"]->setconc(xx["<<get<1>(namc)<<"]); ";
-              sket<<" Ldistr::"<<sss.substr(1)<<"("<<nc<<","<<snm<<"),";
-                  lmetk++; }
-           else if(aaa.find("Metab")+1) { mdatb.push_back(namc);
-              smetb <<"metb["<<lmetb<<"]=&"<<get<1>(namc).substr(1)<<"; ";
-              sconb <<"metb["<<lmetb<<"]->setconc(xx["<<get<1>(namc)<<"]); ";
-              sMe<<" Ldistr::"<<sss.substr(1)<<"("<<nc<<","<<snm<<"),";
-                  lmetb++; }
-                }
-              }//name of metabolite
-   
-     int nmet=mname.size();
+     stype.push_back(aaa);//type of metabolite
+    fi>> aaa; mname.push_back(aaa);//names/numbrs of metabolites met[i]->setconc(
+     if(stype[i].find("Metab_d")+1) { smeta <<"met["<<lmet<<"]=&"<<mname[i].substr(1)<<"; ";//setmet()
+         scona <<"met["<<lmet<<"]->setconc(xx["<<mname[i]<<"]); "; lmet++;}//setcon(),nv.cpp
+     if(stype[i].find("Metab<")+1) { smetb <<"metb["<<lmetb<<"]=&"<<mname[i].substr(1)<<"; ";
+      sconb <<"metb["<<lmetb<<"]->setconc(xx["<<mname[i]<<"]); "; lmetb++;}
+     if(stype[i].find("keto")+1) { smetk <<"metk["<<lmetk<<"]=&"<<mname[i].substr(1)<<"; ";
+     sconk <<"metk["<<lmetk<<"]->setconc(xx["<<mname[i]<<"]); "; lmetk++;}
+              if(aaa=="numx") knkin=i;
+    fi>> aaa; edata.push_back(aaa);//names/numbrs of metabolites
+    fi>> aaa; xi.push_back(aaa);//names/numbrs of metabolites
+   }
+     int nmet=stype.size();
     ostringstream parsets;
-    lmet=mdat.size(); lmetb=mdatb.size();  lmetk=mdatk.size(); 
     smetk<<"\n lmet="<<lmet<<"; lmetb="<<lmetb<<"; lmetk="<<lmetk<<"; ";
    cout<<"variables: "<<nmet<<endl;
 //reding the scheme of the model:
@@ -160,11 +144,11 @@ int main ( int argc, char *argv[] ) {
                if(sy.size()>2) flfor +=s_fl+";\n";
                fi>>eq; parsets<<i<<" ";
        f_ff += mm(aaa,subst,numsub,parsets,eq); // function f
-    fi>>aaa; if(aaa=="input"){aaa=rinput( fi, flname[i]); stdist+=aaa; }
-      else if(aaa=="irr"){aaa=irrev( fi, flname[i]); stdist+=aaa; }
-      else if(aaa=="output"){aaa=rout( fi, flname[i]); stdist+=aaa; }
-      else if(aaa=="m0inp"){aaa=rm0in( fi, flname[i]); stdist+=aaa; }
-      else if(aaa=="r3met"){aaa=r3met( fi); stdist+=aaa; }
+    fi>>aaa; if(aaa=="input"){aaa=rinput( fi, flname[i]); stdist+=aaa; cout<<aaa<<endl;}
+      else if(aaa=="irr"){aaa=irrev( fi, flname[i]); stdist+=aaa; cout<<aaa<<endl;}
+      else if(aaa=="output"){aaa=rout( fi, flname[i]); stdist+=aaa; cout<<aaa<<endl;}
+      else if(aaa=="m0inp"){aaa=rm0in( fi, flname[i]); stdist+=aaa; cout<<aaa<<endl;}
+      else if(aaa=="r3met"){aaa=r3met( fi); stdist+=aaa; cout<<aaa<<endl;}
       else getline(fi,aaa);
          }
       int kfl=flname.size();  cout<<"fluxes: "<<kfl<<'\n';
@@ -220,7 +204,7 @@ int main ( int argc, char *argv[] ) {
              
 //declaration of the list of fluxes and variables for "nums.hh"
   ofstream numshh("../include/nums.hh");
-  string hlfl=listname(flname,"nrea")+listname(fladd,"nflx") + listname(mname,"numx, nmet");//+listname(smet,"nmet");
+  string hlfl=listname(flname,"nrea")+listname(fladd,"nflx") + listname(mname,"nmet");//+listname(smet,"nmet");
      hlfl+="\nextern const double thft;\n";
      hlfl+="extern double mader, dt,dif,dif0, suxx, Vi,Vt, mu, xx[], fluxes[], flx[];\n";
      hlfl+="extern double nv1[],nv2[],xinit1[],xinit2[];\nextern time_t ts,tf,tcal;\n";
@@ -237,10 +221,7 @@ int main ( int argc, char *argv[] ) {
 string nvcpp="#include <iostream>\n#include \"nr.h\"\n#include \"nums.hh\"\n#include \"tk.hh\"\n#include \"nv.hh\"\n#include \"modlab.h\"\n#include \"solvers.h\"\n#include \"analis.h\"\n";
  nvcpp += "using namespace std;\n";
 //definition of the list of fluxes, parameters and variables for "nv.cpp"
- nvcpp +=listint(flname,"nrea")+listint(fladd,"nflx","rald") + listint(mname,"nmet")+snx;//+listint(smet,"nmet","numx");
-string aa="Metab_data"+sdata.str(); aa.erase(aa.end()-1); aa+=";\nketose"+sket.str(); aa.erase(aa.end()-1);
- aa+=";\nMetab"+sMe.str(); aa.erase(aa.end()-1);
- nvcpp +=aa+";\n";
+ nvcpp +=listint(flname,"nrea")+listint(fladd,"nflx","rald") + listint(mname,"nmet");//+listint(smet,"nmet","numx");
   nvcpp+=("\tFit Problem;\n\tconst double thft(1.);\n\tdouble dt,xx[nmet],flx[nflx],fluxes[nflx];\n\tdouble xinit1[nmet],xinit2[nmet];\n\t");
   nvcpp +="string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[numx];\n\tReapar Parray::rea[nrea];\n\tdouble Analis::nv1[nrea], Analis::nv2[nrea];\n"+parsets.str()+"\n void Ldistr::setmet(){";
    parsets.str("");
@@ -256,7 +237,7 @@ string aa="Metab_data"+sdata.str(); aa.erase(aa.end()-1); aa+=";\nketose"+sket.s
    string sdist="#include <iostream>\n#include \"nums.hh\"\n#include \"tk.hh\"\n#include \"nv.hh\"\n#include \"modlab.h\"\n";
  sdist += "using namespace std;\nvoid Ldistr::distr(double *py,double *pdydt) {\n\tdouble NOL=0.;\n\tsetiso(py); setdiso(pdydt);\n\t";
  sdist += "for (int i=0;i<Nn;i++) pdydt[i]=0.;\n\t";
-  for(int i=0;i<mdatk.size();i++) sdist+=get<1>(mdatk[i]).substr(1)+".sett(); "; sdist+="t3.sett(); e4.sett();\n"; 
+  for(int i=0;i<nmet;i++) if((stype[i].size()>3)&&(stype[i].substr(0,3)=="ket")) sdist+=mname[i].substr(1)+".sett(); "; sdist+="t3.sett(); e4.sett();\n"; 
 //     cout<<mname[i]<<endl;
    sdist += "\tProblem.f(py,pdydt);\n\tProblem.ff(py,pdydt);\n\tProblem.fin(py);/**/\n\tdouble xthf=thft-cthf.sumt();\n";
     sdist +=stdist;
@@ -278,32 +259,22 @@ string aa="Metab_data"+sdata.str(); aa.erase(aa.end()-1); aa+=";\nketose"+sket.s
     sdist +=tkk1+".invistk("+tka1+",fluxes[tkfl+6]);\n//";
     sdist +=tkk2+".invistk("+tka2+",fluxes[tkfl+7]);\n//";
     sdist +=tkk3+".invistk("+tka3+",fluxes[tkfl+8]);\n\t";
-    for(int i= nxin;i<nmet;i++) sdist +=mname[i].substr(1)+".volume(Vt);\n\t";
+    for(int i=knkin+1;i<nmet;i++) sdist +=mname[i].substr(1)+".volume(Vt);\n\t";
                      sdist +="symm("+ssym+".getisot());\n//";
-    for(int i=0;i<mdat.size();i++) sdist += "xx["+get<1>(mdat[i])+"]="+get<1>(mdat[i]).substr(1)+".sumt(); ";  sdist += "\n//";
-    for(int i=0;i<mdatk.size();i++) sdist += "xx["+get<1>(mdatk[i])+"]="+get<1>(mdatk[i]).substr(1)+".sumt(); ";  sdist += "\n//";
-    for(int i=0;i<mdatb.size();i++) sdist += "xx["+get<1>(mdatb[i])+"]="+get<1>(mdatb[i]).substr(1)+".sumt(); ";  sdist += "\n";
-    
-    for(int i=0;i<nmet;i++) sdist += "xx["+mname[i]+"]=py["+mname[i]+"]; "; 
+    for(int i=0;i<nmet;i++) if(stype[i]!="0") sdist += "xx["+mname[i]+"]="+mname[i].substr(1)+".sumt(); ";  sdist += "\n";
+    for(int i=0;i<nmet;i++) if(stype[i]!="0") sdist += "xx["+mname[i]+"]=py["+mname[i]+"]; "; 
     sdist += "\n}\n";
  fout.open("../con512tpl/distr.cpp"); fout<<sdist;  fout.close(); sdist="";
  
- string stri= "Metab_data "+get<1>(mdat[0]).substr(1);
- ostringstream stcons;
-  stcons<< (get<1>(mdat[0]).substr(1)+"(")<<get<0>(mdat[0])<<(", "+get<2>(mdat[0])+")");
-  for(int i=1;i<mdat.size();i++){stri += ", "+get<1>(mdat[i]).substr(1);
-  stcons<<(", "+get<1>(mdat[i]).substr(1)+"(")<<get<0>(mdat[i])<<(", "+get<2>(mdat[i])+")");
-  }   stri += ";\n";
-  
- stri += "ketose "+get<1>(mdatk[0]).substr(1);
-  for(int i=1;i<mdatk.size();i++) stri += ", "+get<1>(mdatk[i]).substr(1);  stri += ";\n";
-  for(int i=0;i<mdatk.size();i++)
-  stcons<<(", "+get<1>(mdatk[i]).substr(1)+"(")<<get<0>(mdatk[i])<<(", "+get<2>(mdatk[i])+")");  
-  
- stri += "Metab "+get<1>(mdatb[0]).substr(1);
-  for(int i=1;i<mdatb.size();i++) stri += ", "+get<1>(mdatb[i]).substr(1);  stri += ";\n";
-  for(int i=0;i<mdatb.size();i++)
-  stcons<<(", "+get<1>(mdatb[i]).substr(1)+"(")<<get<0>(mdatb[i])<<(", "+get<2>(mdatb[i])+")"); stcons<< "\n";
- fout.open("output"); fout<<stri<<stcons.str();  fout.close();
+ stri= "Metab_data"; for(int i=0;i<lmet;i++) if(stype[i]!="0") stri += " "+mname[i].substr(1)+";\n";
+ stri += "void sklad(int itime){\n";
+ for(int i=0;i<nmet;i++) {if(edata[i][0]=='c') stri += mname[i].substr(1)+".skladc(itime); ";
+                          if(edata[i][1]=='l') stri += mname[i].substr(1)+".skladm0(itime); ";}
+                          stri += "}\n";
+ stri += "void wrikin(std::ostringstream& so, int nt){\n";
+ for(int i=0;i<nmet;i++) {if(edata[i][0]=='c') stri += mname[i].substr(1)+".wrikinc(\""+mname[i]+"\",so,nt); ";
+                          if(edata[i][1]=='l') stri += mname[i].substr(1)+".wrikinm0(\""+mname[i]+"\",so,nt); ";}
+                          stri += "}\n";
+ fout.open("output"); fout<<stri;  fout.close();
         return 0;}
 
