@@ -124,7 +124,7 @@ void Fit::ff(const double *y,double *dydx) {
 	dydx[nrna] = (+flx[r5_o]- flx[r5_i])*dt;
 }
 
-void Parray::init(){ft3=10.; fh6=7.;
+void Parray::init(){ft3=10.; fh6=7.; 
 	tk.setk(rea[rtk].getpar());
 	ta.setk(rea[rta].getpar());
 	aldolase.setk(rea[rald].getpar());}

@@ -44,22 +44,12 @@ inline void chekxi(char *efi){
 
     tuple<double,double,time_t> sol0;
     
-string Ldistr::read_con(ifstream& fi, string& arg1,int& nfi){
+string Ldistr::read_con(ifstream& fi, string& sfiso,int& nfi){
 // read par-file, output dir, flux conf. inter: main and to compare
- string aaa, spar, sout, sflmain, sflcomp, gpl; 
- fi>>aaa>>spar>>aaa>>sout>>aaa>>nfi>>aaa>>sflmain>>aaa>>sflcomp;
- getline(fi,aaa); 
- getline(fi,gpl);
-     cout<<"*** Read_con: "<<spar<<" ***\n";
-     Problem.read(spar.c_str());    //read parameters
-// extract cell_type/conditions, numbers: of substrates, time points
-   string cell=arg1.substr(arg1.find_last_of('/')+1); cout<<"cell="<<cell<<endl;
-     Problem.setodir(sout,sflmain,sflcomp); //set output directory
+ string aaa,gpl="gnuplot  -e \"con=4;m0=4\" xplt.p"; 
      int isu;
       fi>>isu>>aaa>>ntime>>aaa; 
-// localize cell_type/conditions
-      while(!fi.eof()){getline(fi,aaa);  if((aaa.find(cell)+1)) break;}
-      if(!fi.eof()){ fi>>aaa>>dt;
+      if(!fi.eof()){ fi>>aaa>>dt;//cout<<"pass!!** dt="<<dt<<endl;
       for(int i=0;i<ntime;i++) {double ta; fi>>ta>>aaa; texcon.push_back(ta); }
       for(int i=0;i<isu;i++){
        fi>>aaa; int k;
@@ -89,8 +79,12 @@ int main( int argc, char *argv[] ){
          fex1=argv[1]; fex2=fex1;
          
          
-     string arg1(argv[1]),name; ifstream fi(argv[2]);  int ntr(0),Nfi;
-     string gpl=horse.read_con(fi,arg1,Nfi); if(*Problem.getodir()=="glut/") ntr=1; 
+     string sfiso(argv[1]),sfpar(argv[3]), sout(argv[4]), sflmain(argv[5]), sflcomp(argv[6]), name;
+      ifstream fi(argv[2]);  int ntr(0),Nfi(77);
+     Problem.read(sfpar);    //read parameters
+     Problem.setodir(sout,sflmain,sflcomp); //set output directory
+     cout<<"*** Read_con: "<<sfpar<<" out: "<<sout<<" stat: "<<sflmain<<" cmp: "<<sflcomp<<endl;
+     string gpl=horse.read_con(fi,sfiso,Nfi); if(*Problem.getodir()=="glut/") ntr=1; 
       ifn=Problem.setnumofi(); //number of parameter files
      
   if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
