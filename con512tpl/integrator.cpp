@@ -33,7 +33,7 @@ double Ldistr::integrbs(){
      showdescr(kinet,expm0);  show(kinet,0);
      showdescr(kicon,expcon);  showcon(kicon,0);
  double tout; sklad(0);
-  for(int j=0;j<nflx;j++) ppotok[0][j]=flx[j]*1000.*dt;
+  for(int j=0;j<nflx;j++) ppotok[0][j]=flx[j]*1000.*flx[rdt];
         for(int i=1;i<(ntime);i++) {tm=(tex[i]-t)/10.;
         dxsav = tm/((double)(KMAX-1));
         for(int k=0;k<10;k++){ tout=t+tm;
@@ -44,7 +44,7 @@ double Ldistr::integrbs(){
     }
 xi += xits(i);
 xi += xicon(i);  sklad(i);
-      for(int j=0;j<nflx;j++) ppotok[i][j]=flx[j]*1000.*dt;
+      for(int j=0;j<nflx;j++) ppotok[i][j]=flx[j]*1000.*flx[rdt];
     } 
 wrikin(foc1,ntime);
 wricon(foc1,ntime);

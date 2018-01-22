@@ -7,7 +7,7 @@
 #include "solvers.h"
 #include "analis.h"
 using namespace std;
-const int hk=0, pfk=hk+1, fbpase=pfk+1, t3pep=fbpase+1, pept3=t3pep+1, pk=pept3+1, pyrlac=pk+1, lacpyr=pyrlac+1, pyrdcm=lacpyr+1, pyrdmc=pyrdcm+1, pdh=pyrdmc+1, citakg=pdh+1, akgfum=citakg+1, fumal=akgfum+1, malfum=fumal+1, maloa=malfum+1, oamal=maloa+1, pc=oamal+1, malicm=pc+1, malicc=malicm+1, ppp=malicc+1, oacd=ppp+1, mald=oacd+1, citdmc=mald+1, citdcm=citdmc+1, akgdmc=citdcm+1, akgdcm=akgdmc+1, coaout=akgdcm+1, citakg1=coaout+1, akgcit1=citakg1+1, gln_in=akgcit1+1, gln_out=gln_in+1, gluin=gln_out+1, gluout=gluin+1, t3ser=gluout+1, serpyr=t3ser+1, asp_o=serpyr+1, asp_i=asp_o+1, ala_o=asp_i+1, ala_i=ala_o+1, r5_o=ala_i+1, r5_i=r5_o+1, cystin=r5_i+1, proin=cystin+1, proout=proin+1, kgin=proout+1, coain=kgin+1, gln_pr=coain+1, ser_pr=gln_pr+1, asp_pr=ser_pr+1, ala_pr=asp_pr+1, pro_pr=ala_pr+1, trpala=pro_pr+1, mthf=trpala+1, thf=mthf+1, sergly=thf+1, glyser=sergly+1, cs0=glyser+1, D=cs0+1, atpase=D+1, resp=atpase+1, rald=resp+1, rta=rald+1, rtk=rta+1, nrea=rtk+1;
+const int hk=0, pfk=hk+1, fbpase=pfk+1, t3pep=fbpase+1, pept3=t3pep+1, pk=pept3+1, pyrlac=pk+1, lacpyr=pyrlac+1, pyrdcm=lacpyr+1, pyrdmc=pyrdcm+1, pdh=pyrdmc+1, citakg=pdh+1, akgfum=citakg+1, fumal=akgfum+1, malfum=fumal+1, maloa=malfum+1, oamal=maloa+1, pc=oamal+1, malicm=pc+1, malicc=malicm+1, ppp=malicc+1, oacd=ppp+1, mald=oacd+1, citdmc=mald+1, citdcm=citdmc+1, akgdmc=citdcm+1, akgdcm=akgdmc+1, coaout=akgdcm+1, citakg1=coaout+1, akgcit1=citakg1+1, gln_in=akgcit1+1, gln_out=gln_in+1, gluin=gln_out+1, gluout=gluin+1, t3ser=gluout+1, serpyr=t3ser+1, asp_o=serpyr+1, asp_i=asp_o+1, ala_o=asp_i+1, ala_i=ala_o+1, r5_o=ala_i+1, r5_i=r5_o+1, cystin=r5_i+1, proin=cystin+1, proout=proin+1, kgin=proout+1, coain=kgin+1, gln_pr=coain+1, ser_pr=gln_pr+1, asp_pr=ser_pr+1, ala_pr=asp_pr+1, pro_pr=ala_pr+1, trpala=pro_pr+1, mthf=trpala+1, thf=mthf+1, sergly=thf+1, glyser=sergly+1, cs0=glyser+1, D=cs0+1, rdt=D+1, atpase=rdt+1, resp=atpase+1, rald=resp+1, rta=rald+1, rtk=rta+1, nrea=rtk+1;
 
 const int aldfl=rald, aldrev=aldfl+1, aldfli=aldrev+1, aldi1=aldfli+1, tafl=aldi1+1, s7f6a=tafl+1, f6g3a=s7f6a+1, s7e4a=f6g3a+1, tkfl=s7e4a+1, s7p5=tkfl+1, f6p5=s7p5+1, p5f6=f6p5+1, f6s7=p5f6+1, s7f6=f6s7+1, p5g3i=s7f6+1, f6e4i=p5g3i+1, s7p5i=f6e4i+1, nflx=s7p5i+1;
 
@@ -20,7 +20,7 @@ ketose Ldistr::s7(7,"s7"), Ldistr::h6(6,"h6"), Ldistr::p5(5,"rib");
 Metab Ldistr::cthf(1,"cthf"), Ldistr::gae(2,"gae"), Ldistr::dhe(3,"dhe");
 	Fit Problem;
 	const double thft(1.);
-	double dt,xx[nmet],flx[nflx],fluxes[nflx];
+	double xx[nmet],flx[nflx],fluxes[nflx];
 	double xinit1[nmet],xinit2[nmet];
 	string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[numx];
 	Reapar Parray::rea[nrea];
@@ -98,6 +98,7 @@ flx[sergly]= rea[sergly].v( xx[nser], xthf);
 flx[glyser]= rea[glyser].v( xx[ngly], y[ncthf]);   dydx[ncthf] -= flx[glyser];  
 flx[cs0]= rea[D].v()*rea[cs0].v( y[noa], y[ncoa]); dydx[noa] -= flx[cs0];  dydx[ncoa] -= flx[cs0];  dydx[ncit] += flx[cs0];  
 flx[D]= rea[D].v();                                
+flx[rdt]= rea[rdt].v();                            
 flx[atpase]= rea[atpase].v( y[n_atp]);             dydx[n_atp] -= flx[atpase];  
 flx[resp]= rea[resp].v( h_nad, a_dp);              dydx[n_nad] += flx[resp];  dydx[n_atp] += flx[resp];  dydx[n_atp] += flx[resp];  dydx[n_atp] += flx[resp];  
 aldolase.st1fl(&flx[aldfl], y[nfbp], y[nt3]);      dydx[nfbp] -= flx[aldfl];    dydx[nt3] += 2.*flx[aldfl];
@@ -108,23 +109,23 @@ tk.st1fl(&flx[tkfl], y[nt3]/ft3, y[np5], y[ne4], y[nh6]/fh6, y[np5], y[ns7]);
 				dydx[np5] -= flx[tkfl];	dydx[nt3] += flx[tkfl];
 				dydx[ns7] -= flx[tkfl+1];	dydx[np5] += flx[tkfl+1];
 				dydx[nh6] -= flx[tkfl+2];	dydx[ne4] += flx[tkfl+2];
-for(int i=0;i<numx;i++) dydx[i]*=(dt/Vi);
+for(int i=0;i<numx;i++) dydx[i]*=(flx[rdt]/Vi);
 }
 
 void Fit::ff(const double *y,double *dydx) {
-	dydx[ngl] = (- flx[hk])*dt;
-	dydx[nlac] = (+flx[pyrlac]- flx[lacpyr])*dt;
-	dydx[nglu] = (+flx[gluout]- flx[gluin])*dt;
-	dydx[ngln] = (+flx[gln_out]- flx[gln_in]- flx[gln_pr])*dt;
-	dydx[nala] = (+flx[ala_o]- flx[ala_i]+flx[trpala]- flx[ala_pr])*dt;
-	dydx[nasp] = (+flx[asp_o]- flx[asp_i]- flx[asp_pr])*dt;
-	dydx[nser] = (+flx[t3ser]- flx[serpyr]- flx[ser_pr]+flx[glyser]- flx[sergly])*dt;
-	dydx[ngly] = (+flx[sergly]- flx[glyser])*dt;
-	dydx[npro] = (+flx[proout]- flx[proin]- flx[pro_pr])*dt;
-	dydx[nrna] = (+flx[r5_o]- flx[r5_i])*dt;
+	dydx[ngl] = (- flx[hk])*flx[rdt];
+	dydx[nlac] = (+flx[pyrlac]- flx[lacpyr])*flx[rdt];
+	dydx[nglu] = (+flx[gluout]- flx[gluin])*flx[rdt];
+	dydx[ngln] = (+flx[gln_out]- flx[gln_in]- flx[gln_pr])*flx[rdt];
+	dydx[nala] = (+flx[ala_o]- flx[ala_i]+flx[trpala]- flx[ala_pr])*flx[rdt];
+	dydx[nasp] = (+flx[asp_o]- flx[asp_i]- flx[asp_pr])*flx[rdt];
+	dydx[nser] = (+flx[t3ser]- flx[serpyr]- flx[ser_pr]+flx[glyser]- flx[sergly])*flx[rdt];
+	dydx[ngly] = (+flx[sergly]- flx[glyser])*flx[rdt];
+	dydx[npro] = (+flx[proout]- flx[proin]- flx[pro_pr])*flx[rdt];
+	dydx[nrna] = (+flx[r5_o]- flx[r5_i])*flx[rdt];
 }
 
-void Parray::init(){ft3=10.; fh6=7.; 
+void Parray::init(){ft3=10.; fh6=7.;
 	tk.setk(rea[rtk].getpar());
 	ta.setk(rea[rta].getpar());
 	aldolase.setk(rea[rald].getpar());}
@@ -138,7 +139,7 @@ void Parray::fin(double y[]){
 flfor(y);
 }
 void Parray::flfor(double *y){
-for(int i=0;i<nflx;i++) fluxes[i] = flx[i] * dt/Vi;
+for(int i=0;i<nflx;i++) fluxes[i] = flx[i] * flx[rdt]/Vi;
 fluxes[pfk] /= y[nh6];
 fluxes[fbpase] /= y[nfbp];
 fluxes[t3pep] /= y[nt3];

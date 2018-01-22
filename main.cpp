@@ -51,7 +51,7 @@ string Ldistr::read_con(ifstream& fi, string& sfiso,int& nfi){
       fi>>aaa;
       getline(fi,aaa);
       stringstream onel; onel<<aaa; int ii(0);
-      while(getline(onel,aaa,' ')) if(aaa.length()){double ta=stod(aaa); texcon.push_back(ta); ii++;} ntime=ii; dt=0.29;
+      while(getline(onel,aaa,' ')) if(aaa.length()){double ta=stod(aaa); texcon.push_back(ta); ii++;} ntime=ii; 
       while(!fi.eof()){
        fi>>aaa; if(fi.eof()) break; int k;
         for(k=0;k<=lmet;k++) if(aaa.find(met[k]->getdescr())+1) {
@@ -61,6 +61,7 @@ string Ldistr::read_con(ifstream& fi, string& sfiso,int& nfi){
              if(k==lmet) for(int j=0;j<ntime;j++) fi>>aaa;
                 }
       return gpl;}
+      
 void Ldistr::setflcon(){ int i, ifound;
        for(int j=0;j<expcon.size();j++){
         for(i=0;i<expm0.size();i++){

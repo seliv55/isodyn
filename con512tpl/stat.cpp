@@ -33,7 +33,7 @@ void Fit::write (tuple<double,double,time_t> sol, int& ifn,bool flg) const {
     for (i=0;i<nrea;i++) rea[i].write(fi,i); 
 	for (i=0;i<par.size();i++) fi << par[i]<<" "; fi << "-1"<<spar<<"\n";
   for (i=0;i<nmet;i++) fi<<i<<") "<<setw(9)<<left<<namex[i]<<" "<<xx[i]<<"\n";
-	for (i=0;i<nflx;i++) fi<<i<<") "<<setw(9)<<left<<fid[i]<< " "<<(flx[i]*1000.*dt)<<"\n";
+	for (i=0;i<nflx;i++) fi<<i<<") "<<setw(9)<<left<<fid[i]<< " "<<(flx[i]*1000.*flx[rdt])<<"\n";
 		fi << get<0>(sol) <<"\n";
 		fi << get<2>(sol) <<"\n";
 		fi << get<1>(sol) <<endl;

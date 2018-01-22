@@ -93,7 +93,7 @@ double t=0.,xi=0.,rtol=0.0075,atol=1.0e-9,h0=0.1e-5, hmax=25.2, rpar[2], *rwork=
          for(int i=0;i<getntime();i++) ppotok[i]=&potok[i*nflx];
  double tout;
     sklad(0);
-  for(int j=0;j<nflx;j++) ppotok[0][j]=flx[j]*1000.*dt;
+  for(int j=0;j<nflx;j++) ppotok[0][j]=flx[j]*1000.*flx[rdt];
         for(int i=1;i<(getntime());i++) {double tm=(tex[i]-t)/(double)ikin;
         for(int k=0;k<ikin;k++){ tout=t+tm;
         distr(ys, yprime);
@@ -106,7 +106,7 @@ massfr();
     }
 xi += xits(i);
 xi += xicon(i);  sklad(i);
-      for(int j=0;j<nflx;j++) ppotok[i][j]=flx[j]*1000.*dt;
+      for(int j=0;j<nflx;j++) ppotok[i][j]=flx[j]*1000.*flx[rdt];
     }
 wrikin(foc1,getntime());
 wricon(foc1,getntime());

@@ -141,7 +141,7 @@ int main ( int argc, char *argv[] ) {
      int numsub, eq;
 //     nv.cpp:
   string f_ff="void Fit::f(const double *y,double *dydx) {\n\tfor(int i=0;i<numx;i++) dydx[i]=0.;\n\t for(int i=0;i<nflx;i++) flx[i]=0.;\n\t double amp = -(sqrt(4.*xx[n_atp]*tan-3.*xx[n_atp]*xx[n_atp])-2.*tan+xx[n_atp])/2.;\n\t double a_dp = (sqrt(xx[n_atp])*sqrt(4.*tan-3.*xx[n_atp])-xx[n_atp])/2.;\n\t double h_nad = tnad-xx[n_nad];\n\t xthf=thft-xx[ncthf];\n";// functions f & ff
-  string flfor="void Parray::flfor(double *y){\nfor(int i=0;i<nflx;i++) fluxes[i] = flx[i] * dt/Vi;\n";// function flfor
+  string flfor="void Parray::flfor(double *y){\nfor(int i=0;i<nflx;i++) fluxes[i] = flx[i] * flx[rdt]/Vi;\n";// function flfor
        string stdist;
     
 // reactions (fluxes)
@@ -199,7 +199,7 @@ int main ( int argc, char *argv[] ) {
        fladd.push_back("f6p5"); fladd.push_back("p5f6");
        fladd.push_back("f6s7"); fladd.push_back("s7f6");
        fladd.push_back("p5g3i"); fladd.push_back("f6e4i"); fladd.push_back("s7p5i");
-               f_ff+="for(int i=0;i<numx;i++) dydx[i]*=(dt/Vi);\n}\n\n"; flfor+="}\n\n";
+               f_ff+="for(int i=0;i<numx;i++) dydx[i]*=(flx[rdt]/Vi);\n}\n\n"; flfor+="}\n\n";
    
           fi>>aaa;
           f_ff+="void Fit::ff(const double *y,double *dydx) {\n";
@@ -209,7 +209,7 @@ int main ( int argc, char *argv[] ) {
                                   fi>>numfl;
         for(int j=0;j<numfl;j++) {fi>>aaa;
         if(aaa.at(0)=='-') {f_ff+="- "; aaa.erase(0,1);} else f_ff+="+"; f_ff+="flx["+aaa+"]";}
-         f_ff+=")*dt;\n";
+         f_ff+=")*flx[rdt];\n";
        }  f_ff+="}\n\n";
                   
          fi.close();
@@ -222,7 +222,7 @@ int main ( int argc, char *argv[] ) {
   ofstream numshh("../include/nums.hh");
   string hlfl=listname(flname,"nrea")+listname(fladd,"nflx") + listname(mname,"numx, nmet");//+listname(smet,"nmet");
      hlfl+="\nextern const double thft;\n";
-     hlfl+="extern double mader, dt,dif,dif0, suxx, Vi,Vt, mu, xx[], fluxes[], flx[];\n";
+     hlfl+="extern double mader, dif,dif0, suxx, Vi,Vt, mu, xx[], fluxes[], flx[];\n";
      hlfl+="extern double nv1[],nv2[],xinit1[],xinit2[];\nextern time_t ts,tf,tcal;\n";
      hlfl+="extern std::string foc, kin, kinc;\nextern char *fex1, *fex2;\nextern int ifn;\n";
           numshh<<hlfl; numshh.close(); hlfl=""; //writing "nums.hh"
@@ -241,7 +241,7 @@ string nvcpp="#include <iostream>\n#include \"nr.h\"\n#include \"nums.hh\"\n#inc
 string aa="Metab_data"+sdata.str(); aa.erase(aa.end()-1); aa+=";\nketose"+sket.str(); aa.erase(aa.end()-1);
  aa+=";\nMetab"+sMe.str(); aa.erase(aa.end()-1);
  nvcpp +=aa+";\n";
-  nvcpp+=("\tFit Problem;\n\tconst double thft(1.);\n\tdouble dt,xx[nmet],flx[nflx],fluxes[nflx];\n\tdouble xinit1[nmet],xinit2[nmet];\n\t");
+  nvcpp+=("\tFit Problem;\n\tconst double thft(1.);\n\tdouble xx[nmet],flx[nflx],fluxes[nflx];\n\tdouble xinit1[nmet],xinit2[nmet];\n\t");
   nvcpp +="string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[numx];\n\tReapar Parray::rea[nrea];\n\tdouble Analis::nv1[nrea], Analis::nv2[nrea];\n"+parsets.str()+"\n void Ldistr::setmet(){";
    parsets.str("");
   nvcpp +=smeta.str()+smetb.str()+smetk.str() + " }\n void Ldistr::setcon(){"+

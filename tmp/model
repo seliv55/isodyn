@@ -96,7 +96,7 @@ fin
  glyser 2 -xx[ngly] -ncthf 0 r3met condence ser gly cthf fluxes[glyser] 0 
  cs0 3 -noa -ncoa ncit 1 r3met condence cit oa coa fluxes[cs0] 0
   D 1 - 0 0 0 0 0
- dt 1 - 0 0 0 0 0
+ rdt 1 - 0 0 0 0 0
  atpase 1 -n_atp 0 0 0 0 0
  resp 6 -h_nad n_nad -a_dp n_atp n_atp n_atp 0 0 0 0 0
 fin
