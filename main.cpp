@@ -47,19 +47,20 @@ inline void chekxi(char *efi){
 string Ldistr::read_con(ifstream& fi, string& sfiso,int& nfi){
 // read par-file, output dir, flux conf. inter: main and to compare
  string aaa,gpl="gnuplot  -e \"con=4;m0=4\" xplt.p"; 
-     int isu;
-      fi>>isu>>aaa>>ntime>>aaa; 
-      if(!fi.eof()){ fi>>aaa>>dt;//cout<<"pass!!** dt="<<dt<<endl;
-      for(int i=0;i<ntime;i++) {double ta; fi>>ta>>aaa; texcon.push_back(ta); }
-      for(int i=0;i<isu;i++){
-       fi>>aaa; int k;
+     int isu; 
+      fi>>aaa;
+      getline(fi,aaa);
+      stringstream onel; onel<<aaa; int ii(0);
+      while(getline(onel,aaa,' ')) if(aaa.length()){double ta=stod(aaa); texcon.push_back(ta); ii++;} ntime=ii; dt=0.29;
+      while(!fi.eof()){
+       fi>>aaa; if(fi.eof()) break; int k;
         for(k=0;k<=lmet;k++) if(aaa.find(met[k]->getdescr())+1) {
            for(int j=0;j<ntime;j++) {
        double cc; fi>>cc; met[k]->setconc(cc,j); xx[k]=met[k]->getconc()[0].mean;}
              expcon.push_back(met[k]);  break;}
              if(k==lmet) for(int j=0;j<ntime;j++) fi>>aaa;
                 }
-   }   return gpl;}
+      return gpl;}
 void Ldistr::setflcon(){ int i, ifound;
        for(int j=0;j<expcon.size();j++){
         for(i=0;i<expm0.size();i++){

@@ -1,6 +1,4 @@
-4 substrates 2 times 
-dt   0.29
-0 	h	24 h
+time_h 0 24
 Glucose  8.636  5.282
 Glutamine  2.915  2.637
 Lactate  0.807  7.850
