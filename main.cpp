@@ -79,16 +79,17 @@ int main( int argc, char *argv[] ){
    int itmp; bool check;
          fex1=argv[1]; fex2=fex1;
          
-         
+   for(int i=0;i<argc;i++) cout<<argv[i]<<" "; cout<<argc<<":args\n"; 
+       
      string sfiso(argv[1]),sfpar(argv[3]), sout(argv[4]), sflmain(argv[5]), sflcomp(argv[6]), name;
-      ifstream fi(argv[2]);  int ntr(0),Nfi(77);
+      ifstream fi(argv[2]);  int ntr(0),Nfi=atoi(argv[7]);
      Problem.read(sfpar);    //read parameters
      Problem.setodir(sout,sflmain,sflcomp); //set output directory
-     cout<<"*** Read_con: "<<sfpar<<" out: "<<sout<<" stat: "<<sflmain<<" cmp: "<<sflcomp<<endl;
+     cout<<"*** Read_con: "<<sfpar<<" out: "<<sout<<" stat: "<<sflmain<<" cmp: "<<sflcomp<<" nfi="<<Nfi<<endl;
      string gpl=horse.read_con(fi,sfiso,Nfi); if(*Problem.getodir()=="glut/") ntr=1; 
       ifn=Problem.setnumofi(); //number of parameter files
      
-  if((argc>3)&&(argv[3][0]=='s'))  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
+  if(argv[13][0]=='t')  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
    else{
      cout.precision(3);
@@ -136,18 +137,15 @@ int main( int argc, char *argv[] ){
           int sys=system(gpl.c_str());//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
             
- if (argc>3) {  if(argv[3][0]=='g') analis.grad(); 
-                if(argv[3][1]=='k') analis.desK(1.05,rtk); 
-                if(argv[3][1]=='a') analis.desK(1.05,rta); 
+   if(argv[9][0]=='t') analis.grad(); 
+                if(argv[11][1]=='t') analis.desK(1.05,rtk); 
+                if(argv[12][1]=='t') analis.desK(1.05,rta); 
    Problem.setfnfin(ifn+Nfi);
-  if(argv[3][0]=='f') analis.coord(0.03,1.07);
-   else {
-     try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<Nfi<<" files saved!\n"; return 0;}
-	         Problem.stat(ifn-1);
-                  sol0=Problem.read("1");
-                   for(int i=0;i<numx;i++) xinit1[i]=xx[i];
-                  }
- }
+  if(argv[8][0]=='t') analis.coord(0.03,1.07);
+    {
+    if(argv[10][0]=='t') try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<Nfi<<" files saved!\n"; return 0;}
+                }
+ 
 //               analis.sensitiv(tmax);
 //               analis.swarm(tmax,111);
 }
