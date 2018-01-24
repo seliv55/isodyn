@@ -90,7 +90,7 @@ int main( int argc, char *argv[] ){
      string gpl=horse.read_con(fi,sfiso,Nfi); if(*Problem.getodir()=="glut/") ntr=1; 
       ifn=Problem.setnumofi(); //number of parameter files
      
-  if(argv[13][0]=='t')  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
+  if(argv[8][0]=='S')  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
    else{
      cout.precision(3);
@@ -138,13 +138,13 @@ int main( int argc, char *argv[] ){
           int sys=system(gpl.c_str());//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
             
-   if(argv[9][0]=='t') analis.grad(); 
-                if(argv[11][1]=='t') analis.desK(1.05,rtk); 
-                if(argv[12][1]=='t') analis.desK(1.05,rta); 
+   if(argv[8][0]=='N') analis.grad(); 
+                if(argv[8][0]=='K') analis.desK(1.05,rtk); 
+                if(argv[8][0]=='A') analis.desK(1.05,rta); 
    Problem.setfnfin(ifn+Nfi);
-  if(argv[8][0]=='t') analis.coord(0.03,1.07);
+  if(argv[8][0]=='F') analis.coord(0.03,1.07);
     {
-    if(argv[10][0]=='t') try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<Nfi<<" files saved!\n"; return 0;}
+    if(argv[8][0]=='C') try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<Nfi<<" files saved!\n"; return 0;}
                 }
  
 //               analis.sensitiv(tmax);
