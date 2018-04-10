@@ -5,13 +5,13 @@
 using namespace std;
 
 int Ldistr::getN() {
-met[0]->ny=nmet; cout<<met[0]->ny<<" "<<met[0]->getdescr()<<'\n';
-for(int i=1;i<lmet;i++) {met[i]->ny=met[i-1]->ny+met[i-1]->getlen(); cout<<met[i]->ny<<" "<<met[i]->getdescr()<<'\n';}
+met[0]->ny=nmet; //cout<<met[0]->ny<<" "<<met[0]->getdescr()<<'\n';
+for(int i=1;i<lmet;i++) {met[i]->ny=met[i-1]->ny+met[i-1]->getlen();}// cout<<met[i]->ny<<" "<<met[i]->getdescr()<<'\n';}
 //  glu25.ny=glu.ny;
-metb[0]->ny= met[lmet-1]->ny+met[lmet-1]->getlen(); cout<<metb[0]->ny<<" "<<metb[0]->getdescr()<<'\n';
-for(int i=1;i<lmetb;i++) {metb[i]->ny=metb[i-1]->ny+metb[i-1]->getlen(); cout<<metb[i]->ny<<" "<<metb[i]->getdescr()<<'\n';}
-metk[0]->ny= metb[lmetb-1]->ny+metb[lmetb-1]->getlen(); cout<<metk[0]->ny<<" "<<metk[0]->getdescr()<<'\n';
-for(int i=1;i<lmetk;i++) {metk[i]->ny=metk[i-1]->ny+metk[i-1]->getlen(); cout<<metk[i]->ny<<" "<<metk[i]->getdescr()<<endl;}
+metb[0]->ny= met[lmet-1]->ny+met[lmet-1]->getlen();// cout<<metb[0]->ny<<" "<<metb[0]->getdescr()<<'\n';
+for(int i=1;i<lmetb;i++) {metb[i]->ny=metb[i-1]->ny+metb[i-1]->getlen();}// cout<<metb[i]->ny<<" "<<metb[i]->getdescr()<<'\n';}
+metk[0]->ny= metb[lmetb-1]->ny+metb[lmetb-1]->getlen();// cout<<metk[0]->ny<<" "<<metk[0]->getdescr()<<'\n';
+for(int i=1;i<lmetk;i++) metk[i]->ny=metk[i-1]->ny+metk[i-1]->getlen();//{ cout<<metk[i]->ny<<" "<<metk[i]->getdescr()<<endl;}
 return (Nn=metk[lmetk-1]->ny+metk[lmetk-1]->getlen());
 }
 

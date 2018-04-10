@@ -13,14 +13,15 @@ double Fit::dermax(){    double dx[numx];     f(xx,dx);
             double xpos=positive(dx[i]); if(xpos>ma) ma=xpos;}
                                              return ma;}
                                              
-tuple<double,double,time_t> Fit::read(string fn){
- int i, ip; string aaa;  ifstream fi(fn.c_str()); string ppp;
+tuple<double,double,time_t> Fit::read(string fn){ 
+ int i, ip; string aaa;  ifstream fi(fn.c_str()); string ppp; 
  static int flg=0; tuple<double,double,time_t> sol(1.e12,0.,0);
-  if(!fi.good()) return sol;
-    for (i=0;i<nrea;i++) rea[i].read(fi,flg);// cout<<"Nreact="<<nrea<<"; last="<<rea[nrea-1].v()<<endl;
+  if(!fi.good()) {cout<<" bad file! ";return sol;}
+    for (i=0;i<nrea;i++) rea[i].read(fi,flg); cout<<"Nreact="<<nrea<<"; last="<<rea[nrea-1].v()<<endl;
 	for(i=0;;i++) {fi>>ip; if(ip<0) break; par.push_back(ip);} getline(fi,spar);
-	for (i=0;i<nmet;i++) {fi>>aaa>>namex[i]>>xx[i];} //cout<<aaa<<" "<<namex[nmet-1]<<" "<<xx[nmet-1]<<endl;
-        for (i=0;i<nflx;i++) fi>>aaa>>fid[i]>>flx[i]; if(flx[pfk]<1e-7) cout<<fn<<"!!!: hk=0"<<endl; 
+	for (i=0;i<nmet;i++) {fi>>aaa>>namex[i]>>xx[i];} cout<<nmet<<" "<<namex[nmet-1]<<" "<<xx[nmet-1]<<endl;
+        for (i=0;i<nflx;i++) fi>>aaa>>fid[i]>>flx[i];cout<<nflx<<" "<<fid[nflx-1]<<" "<<flx[nflx-1]<<endl;
+         if(flx[pfk]<1e-7) cout<<fn<<"!!!: hk=0"<<endl; 
 		fi >> get<0>(sol) >> get<2>(sol) >> get<1>(sol);// if((flx[0]<0.1)||(flx[0]>0.2)) xi += 100.;
 	fi.close(); flg++; //cout<<fn<<"; xi="<<xi<<endl;
 return sol;}

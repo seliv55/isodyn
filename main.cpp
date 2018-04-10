@@ -90,7 +90,7 @@ int main( int argc, char *argv[] ){
      string gpl=horse.read_con(fi,sfiso,Nfi); if(*Problem.getodir()=="glut/") ntr=1; 
       ifn=Problem.setnumofi(); //number of parameter files
      
-  if(argv[8][0]=='S')  { cout<<argv[3][0]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
+  if(argv[8][0]=='S')  { cout<<"statistics, "<<argv[4]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
    else{
      cout.precision(3);
