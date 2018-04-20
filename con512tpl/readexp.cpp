@@ -8,8 +8,8 @@
 using namespace std;
 double Vi, xribi, xasp=1.,mu;
 
-double Ldistr::readExp (char fn[],int ntr) {
-  ifstream fi(fn); double Ti,ts1;  mu=0.;  Vi=0.014; 
+void Ldistr::readExp (char fn[],int ntr) {
+  ifstream fi(fn); double Ti;  mu=0.;  Vi=0.014; 
      Tracer l13c=rcsv(fi, result,ntr );  int lres=result.size();
      cout<<"readExp: 13C-substrate: "<<*l13c.getname()<<", fraction: "<<l13c.fract<<endl;
 
@@ -27,7 +27,7 @@ for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
    for(int j=0;j<lres;j++){ findmet(result[j]);   }
 //	 gl.setex0(); gln.setex0();
 //    for(int j=0;j<expm0.size();j++) cout<<expm0[j]->getdescr()<<endl;
-  return ts1;}
+  }
 
 vector<string> Ldistr::spli(stringstream& test,char a){
     vector<string> seglist;    string segment;
@@ -78,10 +78,10 @@ int Ldistr::c13pos(string& s,int& nc,int& nlab){
        }
   return ibin; }
       
-set<string> Ldistr::findopt(string a, vector<string> strok){
+set<string> Ldistr::findopt(string stsam, vector<string> strok){
          int nstrok(strok.size());
    set<string> metka;               // set labeled substrates
-    for(int i=0;i<nstrok;i++){ size_t pos=strok[i].find("C13]-");
+    for(int i=0;i<nstrok;i++){ size_t pos=strok[i].find(stsam);
      if(pos+1){ metka.insert(strok[i].substr(pos,17)); }       }
     for(set<string>::iterator it=metka.begin(); it!=metka.end(); it++) cout<<"findopt "<<*it<<'\n';
   return metka;
@@ -166,6 +166,7 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result,int mar ){
  int lef=(int)segline[0][cols[efrg]].at(4)-(int)segline[0][cols[efrg]].at(1)+2; // number of isotopomers in fragment
     string metnm=segline[0][cols[emet]], //metabolite name
            chinj=segline[0][cols[isotopol]];//injection #
+           cout<<"rcsv: name="<<metnm<<" miso="<<lef<<" cinj="<<chinj<<'\n';
 //           strac=segline[0][cols[trac]]; //13C tracer
 //convert MID from string to double in whole column
     double dis[nstrok];
@@ -174,15 +175,13 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result,int mar ){
      }
    
    vector<Iso> liso,liso1;  Iso *iso;  int iiso(0),iro(0);
-while(iro<(nstrok)){ cout<<"rcsv: name="<<metnm<<" cinj="<<chinj<<" "<<segline[iro][cols[isotopol]]<<'\n';
+while(iro<(nstrok-1)){ cout<<"rcsv: name="<<metnm<<" miso="<<lef<<" cinj="<<chinj<<" "<<segline[iro][cols[isotopol]]<<'\n';
    while(segline[iro][cols[emet]]==metnm){ // take data for metabolite metnm
          if(iiso==0) {iso=new Iso(lef,stod(segline[iro][cols[etime]])*60.,segline[iro][cols[emet]]);
           if(segline[iro][cols[isotopol]]==chinj) iro++;}
     while((segline[iro][cols[isotopol]]!=chinj)&&(iiso<lef)){  // ordenate mid for each injection
                    iso->setmid(iiso,dis[iro]); iiso++; iro++;}
                    if(iiso==lef) { liso.push_back(*iso);}
-                   
-                   
          if(segline[iro][cols[isotopol]]!=chinj) {iro++; iiso++;}
          else { iiso=0; iro++;}
     if(iro>=nstrok)  {liso.push_back(*iso); break;}
@@ -203,7 +202,8 @@ while(iro<(nstrok)){ cout<<"rcsv: name="<<metnm<<" cinj="<<chinj<<" "<<segline[i
      cout<<"**label in "<<*iso->getname()<<" t="<<iso->gett()<<endl;
     marfrac=iso->getmid()[nlab].mean;    }
                  }
-        delete iso; cout<<'\n';   }
+        delete iso;
+         cout<<'\n';   }
      }
          liso.clear();
    if(iro<(nstrok-1)){ iiso=0;

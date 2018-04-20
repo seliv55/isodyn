@@ -507,7 +507,7 @@ static Metab cthf, gae, dhe;
        void distr(double *py,double *pdydt);
        double consum();
        void showmi(std::ostringstream& fo,int nt);
-      double readExp(char *fn,int ntr=0);
+      void readExp(char *fn,int ntr=0);
       std::vector<std::string> spli(std::stringstream& test,char a);
       int c13pos(std::string& s,int& nc,int& nlab);
       void defcol(int nucol[],std::vector<std::string> vstr);

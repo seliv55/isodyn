@@ -1,5 +1,5 @@
 #!/bin/sh
-fiso=A549 #13C labeling in Metabolights format
+fiso=NCI #13C labeling in Metabolights format
 fcon=xglc #concentrations
 inpar="glc/1" #set of parameters to start
 oudir="glc/"  #output directory
