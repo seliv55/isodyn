@@ -96,6 +96,7 @@ int main( int argc, char *argv[] ){
      cout.precision(3);
 //     sol0=Problem.read(argv[2]);    //read parameters
         horse.readExp(argv[1],ntr);            // read experimental data 
+                 cout<<"***pass***"<<endl; 
         horse.setflcon();
       int m0len=horse.wrim0ex("exm0");                // set experimental data for figure
       int conlen=horse.wriconex("excon");                // set experimental data for figure

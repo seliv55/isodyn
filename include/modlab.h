@@ -455,7 +455,7 @@ class ketose:public Metab_data {
 
 class Ldistr {
 	int ntime,lmet,lmetb, lmetk, itrac,markis,Nn;
-static Metab_data fbp, t3, pep, pyr, pyrm, coa, coac, agl, oa, oac, cit, citc, akg, akgc, fum, mal, e4, gl, lac, glu, gln, ala, asp, ser, gly, pro, rna;
+static Metab_data fbp, t3, pep, pyr, pyrm, coa, coac, agl, oa, oac, cit, citc, akg, akgc, fum, mal, e4, gl, lac, glu, gln, ala, asp, ser, gly, pro, rna,glycog;
 static ketose s7, h6, p5;
 static Metab cthf, gae, dhe;
   double lacout,coaefl,tca,fpdh,marfrac;

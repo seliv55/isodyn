@@ -15,7 +15,7 @@ const int nfbp=0, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, ncoa=npyrm+
 
 const int numx=ngl;
 
-Metab_data Ldistr::fbp(6,"fbp"), Ldistr::t3(3,"t3"), Ldistr::pep(3,"pep"), Ldistr::pyr(3,"pyr"), Ldistr::pyrm(3,"Pyr"), Ldistr::coa(2,"CoA"), Ldistr::coac(2,"coac"), Ldistr::agl(3,"Glycerol"), Ldistr::oa(4,"Oaa"), Ldistr::oac(4,"oac"), Ldistr::cit(6,"Cit"), Ldistr::citc(6,"citc"), Ldistr::akg(5,"aKg"), Ldistr::akgc(5,"akgc"), Ldistr::fum(4,"Fum"), Ldistr::mal(4,"Mal"), Ldistr::e4(4,"ne4"), Ldistr::gl(6,"Gluc"), Ldistr::lac(3,"Lac"), Ldistr::glu(5,"Glutamate2-5"), Ldistr::gln(5,"Glutamin"), Ldistr::ala(3,"Ala"), Ldistr::asp(4,"Asp"), Ldistr::ser(3,"Ser"), Ldistr::gly(2,"Gly"), Ldistr::pro(5,"Pro"), Ldistr::rna(5,"Rib");
+Metab_data Ldistr::fbp(6,"fbp"), Ldistr::glycog(6,"Glycog"), Ldistr::t3(3,"t3"), Ldistr::pep(3,"pep"), Ldistr::pyr(3,"pyr"), Ldistr::pyrm(3,"Pyr"), Ldistr::coa(2,"CoA"), Ldistr::coac(2,"coac"), Ldistr::agl(3,"Glycerol"), Ldistr::oa(4,"Oaa"), Ldistr::oac(4,"oac"), Ldistr::cit(6,"Cit"), Ldistr::citc(6,"citc"), Ldistr::akg(5,"aKg"), Ldistr::akgc(5,"akgc"), Ldistr::fum(4,"Fum"), Ldistr::mal(4,"Mal"), Ldistr::e4(4,"ne4"), Ldistr::gl(6,"Gluc"), Ldistr::lac(3,"Lac"), Ldistr::glu(5,"Glutamate2-5"), Ldistr::gln(5,"Glutamin"), Ldistr::ala(3,"Ala"), Ldistr::asp(4,"Asp"), Ldistr::ser(3,"Ser"), Ldistr::gly(2,"Gly"), Ldistr::pro(5,"Pro"), Ldistr::rna(5,"Rib");
 ketose Ldistr::s7(7,"s7"), Ldistr::h6(6,"h6"), Ldistr::p5(5,"rib");
 Metab Ldistr::cthf(1,"cthf"), Ldistr::gae(2,"gae"), Ldistr::dhe(3,"dhe");
 	Fit Problem;

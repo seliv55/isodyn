@@ -27,11 +27,12 @@ for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
    for(int j=0;j<lres;j++){ findmet(result[j]);   }
 //	 gl.setex0(); gln.setex0();
 //    for(int j=0;j<expm0.size();j++) cout<<expm0[j]->getdescr()<<endl;
-  }
+   cout<<" Readexp, fin\n"; }
 
 vector<string> Ldistr::spli(stringstream& test,char a){
     vector<string> seglist;    string segment;
-  while(getline(test, segment, a)) seglist.push_back(segment); return seglist;
+  while(getline(test, segment, a)) seglist.push_back(segment);
+   return seglist;
 }
 
 const int trac=0, lab=trac+1, abund=lab+1, injec=abund+1, etime=injec+1, emet=etime+1, efrg=emet+1, formula=efrg+1, intens=formula+1, isotopol=intens+1, conc=isotopol+1, nepar=conc+1;
@@ -190,7 +191,7 @@ while(iro<(nstrok-1)){ cout<<"rcsv: name="<<metnm<<" miso="<<lef<<" cinj="<<chin
 // statistics grouping all injection for each metabolite
      for(int j=0;j<tex.size();j++){
    for(int i=0;i<liso.size();i++) if(tex[j]==liso[i].gett()) liso1.push_back(liso[i]);
-//     for(int i=0;i<liso1.size();i++) liso1[i].showmid();
+     for(int i=0;i<liso1.size();i++) liso1[i].showmid();
     if(liso1.size()){ iso=new Iso(lef,tex[j],segline[iro-2][cols[emet]]);
     iso->calmesd(liso1);
      iso->showmid("_mean");  iso->showsd("_sd");
@@ -210,5 +211,6 @@ while(iro<(nstrok-1)){ cout<<"rcsv: name="<<metnm<<" miso="<<lef<<" cinj="<<chin
      lef=(int)segline[iro][cols[efrg]].at(4)-(int)segline[iro][cols[efrg]].at(1)+2;
      metnm=segline[iro][cols[emet]];  }
          }
+            cout<<" Rcsv, fin\n"; 
   return labmet; }
 
