@@ -41,6 +41,7 @@ ser.input(pyrm,fluxes[serpyr]);
 oac.input(asp,fluxes[asp_o],fluxes[asp_i]);
 pyr.input(ala,fluxes[ala_o],fluxes[ala_i]);
 p5.input(rna,fluxes[r5_o],fluxes[r5_i]);
+h6.input(glycog,fluxes[glycogin],fluxes[glycogout]);
 pyrm.diso[0]+=fluxes[cystin];
 pro.input(akgc,fluxes[proin],fluxes[proout]);
 akg.diso[0]+=fluxes[kgin];
@@ -90,9 +91,10 @@ h6.condence(e4,gae,(fluxes[s7f6]+fluxes[p5f6]+fluxes[f6e4i])/e4.sumt()/gae.sumt(
 	gly.volume(Vt);
 	pro.volume(Vt);
 	rna.volume(Vt);
+	glycog.volume(Vt);
 	symm(fum.getisot());
-//xx[nfbp]=fbp.sumt(); xx[nt3]=t3.sumt(); xx[npep]=pep.sumt(); xx[npyr]=pyr.sumt(); xx[npyrm]=pyrm.sumt(); xx[ncoa]=coa.sumt(); xx[ncoac]=coac.sumt(); xx[nagl]=agl.sumt(); xx[noa]=oa.sumt(); xx[noac]=oac.sumt(); xx[ncit]=cit.sumt(); xx[ncitc]=citc.sumt(); xx[nakg]=akg.sumt(); xx[nakgc]=akgc.sumt(); xx[nfum]=fum.sumt(); xx[nmal]=mal.sumt(); xx[ne4]=e4.sumt(); xx[ngl]=gl.sumt(); xx[nlac]=lac.sumt(); xx[nglu]=glu.sumt(); xx[ngln]=gln.sumt(); xx[nala]=ala.sumt(); xx[nasp]=asp.sumt(); xx[nser]=ser.sumt(); xx[ngly]=gly.sumt(); xx[npro]=pro.sumt(); xx[nrna]=rna.sumt(); 
+//xx[nfbp]=fbp.sumt(); xx[nt3]=t3.sumt(); xx[npep]=pep.sumt(); xx[npyr]=pyr.sumt(); xx[npyrm]=pyrm.sumt(); xx[ncoa]=coa.sumt(); xx[ncoac]=coac.sumt(); xx[nagl]=agl.sumt(); xx[noa]=oa.sumt(); xx[noac]=oac.sumt(); xx[ncit]=cit.sumt(); xx[ncitc]=citc.sumt(); xx[nakg]=akg.sumt(); xx[nakgc]=akgc.sumt(); xx[nfum]=fum.sumt(); xx[nmal]=mal.sumt(); xx[ne4]=e4.sumt(); xx[ngl]=gl.sumt(); xx[nlac]=lac.sumt(); xx[nglu]=glu.sumt(); xx[ngln]=gln.sumt(); xx[nala]=ala.sumt(); xx[nasp]=asp.sumt(); xx[nser]=ser.sumt(); xx[ngly]=gly.sumt(); xx[npro]=pro.sumt(); xx[nrna]=rna.sumt(); xx[nglycog]=glycog.sumt(); 
 //xx[ns7]=s7.sumt(); xx[nh6]=h6.sumt(); xx[np5]=p5.sumt(); 
 //xx[ncthf]=cthf.sumt(); xx[ngae]=gae.sumt(); xx[ndhe]=dhe.sumt(); 
-xx[nfbp]=py[nfbp]; xx[nt3]=py[nt3]; xx[npep]=py[npep]; xx[npyr]=py[npyr]; xx[npyrm]=py[npyrm]; xx[ncoa]=py[ncoa]; xx[ncoac]=py[ncoac]; xx[nagl]=py[nagl]; xx[noa]=py[noa]; xx[noac]=py[noac]; xx[ncit]=py[ncit]; xx[ncitc]=py[ncitc]; xx[nakg]=py[nakg]; xx[nakgc]=py[nakgc]; xx[nfum]=py[nfum]; xx[nmal]=py[nmal]; xx[ne4]=py[ne4]; xx[ns7]=py[ns7]; xx[nh6]=py[nh6]; xx[np5]=py[np5]; xx[ncthf]=py[ncthf]; xx[ngae]=py[ngae]; xx[ndhe]=py[ndhe]; xx[n_atp]=py[n_atp]; xx[n_nad]=py[n_nad]; xx[ngl]=py[ngl]; xx[nlac]=py[nlac]; xx[nglu]=py[nglu]; xx[ngln]=py[ngln]; xx[nala]=py[nala]; xx[nasp]=py[nasp]; xx[nser]=py[nser]; xx[ngly]=py[ngly]; xx[npro]=py[npro]; xx[nrna]=py[nrna]; 
+xx[nfbp]=py[nfbp]; xx[nt3]=py[nt3]; xx[npep]=py[npep]; xx[npyr]=py[npyr]; xx[npyrm]=py[npyrm]; xx[ncoa]=py[ncoa]; xx[ncoac]=py[ncoac]; xx[nagl]=py[nagl]; xx[noa]=py[noa]; xx[noac]=py[noac]; xx[ncit]=py[ncit]; xx[ncitc]=py[ncitc]; xx[nakg]=py[nakg]; xx[nakgc]=py[nakgc]; xx[nfum]=py[nfum]; xx[nmal]=py[nmal]; xx[ne4]=py[ne4]; xx[ns7]=py[ns7]; xx[nh6]=py[nh6]; xx[np5]=py[np5]; xx[ncthf]=py[ncthf]; xx[ngae]=py[ngae]; xx[ndhe]=py[ndhe]; xx[n_atp]=py[n_atp]; xx[n_nad]=py[n_nad]; xx[ngl]=py[ngl]; xx[nlac]=py[nlac]; xx[nglu]=py[nglu]; xx[ngln]=py[ngln]; xx[nala]=py[nala]; xx[nasp]=py[nasp]; xx[nser]=py[nser]; xx[ngly]=py[ngly]; xx[npro]=py[npro]; xx[nrna]=py[nrna]; xx[nglycog]=py[nglycog]; 
 }

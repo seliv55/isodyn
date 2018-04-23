@@ -7,15 +7,15 @@
 #include "solvers.h"
 #include "analis.h"
 using namespace std;
-const int hk=0, pfk=hk+1, fbpase=pfk+1, t3pep=fbpase+1, pept3=t3pep+1, pk=pept3+1, pyrlac=pk+1, lacpyr=pyrlac+1, pyrdcm=lacpyr+1, pyrdmc=pyrdcm+1, pdh=pyrdmc+1, citakg=pdh+1, akgfum=citakg+1, fumal=akgfum+1, malfum=fumal+1, maloa=malfum+1, oamal=maloa+1, pc=oamal+1, malicm=pc+1, malicc=malicm+1, ppp=malicc+1, oacd=ppp+1, mald=oacd+1, citdmc=mald+1, citdcm=citdmc+1, akgdmc=citdcm+1, akgdcm=akgdmc+1, coaout=akgdcm+1, citakg1=coaout+1, akgcit1=citakg1+1, gln_in=akgcit1+1, gln_out=gln_in+1, gluin=gln_out+1, gluout=gluin+1, t3ser=gluout+1, serpyr=t3ser+1, asp_o=serpyr+1, asp_i=asp_o+1, ala_o=asp_i+1, ala_i=ala_o+1, r5_o=ala_i+1, r5_i=r5_o+1, cystin=r5_i+1, proin=cystin+1, proout=proin+1, kgin=proout+1, coain=kgin+1, gln_pr=coain+1, ser_pr=gln_pr+1, asp_pr=ser_pr+1, ala_pr=asp_pr+1, pro_pr=ala_pr+1, trpala=pro_pr+1, mthf=trpala+1, thf=mthf+1, sergly=thf+1, glyser=sergly+1, cs0=glyser+1, D=cs0+1, rdt=D+1, atpase=rdt+1, resp=atpase+1, rald=resp+1, rta=rald+1, rtk=rta+1, nrea=rtk+1;
+const int hk=0, pfk=hk+1, fbpase=pfk+1, t3pep=fbpase+1, pept3=t3pep+1, pk=pept3+1, pyrlac=pk+1, lacpyr=pyrlac+1, pyrdcm=lacpyr+1, pyrdmc=pyrdcm+1, pdh=pyrdmc+1, citakg=pdh+1, akgfum=citakg+1, fumal=akgfum+1, malfum=fumal+1, maloa=malfum+1, oamal=maloa+1, pc=oamal+1, malicm=pc+1, malicc=malicm+1, ppp=malicc+1, oacd=ppp+1, mald=oacd+1, citdmc=mald+1, citdcm=citdmc+1, akgdmc=citdcm+1, akgdcm=akgdmc+1, coaout=akgdcm+1, citakg1=coaout+1, akgcit1=citakg1+1, gln_in=akgcit1+1, gln_out=gln_in+1, gluin=gln_out+1, gluout=gluin+1, t3ser=gluout+1, serpyr=t3ser+1, asp_o=serpyr+1, asp_i=asp_o+1, ala_o=asp_i+1, ala_i=ala_o+1, r5_o=ala_i+1, r5_i=r5_o+1, glycogin=r5_i+1, glycogout=glycogin+1, cystin=glycogout+1, proin=cystin+1, proout=proin+1, kgin=proout+1, coain=kgin+1, gln_pr=coain+1, ser_pr=gln_pr+1, asp_pr=ser_pr+1, ala_pr=asp_pr+1, pro_pr=ala_pr+1, trpala=pro_pr+1, mthf=trpala+1, thf=mthf+1, sergly=thf+1, glyser=sergly+1, cs0=glyser+1, D=cs0+1, rdt=D+1, atpase=rdt+1, resp=atpase+1, rald=resp+1, rta=rald+1, rtk=rta+1, nrea=rtk+1;
 
 const int aldfl=rald, aldrev=aldfl+1, aldfli=aldrev+1, aldi1=aldfli+1, tafl=aldi1+1, s7f6a=tafl+1, f6g3a=s7f6a+1, s7e4a=f6g3a+1, tkfl=s7e4a+1, s7p5=tkfl+1, f6p5=s7p5+1, p5f6=f6p5+1, f6s7=p5f6+1, s7f6=f6s7+1, p5g3i=s7f6+1, f6e4i=p5g3i+1, s7p5i=f6e4i+1, nflx=s7p5i+1;
 
-const int nfbp=0, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, ncoa=npyrm+1, ncoac=ncoa+1, nagl=ncoac+1, noa=nagl+1, noac=noa+1, ncit=noac+1, ncitc=ncit+1, nakg=ncitc+1, nakgc=nakg+1, nfum=nakgc+1, nmal=nfum+1, ne4=nmal+1, ns7=ne4+1, nh6=ns7+1, np5=nh6+1, ncthf=np5+1, ngae=ncthf+1, ndhe=ngae+1, n_atp=ndhe+1, n_nad=n_atp+1, ngl=n_nad+1, nlac=ngl+1, nglu=nlac+1, ngln=nglu+1, nala=ngln+1, nasp=nala+1, nser=nasp+1, ngly=nser+1, npro=ngly+1, nrna=npro+1, nmet=nrna+1;
+const int nfbp=0, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, ncoa=npyrm+1, ncoac=ncoa+1, nagl=ncoac+1, noa=nagl+1, noac=noa+1, ncit=noac+1, ncitc=ncit+1, nakg=ncitc+1, nakgc=nakg+1, nfum=nakgc+1, nmal=nfum+1, ne4=nmal+1, ns7=ne4+1, nh6=ns7+1, np5=nh6+1, ncthf=np5+1, ngae=ncthf+1, ndhe=ngae+1, n_atp=ndhe+1, n_nad=n_atp+1, ngl=n_nad+1, nlac=ngl+1, nglu=nlac+1, ngln=nglu+1, nala=ngln+1, nasp=nala+1, nser=nasp+1, ngly=nser+1, npro=ngly+1, nrna=npro+1, nglycog=nrna+1, nmet=nglycog+1;
 
 const int numx=ngl;
 
-Metab_data Ldistr::fbp(6,"fbp"), Ldistr::glycog(6,"Glycog"), Ldistr::t3(3,"t3"), Ldistr::pep(3,"pep"), Ldistr::pyr(3,"pyr"), Ldistr::pyrm(3,"Pyr"), Ldistr::coa(2,"CoA"), Ldistr::coac(2,"coac"), Ldistr::agl(3,"Glycerol"), Ldistr::oa(4,"Oaa"), Ldistr::oac(4,"oac"), Ldistr::cit(6,"Cit"), Ldistr::citc(6,"citc"), Ldistr::akg(5,"aKg"), Ldistr::akgc(5,"akgc"), Ldistr::fum(4,"Fum"), Ldistr::mal(4,"Mal"), Ldistr::e4(4,"ne4"), Ldistr::gl(6,"Gluc"), Ldistr::lac(3,"Lac"), Ldistr::glu(5,"Glutamate2-5"), Ldistr::gln(5,"Glutamin"), Ldistr::ala(3,"Ala"), Ldistr::asp(4,"Asp"), Ldistr::ser(3,"Ser"), Ldistr::gly(2,"Gly"), Ldistr::pro(5,"Pro"), Ldistr::rna(5,"Rib");
+Metab_data Ldistr::fbp(6,"fbp"), Ldistr::t3(3,"t3"), Ldistr::pep(3,"pep"), Ldistr::pyr(3,"pyr"), Ldistr::pyrm(3,"Pyr"), Ldistr::coa(2,"CoA"), Ldistr::coac(2,"coac"), Ldistr::agl(3,"Glycerol"), Ldistr::oa(4,"Oaa"), Ldistr::oac(4,"oac"), Ldistr::cit(6,"Cit"), Ldistr::citc(6,"citc"), Ldistr::akg(5,"aKg"), Ldistr::akgc(5,"akgc"), Ldistr::fum(4,"Fum"), Ldistr::mal(4,"Mal"), Ldistr::e4(4,"ne4"), Ldistr::gl(6,"Gluc"), Ldistr::lac(3,"Lac"), Ldistr::glu(5,"Glutamate2-5"), Ldistr::gln(5,"Glutamin"), Ldistr::ala(3,"Ala"), Ldistr::asp(4,"Asp"), Ldistr::ser(3,"Ser"), Ldistr::gly(2,"Gly"), Ldistr::pro(5,"Pro"), Ldistr::rna(5,"Rib"), Ldistr::glycog(6,"Glycog");
 ketose Ldistr::s7(7,"s7"), Ldistr::h6(6,"h6"), Ldistr::p5(5,"rib");
 Metab Ldistr::cthf(1,"cthf"), Ldistr::gae(2,"gae"), Ldistr::dhe(3,"dhe");
 	Fit Problem;
@@ -25,13 +25,13 @@ Metab Ldistr::cthf(1,"cthf"), Ldistr::gae(2,"gae"), Ldistr::dhe(3,"dhe");
 	string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[numx];
 	Reapar Parray::rea[nrea];
 	double Analis::nv1[nrea], Analis::nv2[nrea];
-Metab_data *Ldistr::met[27];
+Metab_data *Ldistr::met[28];
 Metab *Ldistr::metb[3];
  ketose *Ldistr::metk[3];
 
- void Ldistr::setmet(){met[0]=&fbp; met[1]=&t3; met[2]=&pep; met[3]=&pyr; met[4]=&pyrm; met[5]=&coa; met[6]=&coac; met[7]=&agl; met[8]=&oa; met[9]=&oac; met[10]=&cit; met[11]=&citc; met[12]=&akg; met[13]=&akgc; met[14]=&fum; met[15]=&mal; met[16]=&e4; met[17]=&gl; met[18]=&lac; met[19]=&glu; met[20]=&gln; met[21]=&ala; met[22]=&asp; met[23]=&ser; met[24]=&gly; met[25]=&pro; met[26]=&rna; metb[0]=&cthf; metb[1]=&gae; metb[2]=&dhe; metk[0]=&s7; metk[1]=&h6; metk[2]=&p5; 
- lmet=27; lmetb=3; lmetk=3;  }
- void Ldistr::setcon(){met[0]->setconc(xx[nfbp]); met[1]->setconc(xx[nt3]); met[2]->setconc(xx[npep]); met[3]->setconc(xx[npyr]); met[4]->setconc(xx[npyrm]); met[5]->setconc(xx[ncoa]); met[6]->setconc(xx[ncoac]); met[7]->setconc(xx[nagl]); met[8]->setconc(xx[noa]); met[9]->setconc(xx[noac]); met[10]->setconc(xx[ncit]); met[11]->setconc(xx[ncitc]); met[12]->setconc(xx[nakg]); met[13]->setconc(xx[nakgc]); met[14]->setconc(xx[nfum]); met[15]->setconc(xx[nmal]); met[16]->setconc(xx[ne4]); met[17]->setconc(xx[ngl]); met[18]->setconc(xx[nlac]); met[19]->setconc(xx[nglu]); met[20]->setconc(xx[ngln]); met[21]->setconc(xx[nala]); met[22]->setconc(xx[nasp]); met[23]->setconc(xx[nser]); met[24]->setconc(xx[ngly]); met[25]->setconc(xx[npro]); met[26]->setconc(xx[nrna]); metb[0]->setconc(xx[ncthf]); metb[1]->setconc(xx[ngae]); metb[2]->setconc(xx[ndhe]); metk[0]->setconc(xx[ns7]); metk[1]->setconc(xx[nh6]); metk[2]->setconc(xx[np5]);  }
+ void Ldistr::setmet(){met[0]=&fbp; met[1]=&t3; met[2]=&pep; met[3]=&pyr; met[4]=&pyrm; met[5]=&coa; met[6]=&coac; met[7]=&agl; met[8]=&oa; met[9]=&oac; met[10]=&cit; met[11]=&citc; met[12]=&akg; met[13]=&akgc; met[14]=&fum; met[15]=&mal; met[16]=&e4; met[17]=&gl; met[18]=&lac; met[19]=&glu; met[20]=&gln; met[21]=&ala; met[22]=&asp; met[23]=&ser; met[24]=&gly; met[25]=&pro; met[26]=&rna; met[27]=&glycog; metb[0]=&cthf; metb[1]=&gae; metb[2]=&dhe; metk[0]=&s7; metk[1]=&h6; metk[2]=&p5; 
+ lmet=28; lmetb=3; lmetk=3;  }
+ void Ldistr::setcon(){met[0]->setconc(xx[nfbp]); met[1]->setconc(xx[nt3]); met[2]->setconc(xx[npep]); met[3]->setconc(xx[npyr]); met[4]->setconc(xx[npyrm]); met[5]->setconc(xx[ncoa]); met[6]->setconc(xx[ncoac]); met[7]->setconc(xx[nagl]); met[8]->setconc(xx[noa]); met[9]->setconc(xx[noac]); met[10]->setconc(xx[ncit]); met[11]->setconc(xx[ncitc]); met[12]->setconc(xx[nakg]); met[13]->setconc(xx[nakgc]); met[14]->setconc(xx[nfum]); met[15]->setconc(xx[nmal]); met[16]->setconc(xx[ne4]); met[17]->setconc(xx[ngl]); met[18]->setconc(xx[nlac]); met[19]->setconc(xx[nglu]); met[20]->setconc(xx[ngln]); met[21]->setconc(xx[nala]); met[22]->setconc(xx[nasp]); met[23]->setconc(xx[nser]); met[24]->setconc(xx[ngly]); met[25]->setconc(xx[npro]); met[26]->setconc(xx[nrna]); met[27]->setconc(xx[nglycog]); metb[0]->setconc(xx[ncthf]); metb[1]->setconc(xx[ngae]); metb[2]->setconc(xx[ndhe]); metk[0]->setconc(xx[ns7]); metk[1]->setconc(xx[nh6]); metk[2]->setconc(xx[np5]);  }
 void Fit::f(const double *y,double *dydx) {
 	for(int i=0;i<numx;i++) dydx[i]=0.;
 	 for(int i=0;i<nflx;i++) flx[i]=0.;
@@ -81,6 +81,8 @@ flx[ala_o]= rea[ala_o].v( y[npyr]);                dydx[npyr] -= flx[ala_o];
 flx[ala_i]= rea[ala_i].v();                        dydx[npyr] += flx[ala_i];  
 flx[r5_o]= rea[r5_o].v( y[np5]);                   dydx[np5] -= flx[r5_o];  
 flx[r5_i]= rea[r5_i].v();                          dydx[np5] += flx[r5_i];  
+flx[glycogin]= rea[glycogin].v( y[nh6]);           dydx[nh6] -= flx[glycogin];  
+flx[glycogout]= rea[glycogout].v();                dydx[nh6] += flx[glycogout];  
 flx[cystin]= rea[cystin].v();                      dydx[npyrm] += flx[cystin];  
 flx[proin]= rea[proin].v();                        dydx[nakgc] += flx[proin];  
 flx[proout]= rea[proout].v( y[nakgc]);             dydx[nakgc] -= flx[proout];  
@@ -123,6 +125,7 @@ void Fit::ff(const double *y,double *dydx) {
 	dydx[ngly] = (+flx[sergly]- flx[glyser])*flx[rdt];
 	dydx[npro] = (+flx[proout]- flx[proin]- flx[pro_pr])*flx[rdt];
 	dydx[nrna] = (+flx[r5_o]- flx[r5_i])*flx[rdt];
+	dydx[nglycog] = (+flx[glycogin]- flx[glycogout])*flx[rdt];
 }
 
 void Parray::init(){ft3=10.; fh6=7.;
@@ -178,6 +181,7 @@ fluxes[serpyr] /= xx[nser];
 fluxes[asp_o] /= y[noac];
 fluxes[ala_o] /= y[npyr];
 fluxes[r5_o] /= y[np5];
+fluxes[glycogin] /= y[nh6];
 fluxes[proout] /= y[nakgc];
 fluxes[gln_pr] /= xx[ngln];
 fluxes[ser_pr] /= xx[nser];

@@ -35,6 +35,7 @@ Metab_data 3  nser  "Ser"
 Metab_data 2  ngly  "Gly"
 Metab_data 5  npro  "Pro"
 Metab_data 5  nrna  "Rib"
+Metab_data 6  nglycog  "Glycog"
 fin
 
  hk 2 -n_atp nh6 0 input /gl h6 0         
@@ -78,7 +79,9 @@ fin
  ala_o 1 -npyr  0 input pyr ala  ala_i         
  ala_i 1 npyr  0 0 0 0 0         
  r5_o 1 -np5  0 input p5 rna  r5_i         
- r5_i 1 np5  0 0 0 0 0         
+ r5_i 1 np5  0 0 0 0 0
+ glycogin 1 -nh6 0 input h6 glycog glycogout
+ glycogout 1 nh6 0 0 0 0 0
  cystin 1 npyrm  0 m0inp pyrm
  proin 1 nakgc  0 input pro akgc  proout         
  proout 1 -nakgc  0 0 0 0 0         
@@ -127,6 +130,7 @@ nser 5 t3ser -serpyr -ser_pr glyser -sergly
 ngly 2 sergly -glyser
 npro 3 proout -proin -pro_pr
 nrna 2 r5_o -r5_i
+nglycog 2 glycogin -glycogout
 fin
 
                 
