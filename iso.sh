@@ -1,6 +1,7 @@
 #!/bin/sh
-fiso=hubec #13C labeling in Metabolights format
-fcon=xglc #concentrations
+#fiso="../filesimid/files/mark2" #13C labeling in Metabolights format
+fiso="../midcor/BEAS2B-Glucose" #13C labeling in Metabolights format
+fcon=xglc1 #concentrations
 inpar="glc/1" #set of parameters to start
 oudir="glc/"  #output directory
 fstat="glc/statfl"  #statistics on the all sets of parameters

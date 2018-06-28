@@ -50,13 +50,16 @@ string Ldistr::read_con(ifstream& fi, string& sfiso,int& nfi){
      int isu; 
       fi>>aaa;
       getline(fi,aaa);
-      stringstream onel; onel<<aaa; int ii(0);
-      while(getline(onel,aaa,' ')) if(aaa.length()){double ta=stod(aaa); texcon.push_back(ta); ii++;} ntime=ii; 
+      stringstream onel(aaa);  int ii(0);
+      while(getline(onel,aaa,' ')) if(aaa.length()){double ta=stod(aaa); texcon.push_back(ta); ii++; cout<<ta<<" ";}
+       ntime=ii; 
       while(!fi.eof()){
        fi>>aaa; if(fi.eof()) break; int k;
         for(k=0;k<=lmet;k++) if(aaa.find(met[k]->getdescr())+1) {
            for(int j=0;j<ntime;j++) {
-       double cc; fi>>cc; met[k]->setconc(cc,j); xx[k]=met[k]->getconc()[0].mean;}
+       double cc; fi>>cc; met[k]->setconc(cc,j);
+       cout<<"t="<<texcon[j]<<" "<<met[k]->getdescr()<<" "<<met[k]->getconc()[j].mean<<'\n';
+       } xx[k]=met[k]->getconc()[0].mean;
              expcon.push_back(met[k]);  break;}
              if(k==lmet) for(int j=0;j<ntime;j++) fi>>aaa;
                 }
@@ -64,13 +67,16 @@ string Ldistr::read_con(ifstream& fi, string& sfiso,int& nfi){
       
 void Ldistr::setflcon(){ int i, ifound;
        for(int j=0;j<expcon.size();j++){
+       cout<<expcon[j]->getdescr()<<" "<<expcon[j]->getconc()[0].mean<<'\n';
         for(i=0;i<expm0.size();i++){
        ifound=expcon[j]->getdescr().find(expm0[i]->getdescr())+1; if(ifound) break; }
        if(!ifound) {expcon[j]->rizeflcon(); cout<<expcon[j]->getdescr()<<" flcon=1\n";}
          else cout<<expcon[j]->getdescr()<<" flcon=0\n";
        }
 }
-
+void Ldistr::shocon(){for(int j=0;j<expcon.size();j++)
+       cout<<expcon[j]->getdescr()<<" "<<expcon[j]->getconc()[0].mean<<'\n';}
+       
 int main( int argc, char *argv[] ){
 // run: ./isodyn.out  experim_MID-file concentr_and_param_info_file [sx_NumOfFileSavedInFitting]
 // 's'-statistics; 'x'- check χ²
@@ -87,36 +93,37 @@ int main( int argc, char *argv[] ){
      Problem.read(sfpar);    //read parameters
      Problem.setodir(sout,sflmain,sflcomp); //set output directory
      cout<<"*** Read_con: "<<sfpar<<" out: "<<sout<<" stat: "<<sflmain<<" cmp: "<<sflcomp<<" nfi="<<Nfi<<endl;
-     string gpl=horse.read_con(fi,sfiso,Nfi); if(*Problem.getodir()=="glut/") ntr=1; 
+
+      if(*Problem.getodir()=="glut/") ntr=1; 
       ifn=Problem.setnumofi(); //number of parameter files
-     
-  if(argv[8][0]=='S')  { cout<<"statistics, "<<argv[4]<<endl; Problem.stat(ifn-1); return 0; } //order parameter files by increasing of χ2
+//order parameter files by increasing of χ2:
+  if(argv[8][0]=='S')  { cout<<"statistics, "<<argv[4]<<endl; Problem.stat(ifn-1); return 0; }
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
    else{
      cout.precision(3);
 //     sol0=Problem.read(argv[2]);    //read parameters
         horse.readExp(argv[1],ntr);            // read experimental data 
-                 cout<<"***pass***"<<endl; 
+     string gpl=horse.read_con(fi,sfiso,Nfi);
         horse.setflcon();
       int m0len=horse.wrim0ex("exm0");                // set experimental data for figure
       int conlen=horse.wriconex("excon");                // set experimental data for figure
      for(int i=0;i<nmet;i++) {xinit1[i]=xx[i]; xinit2[i]=xx[i];}//copy initial values
-	try{   ts=clock();
-    tsolve(1405);                     //solve ODEs for total concentrations
+	try{   ts=clock(); 
+       Problem.shownx(nmet,xx);         // print concentrations on screen
+    tsolve(1405);          horse.shocon();           //solve ODEs for total concentrations
 //    ddsolve(1405);                     //solve ODEs for total concentrations
 //     mader=Problem.dermax(); Problem.jacobian(xx);  tsolve(37000.);
 //    tsolve(35000.); Problem.jacobian(xx); 
 //         cout<<"aldf="<<flx[aldf]<<"; aldr="<<flx[aldf+1]<<endl;
 //       Problem.chpar(28,noa,0.99,27);
 //    tsolve(35000.);  for(int i=0;i<numx;i++)  xinit1[i]=xx[i];
-       Problem.shownx(numx,xx);         // print concentrations on screen
      kkin<<kin0;  kkin.close();         //save concentration dynamics to "kinxx"
         int sys=system("gnuplot plkin.p");//gnuplot -e 'var=value' script.gp
 //  xi0=horse.integrbs();                 //solve ODEs for isotopomers
   sol0=solve();//horse.integrbs();                 //solve ODEs for isotopomers
-       Problem.shownx(numx,xx);  // print concentrations on screen
+       Problem.shownx(nmet,xx);  // print concentrations on screen
      cout<<" Σxi²="<<get<0>(sol0) <<"\n";        //final results
-     cout<<setw(9)<<"*"<<"*Metab   *   init    Final : "<<setw(17)<<"exper -> xi²\n" <<foc; 
+     cout<<foc; 
         kkin.open("kinGlc"); kkin<<kin<<endl; kkin.close();
          kkin.open("kincon"); kkin<<kinc<<endl; kkin.close();
 //        kkin.open("kinflx"); kkin<<kinflx<<endl; kkin.close();
@@ -150,6 +157,6 @@ int main( int argc, char *argv[] ){
  
 //               analis.sensitiv(tmax);
 //               analis.swarm(tmax,111);
-}
+/**/}
 return 0;}
 

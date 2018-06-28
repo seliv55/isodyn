@@ -10,24 +10,24 @@ double Vi, xribi, xasp=1.,mu;
 
 void Ldistr::readExp (char fn[],int ntr) {
   ifstream fi(fn); double Ti;  mu=0.;  Vi=0.014; 
-     Tracer l13c=rcsv(fi, result,ntr );  int lres=result.size();
-     cout<<"readExp: 13C-substrate: "<<*l13c.getname()<<", fraction: "<<l13c.fract<<endl;
-
- double Nc[ntime]; for(int i=0;i<ntime;i++) Nc[i]=(double)i+1.;//**??** cells number
- 
+ double Nc[ntime]; for(int i=0;i<ntime;i++) Nc[i]=1.+0.1*i;//**??** cells number
+rmid(fi); 
+//     Tracer l13c=rcsv(fi, result,ntr );
+//     cout<<"readExp: 13C-substrate: "<<*l13c.getname()<<", fraction: "<<l13c.fract<<endl;
 for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
  mu /= ((double)(ntime-1)*1.0);
            setcon();
-	  glu.setconc(xx[nglu]);// glu25.setconc(xx[nglu]);
-
+//	  glu.setconc(xx[nglu]);// glu25.setconc(xx[nglu]);
+//cout<<"** pass **"<<endl;
 	 
-       l13c.setmid(markis,marfrac);  l13c.setmid(0,(1-marfrac)); 
-        itrac=findmet(l13c); cout<<"readExp: tracer="<<met[itrac]->getdescr()<<'\n';
-	 
-   for(int j=0;j<lres;j++){ findmet(result[j]);   }
+//       l13c.setmid(markis,marfrac);  l13c.setmid(0,(1-marfrac)); 
+//        itrac=findmet(l13c); cout<<"readExp: tracer="<<met[itrac]->getdescr()<<'\n';
+//   int lres=result.size();
+//   for(int j=0;j<lres;j++){ findmet(result[j]);   } cout<<" Readexp, fin\n";
+   
 //	 gl.setex0(); gln.setex0();
 //    for(int j=0;j<expm0.size();j++) cout<<expm0[j]->getdescr()<<endl;
-   cout<<" Readexp, fin\n"; }
+   }
 
 vector<string> Ldistr::spli(stringstream& test,char a){
     vector<string> seglist;    string segment;
@@ -36,6 +36,44 @@ vector<string> Ldistr::spli(stringstream& test,char a){
 }
 
 const int trac=0, lab=trac+1, abund=lab+1, injec=abund+1, etime=injec+1, emet=etime+1, efrg=emet+1, formula=efrg+1, intens=formula+1, isotopol=intens+1, conc=isotopol+1, nepar=conc+1;
+
+int Ldistr::sexm0(string nm){ int ind(-1),jj(0);
+      for(int i=0;i<lmet;i++)  if(nm.find(met[i]->getdescr())+1){
+       cout<<'\n'<<"sexm0: "<<met[i]->getdescr()<<" i="<<i<<'\n';
+       if(vnn.size()==0) {expm0.push_back(met[i]); vnn.push_back(i); ind=0;}
+       else {
+       for(int j=0;j<vnn.size();j++) { cout<<" j="<<j<<" size="<<vnn.size(); ind=j; if(i==vnn[j]) break; jj=j+1;}
+         if(jj==vnn.size()) {expm0.push_back(met[i]); vnn.push_back(i); ind=(expm0.size()-1);}
+       } break; }
+        cout<<"\nvnn: "; for(int i=0;i<vnn.size();i++) cout<<vnn[i] <<' ';cout<<" ind="<<ind<<'\n';
+return ind;}
+
+void Ldistr::rmid(ifstream& ifi){string aaa="",nm="";
+ int eind(0),niso,lex(0); double ddd;
+ while (getline(ifi, aaa,' ')){ 
+   if (aaa.find("time")+1)  for(int i=0;;i++){ // set incubation times
+      ifi>>ddd;  if(ddd<0) {ntime=tex.size(); break;}
+      tex.push_back(ddd*60.);  cout<<tex[i]<<" ";}
+   else if (aaa.find("name")+1) {// find metabolite corresponding to data
+          getline(ifi,nm); stringstream ss(nm); string nma[5]; int i(0); 
+          while (getline(ss,nma[i],',')) i++; int beg=stoi(nma[1]), mi=stoi(nma[2]);
+          Exper *ee=new Exper(mi,beg,nma[0]); eind=sexm0(nma[0]);
+           expm0[eind]->exper.push_back(*ee); lex=expm0[eind]->exper.size(); delete ee;
+          cout<< nma[0]<<" beg="<<beg<<" mi="<<mi <<" met#"<<eind<<" frag#"<<lex<<'\n';
+           }
+   else if (aaa.find("t=")+1){ int et;
+          ifi>>ddd; cout<<"time: "<<ddd<<'\n'; //incubation time
+          for(int i=0;i<ntime;i++)if(!((int)(ddd*60)-(int)tex[i])) {
+            et=i; cout<<"et="<<et<<'\n'; break;} //corresponding tex index
+          expm0[eind]->exper[lex-1].rex(ifi,et);} //set labeling measured for given incubation time
+   else if(aaa.find("tracer")+1){ifi>>nm>>markis>>marfrac;
+          cout<<" tracer "<< nm<<" iso:"<<markis<<" fract:"<<marfrac<<'\n';
+          for(int i=0;i<lmet;i++)
+           if(nm.find(met[i]->getdescr())+1) {itrac=i; break;}
+          }
+   }
+   shexper(ntime);
+}
 
 void Ldistr::defcol(int nucol[],vector<string> vstr){
      int len=vstr.size(); string a; int pos;
@@ -49,7 +87,7 @@ void Ldistr::defcol(int nucol[],vector<string> vstr){
      else if(vstr[i].find("atomic positions")+1) nucol[efrg]=i;
      else if(vstr[i].find("formula")+1) nucol[formula]=i;
      else if(vstr[i].find("intens")+1) nucol[intens]=i;
-     else if(vstr[i]=="\"isotopologue\"") {nucol[isotopol]=i;} //cout<<"isotopol: "<<nucol[isotopol]<<endl;
+     else if(vstr[i]=="\"isotopologue\"") {nucol[isotopol]=i;}
      else if(vstr[i].find("gue abund")+1) nucol[conc]=i; 
   }
 }
@@ -59,14 +97,12 @@ int Ldistr::findmet(Iso& iso) { int k(-1);
      int j(0); while(iso.gett()>(tex[j]+1e-7)) j++;
    for(int i=0;i<lmet;i++)  if(iso.getname()->find(met[i]->getdescr())+1){ k=i;
      for(int iex=0;iex<expm0.size();iex++) if(met[i]->getdescr()==expm0[iex]->getdescr()){k=-2; break;}//repetitions
-          if(k>=0) {met[i]->setexper(ntime);  expm0.push_back(met[i]);} //if met[i] was not present in expm0, add met[i]
-       met[i]->sex(iso.getniso(),iso.getmid(),j); //set experimental mid for a given met & time
+          if(k>=0)  expm0.push_back(met[i]); //if met[i] was not present in expm0, add met[i]
            cout<<"findmet "<<met[i]->getdescr()<<" m0="<<iso.getmid()[0].mean<<" t="<<iso.gett()<<endl; break;}
            
      if(k==-1) for(int i=0;i<lmetk;i++)  if(iso.getname()->find(metk[i]->getdescr())+1){ k=i;
      for(int iex=0;iex<kexpm0.size();iex++) if(metk[i]->getdescr()==kexpm0[iex]->getdescr()){k=-2; break;}//repetitions
-         if(k>=0) {metk[i]->setexper(ntime);  kexpm0.push_back(metk[i]);}//if met[i] was not present in kexpm0, add met[i]
-       metk[i]->sex(iso.getniso(),iso.getmid(),j); //set experimental mid for a given met & time
+         if(k>=0)  kexpm0.push_back(metk[i]);//if met[i] was not present in kexpm0, add met[i]
            cout<<"findmet "<<metk[i]->getdescr()<<" m0="<<iso.getmid()[0].mean<<" t="<<iso.gett()<<endl; break;}
      if(k==-1)cout<<"findmet "<<(*iso.getname())<<" no metabolite match?!?!?!\n";
      return k;}
@@ -85,9 +121,9 @@ set<string> Ldistr::findopt(string stsam, vector<string> strok){
     for(int i=0;i<nstrok;i++){ size_t pos=strok[i].find(stsam);
      if(pos+1){ metka.insert(strok[i].substr(pos,17)); }       }
     for(set<string>::iterator it=metka.begin(); it!=metka.end(); it++) cout<<"findopt "<<*it<<'\n';
-  return metka;
-}
- void Ldistr::splitstrings(vector<string> segline[],int nstrok,vector<string> substrok){
+  return metka;}
+
+void Ldistr::splitstrings(vector<string> segline[],int nstrok,vector<string> substrok){
    int len;
    for(int j=0;j<nstrok;j++){
 
@@ -111,9 +147,7 @@ set<string> Ldistr::findopt(string stsam, vector<string> strok){
          vector<string> vstav; vstav=spli(ttt,',');
          if(vstav[0].length()<2) vstav.erase(vstav.begin());
          segline[j].insert(segline[j].begin()+i,vstav.begin(),vstav.end());
-          }
-          
-   }
+          }   }
  }
     
 Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result,int mar ){

@@ -13,7 +13,7 @@ void derivsl(const DP x, Vec_IO_DP &y, Vec_O_DP &dydx){
 	double *py=&y[0]; 
 	DP *pdydt=&dydx[0];
         nrhs++; 
-        Vt=Vi*exp(mu*x);
+        Vt=Vi;//*exp(mu*x);
 	horse.distr(py, pdydt);
 }
 
@@ -28,27 +28,28 @@ double Ldistr::integrbs(){
     int nbad,nok; nrhs=0; kmax=KMAX;
           ostringstream foc1, kinet, kicon, flxkin;
     foc1.precision(4); kinet.precision(4);
+    foc1<<"* Metabolite t: ";
+    for(int i=0;i<(ntime);i++) foc1<<setw(10)<<tex[i]; foc1<<setw(12)<<" : exper <-> xi²";
    ssc(pyinit);
     massfr();
      showdescr(kinet,expm0);  show(kinet,0);
      showdescr(kicon,expcon);  showcon(kicon,0);
  double tout; sklad(0);
   for(int j=0;j<nflx;j++) ppotok[0][j]=flx[j]*1000.*flx[rdt];
+         setiso(pyinit);
         for(int i=1;i<(ntime);i++) {tm=(tex[i]-t)/10.;
         dxsav = tm/((double)(KMAX-1));
         for(int k=0;k<10;k++){ tout=t+tm;
-         setiso(pyinit);
     NR::odeint(yy,t,tout,eps,h1,hmin,nok,nbad,derivsl,NR::rkqs);
   massfr();   show(kinet,tout);  showcon(kicon,tout);
-    t=tout;
-    }
+    } sklad(i);
 xi += xits(i);
-xi += xicon(i);  sklad(i);
+xi += xicon(i); 
       for(int j=0;j<nflx;j++) ppotok[i][j]=flx[j]*1000.*flx[rdt];
-    } 
+    }
 wrikin(foc1,ntime);
 wricon(foc1,ntime);
-  for(int j=0;j<nflx;j++) { flxkin<<Problem.fid[j]<<" "; for(int i=0;i<ntime;i++) flxkin<<ppotok[i][j]<<" "; flxkin<<"\n";}
+  for(int j=0;j<nflx;j++) { flxkin<<Problem.fid[j]<<" "; for(int i=0;i<ntime;i++) flxkin<<ppotok[i][j]<<" "; flxkin<<'\n';}
 foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str(); kinc=kicon.str();
         delete yp_p;
         delete xp_p;

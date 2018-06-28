@@ -8,12 +8,12 @@ void Ldistr::distr(double *py,double *pdydt) {
 	double NOL=0.;
 	setiso(py); setdiso(pdydt);
 	for (int i=0;i<Nn;i++) pdydt[i]=0.;
-	s7.sett(); h6.sett(); p5.sett(); t3.sett(); e4.sett();
+	s7.sett(); h6.sett(); p5.sett(); t3.sumt(); e4.sumt();
 	Problem.f(py,pdydt);
 	Problem.ff(py,pdydt);
 	Problem.fin(py);/**/
 	double xthf=thft-cthf.sumt();
-gl.input(h6,fluxes[hk]/gl.sumt());
+dsum=gl.input(h6,fluxes[hk]/gl.sumt());
 h6.input(fbp,fluxes[pfk],fluxes[fbpase]);
 t3.input(pep,fluxes[t3pep],fluxes[pept3]);
 pep.input(pyr,fluxes[pk]);

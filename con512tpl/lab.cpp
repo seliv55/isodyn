@@ -7,10 +7,7 @@ using namespace std;
 int Ldistr::getN() {
 met[0]->ny=nmet; //cout<<met[0]->ny<<" "<<met[0]->getdescr()<<'\n';
 for(int i=1;i<lmet;i++) {met[i]->ny=met[i-1]->ny+met[i-1]->getlen();}// cout<<met[i]->ny<<" "<<met[i]->getdescr()<<'\n';}
-//  glu25.ny=glu.ny;
-metb[0]->ny= met[lmet-1]->ny+met[lmet-1]->getlen();// cout<<metb[0]->ny<<" "<<metb[0]->getdescr()<<'\n';
-for(int i=1;i<lmetb;i++) {metb[i]->ny=metb[i-1]->ny+metb[i-1]->getlen();}// cout<<metb[i]->ny<<" "<<metb[i]->getdescr()<<'\n';}
-metk[0]->ny= metb[lmetb-1]->ny+metb[lmetb-1]->getlen();// cout<<metk[0]->ny<<" "<<metk[0]->getdescr()<<'\n';
+metk[0]->ny= met[lmet-1]->ny+met[lmet-1]->getlen();// cout<<metk[0]->ny<<" "<<metk[0]->getdescr()<<'\n';
 for(int i=1;i<lmetk;i++) metk[i]->ny=metk[i-1]->ny+metk[i-1]->getlen();//{ cout<<metk[i]->ny<<" "<<metk[i]->getdescr()<<endl;}
 return (Nn=metk[lmetk-1]->ny+metk[lmetk-1]->getlen());
 }
@@ -18,14 +15,12 @@ return (Nn=metk[lmetk-1]->ny+metk[lmetk-1]->getlen());
 void Ldistr::setdiso(double *pyinit) {
 for(int i=0;i<lmet;i++) met[i]->diso= &pyinit[met[i]->ny]; 
 //  glu25.diso= &pyinit[glu.ny];
-for(int i=0;i<lmetb;i++) metb[i]->diso= &pyinit[metb[i]->ny];
 for(int i=0;i<lmetk;i++) metk[i]->diso= &pyinit[metk[i]->ny];
 }
 
 void Ldistr::setiso(double *pyinit) {
 for(int i=0;i<(lmet);i++) met[i]->iso= &pyinit[met[i]->ny];
 //  glu25.iso= &pyinit[glu.ny];
-for(int i=0;i<(lmetb);i++) metb[i]->iso= &pyinit[metb[i]->ny];
 for(int i=0;i<(lmetk);i++) metk[i]->iso= &pyinit[metk[i]->ny];
 }
 
@@ -35,21 +30,17 @@ void Ldistr::sklad(int itime){
  }
 
 int Ldistr::stor(double dist[]){int n(0);
- for(int i=0;i<expm0.size();i++) {n += expm0[i]->stormi(&dist[n],ntime);}
+ for(int i=0;i<expm0.size();i++) {n += expm0[i]->exper[0].stormi(&dist[n],ntime);}
  return n;}
  
 int Ldistr::getmicon(){ int n=0;//=expcon.size()*(ntime-1);
- for(int i=0;i<expm0.size();i++) { n += expm0[i]->getmi()*(ntime-1);}
+ for(int i=0;i<expm0.size();i++) for(int j=0;j<expm0[i]->exper.size();j++) { n += expm0[i]->exper[j].getmi()*(ntime-1);}
  return n;}
 
-void Ldistr::massfr() {
-for(int i=0;i<expm0.size();i++) expm0[i]->percent(); 
-for(int i=0;i<expcon.size();i++) if(expcon[i]->flcon) expcon[i]->percent();
-// glu.percent(1,1); glu25.percent(1,0);
-}
+void Ldistr::massfr() { for(int i=0;i<expm0.size();i++)  expm0[i]->percent();}
 
-double Ldistr::xits(int its) {int itp=its-1; double xi=0;
-for(int i=0;i<expm0.size();i++) xi += expm0[i]-> chisq(its);
+double Ldistr::xits(int its) { double xi=0;
+for(int i=0;i<expm0.size();i++) xi += expm0[i]-> xits(its);
 return xi;}
 
 double Ldistr::xicon(int its) {int itp=its-1; double xi=0;
@@ -70,26 +61,28 @@ int Ldistr::wrim0ex(string fn) {
   data *b; ofstream fo(fn); int llen=expm0.size();
 fo<<"time "; for(int i=0;i<llen;i++) fo<<expm0[i]->getdescr()<<" sd "; fo<<endl;
    for(int its=0;its<ntime;its++) {  fo<<tex[its];
-       for(int i=0;i<llen;i++){ b=expm0[i]->getexper(its);   fo<<" "<<b[0].mean<<" "<<b[0].sd; }
+       for(int i=0;i<llen;i++) for(int j=0;j<expm0[i]->exper.size();j++) {
+          b=expm0[i]->exper[j].getexper(its);   fo<<" "<<b[0].mean<<" "<<b[0].sd; }
       fo<<"\n";         }
-       return llen;}
+return llen;}
+
 void Ldistr::show(ostringstream& fo,double xfin) { fo<<setw(5)<<xfin;
-for(int i=0;i<expm0.size();i++) expm0[i]-> showm0(fo); fo<<'\n';}
+   for(int i=0;i<expm0.size();i++) expm0[i]-> showm0(fo,xfin); fo<<'\n';
+}
 
 void Ldistr::showcon(ostringstream& fo,double xfin) { fo<<setw(5)<<xfin;
 for(int i=0;i<expcon.size();i++) expcon[i]-> showcon(fo); fo<<'\n';}
 
-void Ldistr::showdescr(ostringstream& fo, vector<Metab_data*> em0con) { fo<<"time ";
+void Ldistr::showdescr(ostringstream& fo, vector<Metab*> em0con) { fo<<"time ";
 for(int i=0;i<em0con.size();i++) fo<<em0con[i]-> getdescr()<<" "; fo<<'\n';}
 
-double Ldistr::consum() { double sum(0.), sumex(0.); vector<Metab_data*> externcon = expcon;
+double Ldistr::consum() { double sum(0.), sumex(0.); 
 // for(int i=0;i<=lmet;i++) { int j;
 //   for(j=0;j<externcon.size();j++) if(met[i]->getdescr()==externcon[j]->getdescr()) {
 //                                  externcon.erase(externcon.begin()+j); j=-1; break;}
 //     if(j==externcon.size()) sum += met[i]->sumt(); }
  for(int i=0;i<lmet;i++) {sum += met[i]->sumt();}
-  for(int j=0;j<externcon.size();j++) sumex += externcon[j]->sumt(); 
- for(int i=0;i<lmetb;i++) {sum += metb[i]->sumt();}
+  for(int j=0;j<expcon.size();j++) sumex += expcon[j]->sumt(); 
  for(int i=0;i<lmetk;i++) {sum += metk[i]->sumt();}
 return sum-sumex;}
 
