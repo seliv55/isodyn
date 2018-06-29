@@ -74,9 +74,11 @@ void setrav(int nt1,int nt2){
       for(int i=0;i<=mi;i++){ exper[nt1][i].mean=exper[nt2][i].mean; exper[nt1][i].sd=exper[nt2][i].sd;  }
 }
 
-void rex(std::ifstream& ifi, int nt){std::string aaa; double sdd; ifi>>aaa; std::cout<<" rex "<<aaa<<" ";
-      for(int i=0;i<=mi;i++){ ifi>>exper[nt][i].mean; std::cout<<exper[nt][i].mean<<" ";}
-      getline(ifi,aaa); std::cout<<'\n';
+void rex(std::ifstream& ifi, int nt){// reads experimental data
+      std::string aaa; double sdd;
+      ifi>>aaa; std::cout<<" rex "<<aaa<<" ";
+    for(int i=0;i<=mi;i++){ ifi>>exper[nt][i].mean; std::cout<<exper[nt][i].mean<<" ";} std::cout<<'\n';
+      getline(ifi,aaa);
       ifi>>aaa; std::cout<<" rex "<<aaa<<" ";
        for(int i=0;i<=mi;i++){ifi>>sdd; if(sdd<0.01)sdd=0.01; exper[nt][i].sd=sdd; std::cout<<exper[nt][i].sd<<" ";}
        getline(ifi,aaa); std::cout<<'\n';

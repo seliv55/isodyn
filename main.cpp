@@ -92,7 +92,6 @@ int main( int argc, char *argv[] ){
       ifstream fi(argv[2]);  int ntr(0),Nfi=atoi(argv[7]);
      Problem.read(sfpar);    //read parameters
      Problem.setodir(sout,sflmain,sflcomp); //set output directory
-     cout<<"*** Read_con: "<<sfpar<<" out: "<<sout<<" stat: "<<sflmain<<" cmp: "<<sflcomp<<" nfi="<<Nfi<<endl;
 
       if(*Problem.getodir()=="glut/") ntr=1; 
       ifn=Problem.setnumofi(); //number of parameter files

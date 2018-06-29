@@ -9,9 +9,10 @@ using namespace std;
 double Vi, xribi, xasp=1.,mu;
 
 void Ldistr::readExp (char fn[],int ntr) {
-  ifstream fi(fn); double Ti;  mu=0.;  Vi=0.014; 
+  ifstream fi(fn); double Ti;  mu=0.;  Vi=0.014;
+  rmid(fi);
  double Nc[ntime]; for(int i=0;i<ntime;i++) Nc[i]=1.+0.1*i;//**??** cells number
-rmid(fi); 
+ 
 //     Tracer l13c=rcsv(fi, result,ntr );
 //     cout<<"readExp: 13C-substrate: "<<*l13c.getname()<<", fraction: "<<l13c.fract<<endl;
 for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
@@ -39,20 +40,21 @@ const int trac=0, lab=trac+1, abund=lab+1, injec=abund+1, etime=injec+1, emet=et
 
 int Ldistr::sexm0(string nm){ int ind(-1),jj(0);
       for(int i=0;i<lmet;i++)  if(nm.find(met[i]->getdescr())+1){
-       cout<<'\n'<<"sexm0: "<<met[i]->getdescr()<<" i="<<i<<'\n';
+       cout<<"-------------\n"<<"sexm0: "<<met[i]->getdescr()<<" i="<<i<<'\n';
+//       to form expm0:
        if(vnn.size()==0) {expm0.push_back(met[i]); vnn.push_back(i); ind=0;}
        else {
-       for(int j=0;j<vnn.size();j++) { cout<<" j="<<j<<" size="<<vnn.size(); ind=j; if(i==vnn[j]) break; jj=j+1;}
+       for(int j=0;j<vnn.size();j++) { ind=j; if(i==vnn[j]) break; jj=j+1;} // check repetitions
          if(jj==vnn.size()) {expm0.push_back(met[i]); vnn.push_back(i); ind=(expm0.size()-1);}
-       } break; }
-        cout<<"\nvnn: "; for(int i=0;i<vnn.size();i++) cout<<vnn[i] <<' ';cout<<" ind="<<ind<<'\n';
+       }
+        break; }
 return ind;}
 
-void Ldistr::rmid(ifstream& ifi){string aaa="",nm="";
+void Ldistr::rmid(ifstream& ifi){ string aaa="",nm="";
  int eind(0),niso,lex(0); double ddd;
- while (getline(ifi, aaa,' ')){ 
+ while (getline(ifi, aaa,' ')){
    if (aaa.find("time")+1)  for(int i=0;;i++){ // set incubation times
-      ifi>>ddd;  if(ddd<0) {ntime=tex.size(); break;}
+      ifi>>ddd;  if(ddd<0) {ntime=tex.size();  cout<<"ntime="<<ntime<<'\n'; break;}
       tex.push_back(ddd*60.);  cout<<tex[i]<<" ";}
    else if (aaa.find("name")+1) {// find metabolite corresponding to data
           getline(ifi,nm); stringstream ss(nm); string nma[5]; int i(0); 
@@ -64,14 +66,15 @@ void Ldistr::rmid(ifstream& ifi){string aaa="",nm="";
    else if (aaa.find("t=")+1){ int et;
           ifi>>ddd; cout<<"time: "<<ddd<<'\n'; //incubation time
           for(int i=0;i<ntime;i++)if(!((int)(ddd*60)-(int)tex[i])) {
-            et=i; cout<<"et="<<et<<'\n'; break;} //corresponding tex index
+            et=i; break;} //corresponding tex index
           expm0[eind]->exper[lex-1].rex(ifi,et);} //set labeling measured for given incubation time
    else if(aaa.find("tracer")+1){ifi>>nm>>markis>>marfrac;
-          cout<<" tracer "<< nm<<" iso:"<<markis<<" fract:"<<marfrac<<'\n';
+          cout<<"*** tracer "<< nm<<" iso:"<<markis<<" fract:"<<marfrac<<'\n';
           for(int i=0;i<lmet;i++)
            if(nm.find(met[i]->getdescr())+1) {itrac=i; break;}
           }
    }
+        cout<<"\tvnn: "; for(int i=0;i<vnn.size();i++) cout<<vnn[i] <<' ';cout<<'\n';
    shexper(ntime);
 }
 
