@@ -138,6 +138,7 @@ void wrikinm0(std::ostringstream& so, int nt) {
      for(int i=0;i<mi;i++) std::cout<<exper[j][i].mean<<" "; std::cout<<'\n';} std::cout<<'\n';
 }
 double* getcalc(){return &calc[0];}
+double shkin(int itp){return this->kinm0[itp];}
 
 double dilut( double& dlt,const double *iso,const int len,const int nt) {
 	     unsigned i; double xi(0.0),a(0.0);

@@ -65,7 +65,7 @@ string Ldistr::read_con(ifstream& fi, string& sfiso,int& nfi){
                 }
       return gpl;}
       
-void Ldistr::setflcon(){ int i, ifound;
+void Ldistr::setflcon(){ int i, ifound;//set flag if only concentration, not m0, is available
        for(int j=0;j<expcon.size();j++){
        cout<<expcon[j]->getdescr()<<" "<<expcon[j]->getconc()[0].mean<<'\n';
         for(i=0;i<expm0.size();i++){
@@ -102,7 +102,7 @@ int main( int argc, char *argv[] ){
      cout.precision(3);
 //     sol0=Problem.read(argv[2]);    //read parameters
         horse.readExp(argv[1],ntr);            // read experimental data 
-     string gpl=horse.read_con(fi,sfiso,Nfi);
+     string gpl=horse.read_con(fi,sfiso,Nfi);  // read concentrations
         horse.setflcon();
       int m0len=horse.wrim0ex("exm0");                // set experimental data for figure
       int conlen=horse.wriconex("excon");                // set experimental data for figure
