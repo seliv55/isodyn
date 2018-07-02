@@ -87,7 +87,7 @@ void rex(std::ifstream& ifi, int nt){// reads experimental data
 double percent(const double *iso,int len){
 		double tot=0.; int nc,sum;
 		for(int i=0;i<mi+2;i++) calc[i]=0.;
-   for(nc=0;nc<=len;nc++) { int i=((nc>>frbeg)&((1<<mi)-1)); sum=0;
+   for(nc=0;nc<len;nc++) { int i=((nc>>frbeg)&((1<<mi)-1)); sum=0;
 	while(i>0){sum += (i & 1);i = (i >> 1);}     calc[sum] += iso[nc];
 		          }//end for
 	for(int i=0;i<=mi;i++) tot += calc[i];
@@ -135,7 +135,7 @@ void wrikinm0(std::ostringstream& so, int nt) {
  }
  void shexper(int nt){ std::cout<<getdescr()<<" ";
    for(int j=0;j<nt;j++){
-     for(int i=0;i<mi;i++) std::cout<<exper[j][i].mean<<" "; std::cout<<'\n';} std::cout<<'\n';
+     for(int i=0;i<=mi;i++) std::cout<<exper[j][i].mean<<" "; std::cout<<'\n';} std::cout<<'\n';
 }
 double* getcalc(){return &calc[0];}
 double shkin(int itp){return this->kinm0[itp];}

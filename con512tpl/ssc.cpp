@@ -12,6 +12,6 @@ met[itrac]->iso[markis]=met[itrac]->getconc()[0].mean*marfrac;
 met[itrac]->iso[0]=met[itrac]->getconc()[0].mean*(1-marfrac);
 massfr();
 sklad(0);
- cout<<"Tracer="<<met[itrac]->getdescr()<<" con="<<met[itrac]->getconc()[0].mean<<" marked="<<met[itrac]->iso[markis]/met[itrac]->getconc()[0].mean<<" m0con="<<met[itrac]->iso[0]<<" m0="<<gl.exper[0].shkin(0)<<" sumiso="<<met[itrac]->sumt()<<" calc[0]="<<gl.exper[0].getcalc()[0]/gl.exper[0].getcalc()[gl.exper[0].getmi()+1]<<" calc[mi+1]="<<gl.exper[0].getcalc()[gl.exper[0].getmi()+1]<<" mi="<<gl.exper[0].getmi()<<endl;
+// cout<<"Tracer="<<met[itrac]->getdescr()<<" con="<<met[itrac]->getconc()[0].mean<<" marked="<<met[itrac]->iso[markis]/met[itrac]->getconc()[0].mean<<" m0con="<<met[itrac]->iso[0]<<" m0="<<gl.exper[0].shkin(0)<<" sumiso="<<met[itrac]->sumt()<<" calc[0]="<<gl.exper[0].getcalc()[0]/gl.exper[0].getcalc()[gl.exper[0].getmi()+1]<<" calc[mi+1]="<<gl.exper[0].getcalc()[gl.exper[0].getmi()+1]<<" mi="<<gl.exper[0].getmi()<<endl;
 }
 

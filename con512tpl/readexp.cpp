@@ -58,7 +58,7 @@ void Ldistr::rmid(ifstream& ifi){ string aaa="",nm="";
       tex.push_back(ddd*60.);  cout<<tex[i]<<" ";}
    else if (aaa.find("name")+1) {// find metabolite corresponding to data
           getline(ifi,nm); stringstream ss(nm); string nma[5]; int i(0); 
-          while (getline(ss,nma[i],',')) i++; int beg=stoi(nma[1]), mi=stoi(nma[2]);
+          while (getline(ss,nma[i],',')) i++; int beg=stoi(nma[1]), mi=stoi(nma[2])-beg+1;
           Exper *ee=new Exper(mi,beg,nma[0]); eind=sexm0(nma[0]);
            expm0[eind]->exper.push_back(*ee); lex=expm0[eind]->exper.size(); delete ee;
           cout<< nma[0]<<" beg="<<beg<<" mi="<<mi <<" met#"<<eind<<" frag#"<<lex<<'\n';
@@ -75,7 +75,7 @@ void Ldistr::rmid(ifstream& ifi){ string aaa="",nm="";
           }
    }
         cout<<"\tvnn: "; for(int i=0;i<vnn.size();i++) cout<<vnn[i] <<' ';cout<<'\n';
-   shexper(ntime);
+   shexper(ntime); cout<<"****++****"<<endl;
 }
 
 void Ldistr::defcol(int nucol[],vector<string> vstr){
