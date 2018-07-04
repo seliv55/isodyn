@@ -63,7 +63,6 @@ extern void d02nefsv(const double tmax);
 extern void derivs(const DP x, Vec_IO_DP &y, Vec_O_DP &dydx);
 extern void integ(const double tmax);
 extern void derivsl(const DP x, Vec_IO_DP &y, Vec_O_DP &dydx);
-extern void integrbs(const double tmax);
 //extern void  NR::jacobn_s(const DP x, Vec_I_DP &y, Vec_O_DP &dfdx, Mat_O_DP &dfdy);
 extern DP dxsav;   // defining declarations
 extern int kmax,kount;

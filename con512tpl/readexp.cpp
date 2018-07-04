@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
-#include <unordered_set>
 #include "nums.hh"
 #include "tk.hh"
 #include "nv.hh"
@@ -9,71 +8,112 @@
 using namespace std;
 double Vi, xribi, xasp=1.,mu;
 
-double Ldistr::readExp (char fn[]) {
-  ifstream fi(fn); double Ti,ts1;  mu=0.; dt=0.6;  Vi=0.014; 
-     Tracer l13c=rcsv(fi, result );  int lres=result.size();
-     cout<<" 13C%: "<<*l13c.getname()<<", fraction: "<<l13c.fract<<endl;
-
- double Nc[ntime]; for(int i=0;i<ntime;i++) Nc[i]=(double)i+1.;//cells number
+void Ldistr::readExp (char fn[],int ntr) {
+  ifstream fi(fn); double Ti;  mu=0.;  Vi=0.014;
+  rmid(fi);
+ double Nc[ntime]; for(int i=0;i<ntime;i++) Nc[i]=1.+0.1*i;//**??** cells number
  
+//     Tracer l13c=rcsv(fi, result,ntr );
+//     cout<<"readExp: 13C-substrate: "<<*l13c.getname()<<", fraction: "<<l13c.fract<<endl;
 for(int i=1;i<ntime;i++) mu += log(Nc[i]/Nc[0])/tex[i];
  mu /= ((double)(ntime-1)*1.0);
-	 xx[ngl]=10.; gl.setconc(xx[ngl]); gl.setex0();
-	 xx[nglycog]=3.; glycog.setconc(xx[nglycog]);// glycog.setex0();
-	 xx[nlac]=0.001; lac.setconc(xx[nlac]);
-	 xx[nglu]=4.1; glu.setconc(xx[nglu]); glu25.setconc(xx[nglu]);
-	 xx[ngln]=4.9; gln.setconc(xx[ngln]); gln.setex0();
-	 xx[nala]=0.4; ala.setconc(xx[nala]);
-	 xx[ngly]=0.4; gly.setconc(xx[ngly]);
-	 xx[nser]=0.4; ser.setconc(xx[nser]);
-	 xx[nasp]=0.0001; asp.setconc(xx[nasp]);
-	 xx[npro]=0.0001; pro.setconc(xx[npro]);
-	 xx[ncoac]=0.007; coac.setconc(xx[ncoac]);
-	 xx[nrna]=0.007; coac.setconc(xx[nrna]);
-
-	 xx[nagl]=1.0;
-	 xx[ncthf]=0.5;	 lmet=10;//sizeof(met)/sizeof(*met); 
+           setcon();
+//	  glu.setconc(xx[nglu]);// glu25.setconc(xx[nglu]);
+//cout<<"** pass **"<<endl;
 	 
-       l13c.setmid(markis,marfrac*100.);  l13c.setmid(0,100*(1-marfrac)); 
-        itrac=findmet(l13c.getname(),l13c.getniso(),l13c.getmid());
-	 
-   for(int j=0;j<lres;j++){ findmet(result[j].getname(),result[j].getniso(),result[j].getmid());   }
-    
-  return ts1;}
+//       l13c.setmid(markis,marfrac);  l13c.setmid(0,(1-marfrac)); 
+//        itrac=findmet(l13c); cout<<"readExp: tracer="<<met[itrac]->getdescr()<<'\n';
+//   int lres=result.size();
+//   for(int j=0;j<lres;j++){ findmet(result[j]);   } cout<<" Readexp, fin\n";
+   
+//	 gl.setex0(); gln.setex0();
+//    for(int j=0;j<expm0.size();j++) cout<<expm0[j]->getdescr()<<endl;
+   }
 
 vector<string> Ldistr::spli(stringstream& test,char a){
     vector<string> seglist;    string segment;
-  while(getline(test, segment, a)) seglist.push_back(segment); return seglist;
+  while(getline(test, segment, a)) seglist.push_back(segment);
+   return seglist;
 }
 
 const int trac=0, lab=trac+1, abund=lab+1, injec=abund+1, etime=injec+1, emet=etime+1, efrg=emet+1, formula=efrg+1, intens=formula+1, isotopol=intens+1, conc=isotopol+1, nepar=conc+1;
 
+int Ldistr::sexm0(string nm){ int ind(-1),jj(0);
+      for(int i=0;i<lmet;i++)  if(nm.find(met[i]->getdescr())+1){
+       cout<<"-------------\n"<<"sexm0: "<<met[i]->getdescr()<<" i="<<i<<'\n';
+//       to form expm0:
+       if(vnn.size()==0) {expm0.push_back(met[i]); vnn.push_back(i); ind=0;}
+       else {
+       for(int j=0;j<vnn.size();j++) { ind=j; if(i==vnn[j]) break; jj=j+1;} // check repetitions
+         if(jj==vnn.size()) {expm0.push_back(met[i]); vnn.push_back(i); ind=(expm0.size()-1);}
+       }
+        break; }
+return ind;}
+
+void Ldistr::rmid(ifstream& ifi){ string aaa="",nm="";
+ int eind(0),niso,lex(0); double ddd;
+ while (getline(ifi, aaa,' ')){
+   if (aaa.find("time")+1)  for(int i=0;;i++){ // set incubation times
+      ifi>>ddd;  if(ddd<0) {ntime=tex.size();  cout<<"ntime="<<ntime<<'\n'; break;}
+      tex.push_back(ddd*60.);  cout<<tex[i]<<" ";}
+   else if (aaa.find("name")+1) {// find metabolite corresponding to data
+          getline(ifi,nm); stringstream ss(nm); string nma[5]; int i(0); 
+          while (getline(ss,nma[i],',')) i++; int beg=stoi(nma[1]), mi=stoi(nma[2])-beg+1;
+           eind=sexm0(nma[0]);
+           if(eind>=0){
+           Exper *ee=new Exper(mi,beg,nma[0]);
+           expm0[eind]->exper.push_back(*ee); lex=expm0[eind]->exper.size(); delete ee;
+           cout<< nma[0]<<" beg="<<beg<<" mi="<<mi <<" met#"<<eind<<" frag#"<<lex<<'\n';
+          ifi>>aaa;
+          if (aaa.find("t=")+1){ int et;
+          ifi>>ddd; cout<<"time: "<<ddd<<'\n'; //incubation time
+          for(int i=0;i<ntime;i++)if(!((int)(ddd*60)-(int)tex[i])) {
+            et=i; break;} //corresponding tex index
+          expm0[eind]->exper[lex-1].rex(ifi,et);} //set labeling measured for given incubation time
+           
+           }
+
+           }
+   else if(aaa.find("tracer")+1){ifi>>nm>>markis>>marfrac;
+          cout<<"*** tracer "<< nm<<" iso:"<<markis<<" fract:"<<marfrac<<'\n';
+          for(int i=0;i<lmet;i++)
+           if(nm.find(met[i]->getdescr())+1) {itrac=i; break;}
+          }
+   }
+        cout<<"\tvnn: "; for(int i=0;i<vnn.size();i++) cout<<vnn[i] <<' ';cout<<'\n';
+   shexper(ntime); cout<<"****++****"<<endl;
+}
+
 void Ldistr::defcol(int nucol[],vector<string> vstr){
      int len=vstr.size(); string a; int pos;
   for(int i=0;i<len;i++){
-     if(vstr[i].find("tracer")!=string::npos) nucol[trac]=i;
-     else if(vstr[i].find("label")!=string::npos) nucol[lab]=i;
-     else if(((pos=vstr[i].find("abundance"))!=string::npos)&&(pos<3)) nucol[abund]=i;
-     else if(vstr[i].find("injection")!=string::npos) nucol[injec]=i;
-     else if(vstr[i].find("time")!=string::npos) nucol[etime]=i;
-     else if(vstr[i].find("Metabolite")!=string::npos) nucol[emet]=i;
-     else if(vstr[i].find("atomic positions")!=string::npos) nucol[efrg]=i;
-     else if(vstr[i].find("formula")!=string::npos) nucol[formula]=i;
-     else if(vstr[i].find("intens")!=string::npos) nucol[intens]=i;
-     else if(vstr[i]=="\"isotopologue\"") {nucol[isotopol]=i;} //cout<<"isotopol: "<<nucol[isotopol]<<endl;} 
-     else if(vstr[i].find("gue abund")!=string::npos) nucol[conc]=i; 
+     if(vstr[i].find("tracer")+1) nucol[trac]=i;
+     else if(vstr[i].find("label")+1) nucol[lab]=i;
+     else if(((pos=vstr[i].find("abundance"))+1)&&(pos<3)) nucol[abund]=i;
+     else if(vstr[i].find("injection")+1) nucol[injec]=i;
+     else if(vstr[i].find("time")+1) nucol[etime]=i;
+     else if(vstr[i].find("Metabolite")+1) nucol[emet]=i;
+     else if(vstr[i].find("atomic positions")+1) nucol[efrg]=i;
+     else if(vstr[i].find("formula")+1) nucol[formula]=i;
+     else if(vstr[i].find("intens")+1) nucol[intens]=i;
+     else if(vstr[i]=="\"isotopologue\"") {nucol[isotopol]=i;}
+     else if(vstr[i].find("gue abund")+1) nucol[conc]=i; 
   }
 }
 
-int Ldistr::findmet(string *s,int niso,data* mid) { int k(0);
-      for(int i=0;i<lmet;i++){
-      int imatch=(*s).find(met[i]->getdescr()); 
-        if(imatch != (int)std::string::npos){ met[i]->setex0(); k=i;
-//       cout<<"c13pos: "; cout<<markis<<" "<<marfrac<<"\n";
-         cout<<i<<": "<<met[i]->getdescr()<<" niso="<<niso<<" m0="<<mid[0].mean<<" sd0="<<mid[0].sd<<endl;
-         met[i]->sex(niso,mid,1); break; }
-                             }
-   if(k==0){cout<<*s<<" k="<<k<<" no metabolite match?!?!?!\n";}
+int Ldistr::findmet(Iso& iso) { int k(-1); 
+//find met[i] for which there are experimental data presented in the unit iso
+     int j(0); while(iso.gett()>(tex[j]+1e-7)) j++;
+   for(int i=0;i<lmet;i++)  if(iso.getname()->find(met[i]->getdescr())+1){ k=i;
+     for(int iex=0;iex<expm0.size();iex++) if(met[i]->getdescr()==expm0[iex]->getdescr()){k=-2; break;}//repetitions
+          if(k>=0)  expm0.push_back(met[i]); //if met[i] was not present in expm0, add met[i]
+           cout<<"findmet "<<met[i]->getdescr()<<" m0="<<iso.getmid()[0].mean<<" t="<<iso.gett()<<endl; break;}
+           
+     if(k==-1) for(int i=0;i<lmetk;i++)  if(iso.getname()->find(metk[i]->getdescr())+1){ k=i;
+     for(int iex=0;iex<kexpm0.size();iex++) if(metk[i]->getdescr()==kexpm0[iex]->getdescr()){k=-2; break;}//repetitions
+         if(k>=0)  kexpm0.push_back(metk[i]);//if met[i] was not present in kexpm0, add met[i]
+           cout<<"findmet "<<metk[i]->getdescr()<<" m0="<<iso.getmid()[0].mean<<" t="<<iso.gett()<<endl; break;}
+     if(k==-1)cout<<"findmet "<<(*iso.getname())<<" no metabolite match?!?!?!\n";
      return k;}
 
 int Ldistr::c13pos(string& s,int& nc,int& nlab){
@@ -84,34 +124,20 @@ int Ldistr::c13pos(string& s,int& nc,int& nlab){
        }
   return ibin; }
       
-Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
-   string aaa;
-   int cols[nepar];
-    vector<string> titl, strok, substrok;//  result.clear();
-//** 1. CONVERSION OF DATA FROM STRINGS
-// List of column Titles
-    getline(fi,aaa);
-     stringstream test(aaa); 
-      titl=spli(test,',');
-   defcol(cols,titl);
-//get rows
-    while(getline(fi,aaa)) strok.push_back(aaa);
-    
+set<string> Ldistr::findopt(string stsam, vector<string> strok){
          int nstrok(strok.size());
-   unordered_set<string> metka;
-    for(int i=0;i<nstrok;i++){ size_t pos=strok[i].find("C13]-"); if(pos!=string::npos){
-     string bbb=strok[i].substr(pos,10); metka.emplace(bbb); }       }
-    for(const string& it: metka) cout<<it<<"\n";
-    
-    for(int i=0;i<nstrok;i++) if(strok[i].find(*(metka.begin()))!=string::npos) substrok.push_back(strok[i]);
-    nstrok=substrok.size();
-    
-//  string Matrix of data for the analysis; segline[nstrok][columns #]
- vector<string> segline[nstrok]; int len;
+   set<string> metka;               // set labeled substrates
+    for(int i=0;i<nstrok;i++){ size_t pos=strok[i].find(stsam);
+     if(pos+1){ metka.insert(strok[i].substr(pos,17)); }       }
+    for(set<string>::iterator it=metka.begin(); it!=metka.end(); it++) cout<<"findopt "<<*it<<'\n';
+  return metka;}
+
+void Ldistr::splitstrings(vector<string> segline[],int nstrok,vector<string> substrok){
+   int len;
    for(int j=0;j<nstrok;j++){
 
 // split rows by "
-   test.clear(); test.str(substrok[j]);
+  stringstream test; test.str(substrok[j]); 
       segline[j]=spli(test,'"'); len=segline[j].size();
 
 // split rows by ,      
@@ -130,68 +156,104 @@ Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result ){
          vector<string> vstav; vstav=spli(ttt,',');
          if(vstav[0].length()<2) vstav.erase(vstav.begin());
          segline[j].insert(segline[j].begin()+i,vstav.begin(),vstav.end());
-          }
-          
-   }
-    cout<<"titles - data: "<< titl.size()<<" - "<<segline[5].size()<<"\n";
+          }   }
+ }
+    
+Tracer Ldistr::rcsv(ifstream& fi,vector<Iso>& result,int mar ){
+   string aaa;
+   int cols[nepar];
+    vector<string> titl, strok;//  result.clear();
+//** 1. CONVERSION OF DATA FROM STRINGS
+// List of column Titles
+    getline(fi,aaa);           // read first line
+     stringstream test(aaa); 
+      titl=spli(test,',');    // names and positions of columns
+   defcol(cols,titl);
+//get rows
+    while(getline(fi,aaa)) strok.push_back(aaa);
+    int nstrok=strok.size();
+    
+     set<string> metka=findopt("C13]-",strok);
+    
+//                              chosing strings corresponding to the labeled substrate
+    vector<string> substrok;//  result.clear();
+     set<string>::iterator itm=metka.begin(); for(int i=0;i<mar;i++) itm++;
+    for(int i=0;i<nstrok;i++) if(strok[i].find(*itm)+1) substrok.push_back(strok[i]);
+    nstrok=substrok.size(); cout<<"rcsv: "<<nstrok<<" strok\n";
+    
+//  string Matrix of data for the analysis; segline[nstrok][columns #]
+  vector<string> segline[nstrok];
+  splitstrings(segline, nstrok,substrok);
+    cout<<"rcsv: titles - data: "<< titl.size()<<" - "<<segline[5].size()<<"\n";
 //** 2. GETTING DATA IN APPROPRIATE FORMAT
 
 // set tracer
   int nc, nlab;
   if(segline[0][cols[trac]]!="") { markis=c13pos(segline[0][cols[lab]],nc,nlab);
-     marfrac=strtod(segline[0][cols[abund]].c_str(), NULL)/100.;
+     marfrac=stod(segline[0][cols[abund]])/100.;
       }
-       cout<<"Tracer="<<segline[0][cols[trac]]<<"; Isotopomers="<<markis<<"; Carbons="<<nc<<"; Labels="<<nlab<<"; Fraction="<<marfrac<<"\n";
    Tracer labmet(nc,0.,segline[0][cols[trac]],markis,marfrac,nlab);
-          labmet.setrac();
+          labmet.setrac(); 
+   cout<<"rcsv: Tracer="<<*labmet.getname()<<"; Isotopomer="<<markis<<"; Carbons="<<nc;
+   cout<<"; Labels="<<nlab<<"; Fraction="<<marfrac<<'\n';
+          
 //  tex: time points of measures during incubation
-    tex.clear(); tex.push_back(0.);
-   double dis[nstrok];
-//convert MID from string to double in whole column
-    int iro=0, // row #
-     lef=(int)segline[0][cols[efrg]].at(4)-(int)segline[0][cols[efrg]].at(1)+2; // number of isotopomers in fragment
-    string metnm=segline[0][cols[emet]], //metabolite name
-           chinj=segline[iro][cols[isotopol]],//injection #
-           strac=segline[0][cols[trac]]; //13C tracer
-   cout<<"isotopologue="<<segline[iro][cols[isotopol]]<<endl;
-   vector<Iso> liso;   int iiso(0); Iso *iso;
-   
-    
-      for(int i=0;i<nstrok;i++){
-       if(segline[i][cols[trac]]!="") { int j;
-   double d=strtod(segline[i][cols[etime]].c_str(), NULL)*60.;
-    for(j=0;j<tex.size();j++) if(d==tex[j]) break;
-     if(j==tex.size()) tex.push_back(d);}
-     
-      dis[i]=0.; if(segline[i][cols[conc]].length()>2) 
-     dis[i]=strtod(segline[i][cols[conc]].c_str(), NULL);
-     }
+    tex.clear();
+     set<string> stex; stex.insert("0");
+    for(int i=0;i<nstrok;i++) stex.insert(segline[i][cols[etime]]); int itex=0;
+    cout<<"rcsv: tex="; 
+   for(set<string>::iterator it=stex.begin();it!=stex.end();it++){
+     tex.push_back(stod(*it)*60);cout<<tex[itex]<<" ";++itex;} cout << '\n';
           ntime=tex.size();
-       cout<<"incubation times (h): "; for(int i=0;i<ntime;i++) cout<<tex[i]/60.<<" "; cout<<"\n";
+     
+// Take values of some parameters
+ int lef=(int)segline[0][cols[efrg]].at(4)-(int)segline[0][cols[efrg]].at(1)+2; // number of isotopomers in fragment
+    string metnm=segline[0][cols[emet]], //metabolite name
+           chinj=segline[0][cols[isotopol]];//injection #
+           cout<<"rcsv: name="<<metnm<<" miso="<<lef<<" cinj="<<chinj<<'\n';
+//           strac=segline[0][cols[trac]]; //13C tracer
+//convert MID from string to double in whole column
+    double dis[nstrok];
+      for(int i=0;i<nstrok;i++){ dis[i]=0.;
+       if(segline[i][cols[conc]].length()>2)  dis[i]=stod(segline[i][cols[conc]])*0.01;
+     }
    
-while(iro<(nstrok-1)){
-   while(segline[iro][cols[emet]]==metnm){ // extract mid for each metabolite from all injections
-         if(iiso==0) {iso=new Iso(lef,strtod(segline[iro][cols[etime]].c_str(), NULL)*60.,segline[iro][cols[emet]]);
+   vector<Iso> liso,liso1;  Iso *iso;  int iiso(0),iro(0);
+while(iro<(nstrok-1)){ cout<<"rcsv: name="<<metnm<<" miso="<<lef<<" cinj="<<chinj<<" "<<segline[iro][cols[isotopol]]<<'\n';
+   while(segline[iro][cols[emet]]==metnm){ // take data for metabolite metnm
+         if(iiso==0) {iso=new Iso(lef,stod(segline[iro][cols[etime]])*60.,segline[iro][cols[emet]]);
           if(segline[iro][cols[isotopol]]==chinj) iro++;}
     while((segline[iro][cols[isotopol]]!=chinj)&&(iiso<lef)){  // ordenate mid for each injection
                    iso->setmid(iiso,dis[iro]); iiso++; iro++;}
-                   if(iiso==lef){ liso.push_back(*iso);}
-                   
+                   if(iiso==lef) { liso.push_back(*iso);}
          if(segline[iro][cols[isotopol]]!=chinj) {iro++; iiso++;}
          else { iiso=0; iro++;}
     if(iro>=nstrok)  {liso.push_back(*iso); break;}
    }
+//   liso.push_back(labmet);
 // statistics grouping all injection for each metabolite
-     for(int i=0;i<liso.size();i++) liso[i].showmid();
-    iso=new Iso(lef,0.,segline[iro-2][cols[emet]]);
-    iso->calmesd(liso); iso->showmid("_mean");  iso->showsd("_sd"); cout<<"\n";
-    if((*labmet.getname()).find(*iso->getname())<string::npos) {marfrac=iso->getmid()[nlab].mean*0.01; }
-     result.push_back(*iso);
-    liso.clear();
-//   while(segline[iro][cols[trac]]=="") if(iro<nstrok) iro++;
+     for(int j=0;j<tex.size();j++){
+   for(int i=0;i<liso.size();i++) if(tex[j]==liso[i].gett()) liso1.push_back(liso[i]);
+     for(int i=0;i<liso1.size();i++) liso1[i].showmid();
+    if(liso1.size()){ iso=new Iso(lef,tex[j],segline[iro-2][cols[emet]]);
+    iso->calmesd(liso1);
+     iso->showmid("_mean");  iso->showsd("_sd");
+     result.push_back(*iso); 
+    liso1.clear();    
+//    correct labeled fraction
+    if(iso->gett()<1e-7){
+    if((*labmet.getname()).find(*iso->getname())+1){
+     cout<<"**label in "<<*iso->getname()<<" t="<<iso->gett()<<endl;
+    marfrac=iso->getmid()[nlab].mean;    }
+                 }
+        delete iso;
+         cout<<'\n';   }
+     }
+         liso.clear();
    if(iro<(nstrok-1)){ iiso=0;
      lef=(int)segline[iro][cols[efrg]].at(4)-(int)segline[iro][cols[efrg]].at(1)+2;
-     metnm=segline[iro][cols[emet]];
-  }    }
+     metnm=segline[iro][cols[emet]];  }
+         }
+            cout<<" Rcsv, fin\n"; 
   return labmet; }
 

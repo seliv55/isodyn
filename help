@@ -1,0 +1,17 @@
+Correct call of Isodyn:
+./iso.sh [option1 [parameter1]] [option2 [parameter2]] ...
+
+The options are:
+-a   path to a file with mass isotopomer data (default parameter A549)
+-b   path to a file with covcentrations  (default parameter xglc)
+-i   path to a file with parameters  (default parameter "glc/1")
+-o   path to an ouput data directory (default parameter "glc/")
+-s   path to a file with statistics of adjusted fluxes (default parameter "glc/statfl")
+-c   path to a file to compare with statistics of adjusted fluxes (default parameter "glut/statfl")
+-m   maximal number of saved during fitting files with parameters (default parameter 77)
+-F   perform fitting (default parameter false)
+-N   find the number of independent parameters (default parameter false)
+-C   find the confidence intervals (default parameter false)
+-K   perform fitting changing transketolase parameters (default parameter false)
+-A   perform fitting changing transaldolase parameters (default parameter false)
+

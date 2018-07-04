@@ -1,0 +1,35 @@
+
+ y1: Pdd1-(Pdd2*v0[2])/(v[1]+v0[2]);
+ y2: Pdd2-(Pdd1*v[2]+Pdd3*v0[3])/(v[2]+v0[3]);
+ y3: Pdd3-(Pdd2*v[3]+Pdd4*v0[4]+Pdd8*v[9])/(v[3]+v0[4]+v[9]);
+ y4: Pdd4-(Pdd3*v[4]+Pdd5*v0[5])/(v[4]+v0[5]);
+ y5: Pdd5-(v0[6]+Pdd4*v[5])/(v[5]+v0[6]);
+ y6: Pdd8-(Pdd3*v0[9]+Pdd7*v[8])/(v[8]+v0[9]);
+ y7: Pdd7-(Pdd8*v0[8])/(v[7]+v0[8]);
+sol1: algsys([y1,y2,y3,y4,y5,y6,y7],[Pdd1,Pdd2,Pdd3,Pdd4,Pdd5,Pdd7,Pdd8]);
+
+stringout("s7",sol1);
+
+ y1: Pdd1-(v[1]+Pdd2*v0[2])/(v[1]+v0[2]);
+ y2: Pdd2-(Pdd1*v[2]+Pdd3*v0[3])/(v[2]+v0[3]);
+ y3: Pdd3-(Pdd2*v[3]+Pdd4*v0[4]+Pdd8*v[9])/(v[3]+v0[4]+v[9]);
+ y4: Pdd4-(Pdd3*v[4]+Pdd5*v0[5])/(v[4]+v0[5]);
+ y5: Pdd5-(Pdd4*v[5])/(v[5]+v0[6]);
+ y6: Pdd8-(Pdd3*v0[9]+Pdd7*v[8])/(v[8]+v0[9]);
+ y7: Pdd7-(Pdd8*v0[8])/(v[7]+v0[8]);
+sol1: algsys([y1,y2,y3,y4,y5,y6,y7],[Pdd1,Pdd2,Pdd3,Pdd4,Pdd5,Pdd7,Pdd8]);
+
+stringout("p5",sol1);
+
+ y1: Pdd1-(Pdd2*v0[2])/(v[1]+v0[2]);
+ y2: Pdd2-(Pdd1*v[2]+Pdd3*v0[3])/(v[2]+v0[3]);
+ y3: Pdd3-(Pdd2*v[3]+Pdd4*v0[4]+Pdd8*v[9])/(v[3]+v0[4]+v[9]);
+ y4: Pdd4-(Pdd3*v[4]+Pdd5*v0[5])/(v[4]+v0[5]);
+ y5: Pdd5-(Pdd4*v[5])/(v[5]+v0[6]);
+ y6: Pdd8-(Pdd3*v0[9]+Pdd7*v[8])/(v[8]+v0[9]);
+ y7: Pdd7-(v[7]+Pdd8*v0[8])/(v[7]+v0[8]);
+sol1: algsys([y1,y2,y3,y4,y5,y6,y7],[Pdd1,Pdd2,Pdd3,Pdd4,Pdd5,Pdd7,Pdd8]);
+
+stringout("f6",sol1);
+
+
