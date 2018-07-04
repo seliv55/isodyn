@@ -59,15 +59,21 @@ void Ldistr::rmid(ifstream& ifi){ string aaa="",nm="";
    else if (aaa.find("name")+1) {// find metabolite corresponding to data
           getline(ifi,nm); stringstream ss(nm); string nma[5]; int i(0); 
           while (getline(ss,nma[i],',')) i++; int beg=stoi(nma[1]), mi=stoi(nma[2])-beg+1;
-          Exper *ee=new Exper(mi,beg,nma[0]); eind=sexm0(nma[0]);
+           eind=sexm0(nma[0]);
+           if(eind>=0){
+           Exper *ee=new Exper(mi,beg,nma[0]);
            expm0[eind]->exper.push_back(*ee); lex=expm0[eind]->exper.size(); delete ee;
-          cout<< nma[0]<<" beg="<<beg<<" mi="<<mi <<" met#"<<eind<<" frag#"<<lex<<'\n';
-           }
-   else if (aaa.find("t=")+1){ int et;
+           cout<< nma[0]<<" beg="<<beg<<" mi="<<mi <<" met#"<<eind<<" frag#"<<lex<<'\n';
+          ifi>>aaa;
+          if (aaa.find("t=")+1){ int et;
           ifi>>ddd; cout<<"time: "<<ddd<<'\n'; //incubation time
           for(int i=0;i<ntime;i++)if(!((int)(ddd*60)-(int)tex[i])) {
             et=i; break;} //corresponding tex index
           expm0[eind]->exper[lex-1].rex(ifi,et);} //set labeling measured for given incubation time
+           
+           }
+
+           }
    else if(aaa.find("tracer")+1){ifi>>nm>>markis>>marfrac;
           cout<<"*** tracer "<< nm<<" iso:"<<markis<<" fract:"<<marfrac<<'\n';
           for(int i=0;i<lmet;i++)
