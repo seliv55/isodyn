@@ -1,6 +1,6 @@
 #!/bin/sh
-fiso=/data/BEAS2B-Glucose
-fcon=/data/xglc1
+fiso=/data/SW620-Glucose 
+fcon=/data/xglc
 inpar="/data/glc/1"
 oudir="/data/glc/"
 fstat="/data/glc/statfl"
