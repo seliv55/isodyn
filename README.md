@@ -60,40 +60,75 @@ Version: 1.0
 A linux shell script "iso.sh" helps to run Isodyn. Here is its text with comments explaining the meaning of its parameters.
 
 #!/bin/sh
+
 fiso="SW620-Glucose"    # input data: file indicating 13C labeling of metabolites
+
 fcon=xglc               # input data: file with measured concentrations
+
 inpar="glc/1"           # input data: initial set of parameters to start
+
 oudir="glc/"            # output directory
+
 fstat="glc/statfl"      # path to write the results of fitting: mean and confidence intervals
+
 fcmpr="glc/statfl"      # results of fitting for the conditions used for comparison.
+
 manfi=77                # number of files to be saved during fitting
+
 FNCKAS="0"              # a number of options forsing Isodyn to run in various modes. Default: make one simulation and stop
+
 tst=yes                 # run Isodyn?
-while getopts ":a:b:i:o:s:c:m:FNCKAS" opt; do
+
+while getopts ":\a:b:i:\o:s:c:\m:FNCKAS" opt; do
+
   case $opt in
+  
     a) fiso=$OPTARG;;
+    
     b) fcon=$OPTARG;;
+    
     i) inpar=$OPTARG;;
+    
     o) oudir=$OPTARG;;
+    
     s) fstat=$OPTARG;;
+    
     c) fcmpr=$OPTARG;;
+    
     m) manfi=$OPTARG;;
+    
     F) FNCKAS=F;;     # fit data using Simulated Annealing algorithm
+    
     N) FNCKAS=N;;     # find the number of degrees of freedom for estimation of goodness of fit.
+    
     C) FNCKAS=C;;     # attempts to increase confidence intervals for fluxes
+    
     K) FNCKAS=K;;     # special algorithm for fitting transketolase parameters
+    
     A) FNCKAS=A;;     # special algorithm for fitting transaldolase parameters
+    
     S) FNCKAS=S;;     # statistics on the results of fitting: mean and confidence intervals for fluxes
+    
     *)
+    
       echo "Invalid option: -$OPTARG" 
+      
       cat help
+      
       tst=no
+      
       ;;
+      
   esac
+  
 done
+
 if [ $tst = yes ]
+
 then                  # run Isodyn
+
 ./isodyn.out $fiso $fcon $inpar $oudir $fstat $fcmpr $manfi $FNCKAS
+
 fi
 
 
