@@ -9,7 +9,8 @@ Version: 1.0
 
 ## Description
 
-“Isodyn” is a C++-program that performs an analysis of stable isotope tracer data to assess metabolic flux profiles in living cells. Isodyn simulates propagation of 13C label from artificially 13C enriched substrates into isotopic isomers (isotopomers) of metabolites of central metabolic pathways. It performs fitting the simulated dynamics of mass isotopomers to that observed experimentally, thus finding the parameters, which reflect the characteristics of corresponding biochemical reactions, and metabolic fluxes that correspond to the real fluxes under the analyzed biological object and conditions. Isodyn contains tools that check the goodness of fit and perform a statistical analysis of obtained metabolic fluxes.
+“Isodyn” is a C++-program that supports an analysis of stable isotope tracer data to assess metabolic flux profiles in living cells. Isodyn simulates propagation of 13C label from artificially 13C enriched substrates into metabolites of central metabolic pathways forming various isotopic isomers (isotopomers). It fits the simulated dynamics of mass isotopomers to that observed experimentally, thus finding the parameters, which reflect the characteristics of corresponding biochemical reactions, and metabolic fluxes that correspond to the real fluxes for the analyzed biological object and conditions. Isodyn contains tools that check the goodness of fit and perform a statistical analysis of obtained metabolic fluxes. It using the change of metabolite concentrations in the analysis in addition to labeling data, as a restrictive factor. Optionally it uses manually corrected files provided by Midcor. It automatically adjusting the analysis to the provided experimental data, and automatically constructs the equations of model according to a list of reactions.
+
 
 ## Key features
 
@@ -56,68 +57,65 @@ Version: 1.0
 
 ## Usage Instructions
 
-Isodyn can run in several modes:
+A linux shell script "iso.sh" helps to run Isodyn. Here is its text with comments explaining the meaning of its parameters.
 
-- The following command forces Isodyn to perform just one simulation of the metabolite labeling data presented in "labeling_data_file" and external concentrations and other input information (path to the file with model parameters; path to output directory; max number of parameter files saved during optimization; path to the file where statistical data are saved) presented in "additional_info_file" and stop:
+#!/bin/sh
+fiso="SW620-Glucose"    # input data: file indicating 13C labeling of metabolites
+fcon=xglc               # input data: file with measured concentrations
+inpar="glc/1"           # input data: initial set of parameters to start
+oudir="glc/"            # output directory
+fstat="glc/statfl"      # path to write the results of fitting: mean and confidence intervals
+fcmpr="glc/statfl"      # results of fitting for the conditions used for comparison.
+manfi=77                # number of files to be saved during fitting
+FNCKAS="0"              # a number of options forsing Isodyn to run in various modes. Default: make one simulation and stop
+tst=yes                 # run Isodyn?
+while getopts ":a:b:i:o:s:c:m:FNCKAS" opt; do
+  case $opt in
+    a) fiso=$OPTARG;;
+    b) fcon=$OPTARG;;
+    i) inpar=$OPTARG;;
+    o) oudir=$OPTARG;;
+    s) fstat=$OPTARG;;
+    c) fcmpr=$OPTARG;;
+    m) manfi=$OPTARG;;
+    F) FNCKAS=F;;     # fit data using Simulated Annealing algorithm
+    N) FNCKAS=N;;     # find the number of degrees of freedom for estimation of goodness of fit.
+    C) FNCKAS=C;;     # attempts to increase confidence intervals for fluxes
+    K) FNCKAS=K;;     # special algorithm for fitting transketolase parameters
+    A) FNCKAS=A;;     # special algorithm for fitting transaldolase parameters
+    S) FNCKAS=S;;     # statistics on the results of fitting: mean and confidence intervals for fluxes
+    *)
+      echo "Invalid option: -$OPTARG" 
+      cat help
+      tst=no
+      ;;
+  esac
+done
+if [ $tst = yes ]
+then                  # run Isodyn
+./isodyn.out $fiso $fcon $inpar $oudir $fstat $fcmpr $manfi $FNCKAS
+fi
+
+
+- The following command forces Isodyn to run with default parameters
  
 ```
-  ./isodyn.out [labeling_data_file] [additional_info_file] 
+ ./iso.sh
 ```
 
-- The addition of parameter "s" forces to calculate the confidence intervals for all fluxes, based on the previously saved in the output directory files with model parameters and metabolic fluxes, and save the results in file "statfl":
+- to run it with different options one of the two options should be used, either edit the script, or use the listed above options, for instance the following command can be used to fit data:
  
 ```
- ./isodyn.out [labeling_data_file] [additional_info_file] s 
+ ./iso.sh -F
 ```
-
-- The addition of parameter "x" forces to recalculate the χ2 for the parameters sets previously saved in the output directory as files "1", "2", etc:
- 
+To take concentrations from different file, for instance "abcd.efg":
 ```
- ./isodyn.out [labeling_data_file] [additional_info_file] x 
+ ./iso.sh -b abcd.efg
 ```
-
-- The addition of integer forces to perform optimization using Simulated Annealing algorithm minimizing χ2 and stop after saving "int_number" of files with optimized parameters in the output directory:
- 
-```
- ./isodyn.out [labeling_data_file] [additional_info_file] [int] 
-```
-
-- find a set of parameters, which change produces linearly independent changes iin the output corresponding to the experimental data:
- 
-```
- ./isodyn.out [labeling_data_file] [additional_info_file] g 
-```
-
-- optimise parameters for transketolase reaction:
- 
-```
- ./isodyn.out [labeling_data_file] [additional_info_file] tk 
-```
-
-- optimise parameters for transaldoase reaction:
- 
-```
- ./isodyn.out [labeling_data_file] [additional_info_file] ta 
-```
-
-
  
 ## The provided examples:
  
-The provided file "A549", is obtained applying tools supporting a workflow of primary analysis of raw data machine written in multipeak CDF files (R-programs RaMID or CDF2MID, and MIDcor). It contains the mass isotopomer distributions measured for various metabolites of central pathways. The other infrmation necessary for simulations with Isodyn (path to the file with model parameters; path to output directory; max number of parameter files saved during optimization; path to the file where statistical data are saved) is presented in the file "xglc". Below are the examples of commands to run Isodyn in several modes.
-
-Single simulation:
-
-```
- ./isodyn.out A549 xglc 
-```
-
-screenshot of a simulation of input data, shown only for unlabeled fraction (m0)
-
-![screenshot](Screenshot.png)
-
- 
-- the other modes of Isodyn functioning are achieved by addition of one more parameter to the above command as described in "Usage instruction"
+The provided file "SW620-Glucose", is an output of R-program Midcor (https://github.com/seliv55/midcor) that corrects mass spectra for natural isotope abundance and peaks overlapping. This output is designed for convenience of visual checking and manual edition, it can be edited or taken directly. It contains the mass isotopomer distributions measured for various metabolites of central pathways. The other infrmation necessary for simulations with Isodyn (path to the file with model parameters; path to output directory; max number of parameter files saved during optimization; path to the file where statistical data are saved) is presented in the file "xglc". Below are the examples of commands to run Isodyn in several modes.
 
 ## Publications
 
