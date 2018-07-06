@@ -117,7 +117,7 @@ To take concentrations from different file, for instance "abcd.efg":
  
 ## The provided examples:
  
-The provided file "SW620-Glucose", is an output of R-program Midcor (https://github.com/seliv55/midcor) that corrects mass spectra for natural isotope abundance and peaks overlapping. This output is designed for convenience of visual checking and manual edition, it can be edited or taken directly. It contains the mass isotopomer distributions measured for various metabolites of central pathways. The other infrmation necessary for simulations with Isodyn (path to the file with model parameters; path to output directory; max number of parameter files saved during optimization; path to the file where statistical data are saved) is presented in the file "xglc". Below are the examples of commands to run Isodyn in several modes.
+The provided file "SW620-Glucose", is an output of R-program Midcor (https://github.com/seliv55/midcor) that corrects mass spectra for natural isotope abundance and peaks overlapping. This output is designed for the convenience of visual checking and manual edition, it can be edited or taken directly. It contains the mass isotopomer distributions measured for various metabolites of central pathways. The other infrmation necessary for simulations with Isodyn (path to the file with model parameters; path to output directory; max number of parameter files saved during optimization; path to the file where statistical data are saved) is indicated in the script above.
 
 ## Publications
 
