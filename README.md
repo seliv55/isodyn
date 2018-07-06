@@ -79,7 +79,7 @@ FNCKAS="0"              # a number of options forsing Isodyn to run in various m
 
 tst=yes                 # run Isodyn?
 
-while getopts ":\a:b:i:\o:s:c:\m:FNCKAS" opt; do
+while getopts ": a: b:i: o:s:c:\ m:FNCKAS" opt; do
 
   case $opt in
   
