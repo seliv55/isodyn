@@ -117,7 +117,7 @@ int main( int argc, char *argv[] ){
 //       Problem.chpar(28,noa,0.99,27);
 //    tsolve(35000.);  for(int i=0;i<numx;i++)  xinit1[i]=xx[i];
      kkin<<kin0;  kkin.close();         //save concentration dynamics to "kinxx"
-        int sys=system("gnuplot plkin.p");//gnuplot -e 'var=value' script.gp
+//        int sys=system("gnuplot plkin.p");//gnuplot -e 'var=value' script.gp
 //  xi0=horse.integrbs();                 //solve ODEs for isotopomers
   sol0=solve();//horse.integrbs();                 //solve ODEs for isotopomers
        Problem.shownx(nmet,xx);  // print concentrations on screen
@@ -142,7 +142,7 @@ int main( int argc, char *argv[] ){
                 int ifn0=250002; Problem.write(sol0,ifn0,0);
 //	Problem.cont(121,0.0001, 0.015);
 //chekxi(1,33);
-          int sys=system(gpl.c_str());//gnuplot -e 'var=value' script.gp
+//          int sys=system(gpl.c_str());//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
             
    if(argv[8][0]=='N') analis.grad(); 
