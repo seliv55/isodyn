@@ -5,7 +5,7 @@ inpar="/data/glc/1"
 oudir="/data/glc/"
 fstat="/data/glc/statfl"
 fcmpr="/data/glut/statfl"
-manfi=77
+manfi=2
 FNCKAS="0"
 tst=yes
 

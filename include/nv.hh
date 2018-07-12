@@ -1,11 +1,14 @@
 //---------------------------------------------------------------------------
 #ifndef NVH
 #define NVH
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <vector>
-#include <tuple>
+       #include <iostream>
+       #include <fstream>
+       #include <sstream>
+       #include <iomanip>
+       #include <vector>
+       #include <tuple>
+       #include <sys/stat.h>
+       #include <dirent.h>
 class Reapar{
    std::string name, *spar;
     int npar; double *par;
@@ -79,14 +82,16 @@ class Fit: public Parray{
       void ff(const double *y,double *dydx);
       int getparsize(){for(unsigned i=0;i<par.size();i++) std::cout<<par[i]<<" "; std::cout<<"\n"; return par.size();}
  
-    void setodir(std::string outd,std::string flm,std::string flc){ outdir=outd; flmain=flm; flcomp=flc;}
+    void setodir(std::string outd,std::string flm,std::string flc){  DIR *a=opendir(outd.c_str());
+        if(!a)  mkdir(outd.c_str(),0777);
+          outdir=outd; flmain=flm; flcomp=flc;}
          
     std::string* getodir(){return &outdir;}
     std::string* getflm(){return &flmain;}
     std::string* getflc(){return &flcomp;}
          
     int setnumofi()const{ for(int i=1;;i++) {std::stringstream fn;
-       fn<<outdir<<i;   std::ifstream checkfi(fn.str().c_str()); checkfi.close(); 
+       fn<<outdir<<'/'<<i;   std::ifstream checkfi(fn.str().c_str()); checkfi.close(); 
 	 if(!checkfi.good())  return (i);}    }
 
      void getListFit(int list[]) const {  

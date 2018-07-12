@@ -29,7 +29,7 @@ return sol;}
 void Fit::write (tuple<double,double,time_t> sol, int& ifn,bool flg) const {
          int i; stringstream fn;
             if(flg) ifn=setnumofi();  if((ifn>fnfin)&&(ifn<(fnfin+5))) throw(invalid_argument("limit number of iterations reached"));
-    fn<<outdir<<ifn; //sprintf(fn,"%i",ifn);
+    fn<<outdir<<'/'<<ifn; //sprintf(fn,"%i",ifn);
   ofstream fi(fn.str().c_str());
     for (i=0;i<nrea;i++) rea[i].write(fi,i); 
 	for (i=0;i<par.size();i++) fi << par[i]<<" "; fi << "-1"<<spar<<"\n";
@@ -48,7 +48,7 @@ void Parray::rnames(ifstream& fi){
         }
 
 void Fit::wstorefl (int numpar,const double** m,string name[]) {
-     stringstream finame; finame<<outdir<<"names"; ifstream fii(finame.str().c_str());
+     stringstream finame; finame<<outdir<<'/'<<"names"; ifstream fii(finame.str().c_str());
      rnames(fii);
         ofstream fi(flmain.c_str());
    fi << "Confidence_level: 0.99\n Reaction_id Lower_bound Upper_bound name scheme\n";
@@ -82,7 +82,7 @@ void Fit::readst( int* b){
 	ifstream fi;
  for (int iset=0;iset<i99;iset++) {
 	pmp[iset]=&mpar[iset][0]; pmf[iset]=&mfl[iset][0];
-	 stringstream fn; fn<<outdir<<(iset+1);
+	 stringstream fn; fn<<outdir<<'/'<<(iset+1);
           fi.open(fn.str().c_str());
 	for (i=0;i<nrea;i++) {fi>>aaa>>aaa>>aaa>>aaa>>mpar[iset][i]; getline(fi,aaa);}
 	getline(fi,aaa);
@@ -108,7 +108,7 @@ void Fit::stat(const int NP ){
         Vec_DP a(NP), conc(NP), *ac; Vec_INT b(NP),t(NP);
         int i,sys;
  for ( i=1;i<=NP;i++) {
-	  stringstream fn; fn<<outdir<<i; cout<<fn.str().c_str()<<endl;
+	  stringstream fn; fn<<outdir<<'/'<<i; cout<<fn.str().c_str()<<endl;
        tie(a[i-1],conc[i-1],t[i-1]) = read(fn.str().c_str());
 //       a[i-1] = read(t[i-1],conc[i-1],fn.str().c_str());
        b[i-1] = i;
@@ -134,11 +134,11 @@ if ((i%3)==0) cout<<endl;
 readst( &b[0]);
 int chr=NP;//i99;
  for (i=0;i<chr;i++) {
-	  stringstream fn; fn<<"mv "<<outdir<<b[i]<<" "<<outdir<<(i+1)<<"a";
+	  stringstream fn; fn<<"mv "<<outdir<<'/'<<b[i]<<" "<<outdir<<'/'<<(i+1)<<"a";
 		sys=system(fn.str().c_str());
 	}
  for (i=0;i<chr;i++) {
-	  stringstream fn; fn<<"mv "<<outdir<<(i+1)<<"a "<<outdir<<(i+1);
+	  stringstream fn; fn<<"mv "<<outdir<<'/'<<(i+1)<<"a "<<outdir<<'/'<<(i+1);
 		sys=system(fn.str().c_str());
 	}
 	cout<<"selected " <<i99<<" from "<<NP<<endl;
