@@ -2,7 +2,7 @@
 fiso=/data/SW620-Glucose 
 fcon=/data/xglc
 inpar="/data/glc/1"
-oudir="/data/glc/"
+oudir="/data/glc"
 fstat="/data/glc/statfl"
 fcmpr="/data/glut/statfl"
 manfi=2
