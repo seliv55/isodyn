@@ -12,6 +12,8 @@ using namespace std;
 void TK::setk( double *pv) {
      const double kdX5 = 0.055*pv[1],kdG3 = 0.0344*pv[2],kdR5 = 0.27*pv[3],
            kdF6 = 0.9*pv[4], diss = 5000, kefg = 29.7, kexr = 0.48;
+     static string fln[]={"p5s7", "s7p5", "f6p5", "p5f6", "f6s7", "s7f6", "p5g3i", "f6e4i", "s7p5i"};
+     flnames=fln;
            e0=0.0025*pv[0];		//e0tk
 		k0[1] = diss;	k[1]=k0[1]/kdX5;
 		k[2] = 5300.;	k0[2]=5300.;
@@ -138,6 +140,9 @@ fl[8] = flka(v0[6],v0[5],v0[4],v[5],v[4]);//-fl[0]+fl[1]-fl[4]+fl[5];	        //
 void TA::setk(double *pv) {
      const double kefe = 0.37, diss = 5000., kdEA = 0.032*pv[1], kdFA = 0.72*pv[2],
            kdGA = 0.07*pv[3];
+     static string fln[]={"f6s7a", "s7f6a", "f6g3a", "s7e4a"};
+     flnames=fln;
+           
 	   e0=0.0025*pv[0];	//e0ta
      k0[1] = diss; k[1]=k0[1]/kdFA;   k[2] = 5300.*pv[4];	k0[2]=5300.;
      k[3] = diss;  k0[3]=k[3]/kdGA;   k0[4] = diss;             k[4] = k0[4]/kdEA;
@@ -197,6 +202,8 @@ void TA::st2fl(double* const fl, double f6i,double g3i,double e4,double s7) {
 }
 void Aldolase::setk(double *pv) {
 e0=pv[0]; 
+     static string fln[]={"aldfl", "aldrev", "aldfli"};
+     flnames=fln;
 k[1]=pv[1]; 
 k[3] = 0.0014*k[1]; 
 k[2] = 0.0014*k[1]; 
