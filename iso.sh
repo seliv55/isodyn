@@ -3,7 +3,7 @@
 fiso="../midcor/SW620-Glucose" #13C labeling in Metabolights format
 fcon=xglc #concentrations
 inpar="glc/1" #set of parameters to start
-oudir="glc/"  #output directory
+oudir="glc"  #output directory
 fstat="glc/statfl"  #statistics on the all sets of parameters
 fcmpr="glc/statfl1" #statistics for matching conditions
 manfi=77 #number of files saved

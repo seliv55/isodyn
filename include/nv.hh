@@ -86,7 +86,7 @@ class Fit: public Parray{
     std::string* getflc(){return &flcomp;}
          
     int setnumofi()const{ for(int i=1;;i++) {std::stringstream fn;
-       fn<<outdir<<i;   std::ifstream checkfi(fn.str().c_str()); checkfi.close(); 
+       fn<<outdir<<'/'<<i;   std::ifstream checkfi(fn.str().c_str()); checkfi.close(); 
 	 if(!checkfi.good())  return (i);}    }
 
      void getListFit(int list[]) const {  
