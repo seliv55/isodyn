@@ -57,14 +57,13 @@ void Fit::wstorefl (int numpar,const double** m,string fid[]) {
         ofstream fi(flmain.c_str());
    fi << "Confidence_level: 0.99\n Reaction_id Lower_bound Upper_bound\n";
 //	        for (int j=0;j<parsets;j++) fi<<" "<<j; fi <<endl;
-	        for (int i=0;i<numpar;i++) {
-			fi<<fid[i]<<" ";
-	double mn=m[0][i], mx=m[0][i]; int imn=0, imx=0;
-	        for (int j=0;j<i99;j++) {
-			if(m[j][i]>mx) {mx=m[j][i]; imx=j;}
-			else if((m[j][i]<mn)&&(m[j][i]>1e-13)) {mn=m[j][i]; imn=j;}
- }   fi  << mn <<" "<< mx<<"\n";
-                }
+	 for (int i=0;i<numpar;i++) {	fi<<fid[i]<<" ";
+	   double mn=m[0][i], mx=m[0][i]; int imn=0, imx=0;
+	   for (int j=0;j<i99;j++) {
+	    if(m[j][i]>mx) {mx=m[j][i]; imx=j;}
+	    else if((m[j][i]<mn)&&(m[j][i]>1e-13)) {mn=m[j][i]; imn=j;}
+                                   }
+           fi  << mn <<" "<< mx<<"\n"; }
    fi<<"chi "<<m[0][numpar] <<"\n";
    fi<<"time "<<m[0][numpar+1] <<"\n";
 
@@ -80,12 +79,12 @@ void Fit::readst( int* b){
 	pmp[iset]=&mpar[iset][0]; pmf[iset]=&mfl[iset][0];
 	 stringstream fn; fn<<outdir<<(iset+1);
           fi.open(fn.str().c_str());
-	for (i=0;i<(nrea+nmet+3);i++) {getline(fi,aaa);}
-	getline(fi,aaa); cout<<aaa<<'\n';
+	for (;;) {getline(fi,aaa); if(aaa.find("C= ")+1) break;}
+	
         for (i=0;i<nflx-2;i++) fi>>aaa>>fid[i]>>mfl[iset][i];
 		fi >> mfl[iset][nflx]>>mfl[iset][nflx+1]>>mfl[iset][nflx+2];
 	fi.close();
- } cout<<fid[0]<<endl;
+ }
          wstorefl(nflx-2, pmf,fid);
 }
 void Fit::stat(const int NP ){ //reorders parameters files ascending with respect to chi square
@@ -101,7 +100,7 @@ void Fit::stat(const int NP ){ //reorders parameters files ascending with respec
         ac=&xi;
 //        ac=&conc;
         NR::sort2a(*ac,b);
-        cout << endl << "After sorting, Parameter file (xi2) are:" << '\n';
+        cout << endl << "After sorting by xi2, Parameter files are:" << '\n';
 	cout.precision(4);
 	for (i=0;i<NP;i++) {
 		double df=(xi[i]-xi[0]);
