@@ -69,7 +69,7 @@ class Fit: public Parray{
       void readst( int* );
       void setfnfin(int ia){fnfin=ia;}
       void wstorefl (int numpar, const double** m,std::string n[]);
-      void write (std::tuple<double,double,time_t> sol, int& ifn,bool flg=true) const ;
+      void write (std::tuple<double,double,time_t> sol, int& ifn,bool flg=true) ;
       void perturb(const double f1);
       void cont(const int,const  double,const double);
       void fitc(double dc,double dm,int iin,int iout);

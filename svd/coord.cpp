@@ -68,9 +68,8 @@ double Analis::desK(double factor,int ip){
  return chimin;}
  
  void Analis::rconfint(ifstream& fi, double ami[],double ama[]){
-  string aaa; getline(fi,aaa);
-   for(int i=0;i<nrea;i++) {fi>>aaa>>aaa>>aaa>>ami[i]>>ama[i]; getline(fi,aaa);
-//    cout<<i<<" ama="<<ami[i]<<" ama="<<ama[i]<<endl;
+  string aaa; getline(fi,aaa); getline(fi,aaa);
+   for(int i=0;i<nrea;i++) {fi>>aaa>>ami[i]>>ama[i];
     }
    double normf=ami[0];  if(normf>1e-9)
    for(int i=1;i<nrea;i++) {ami[i] /= normf; ama[i] /= normf;}

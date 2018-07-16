@@ -93,7 +93,7 @@ int main( int argc, char *argv[] ){
      Problem.read(sfpar);    //read parameters
      Problem.setodir(sout,sflmain,sflcomp); //set output directory
 
-      if(*Problem.getodir()=="glut/") ntr=1; 
+      if(*Problem.getodir()=="glut") ntr=1; 
       ifn=Problem.setnumofi(); //number of parameter files
 //order parameter files by increasing of χ2:
   if(argv[8][0]=='S')  { cout<<"statistics, "<<argv[4]<<endl; Problem.stat(ifn-1); return 0; }

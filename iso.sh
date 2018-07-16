@@ -5,8 +5,8 @@ fcon=xglc #concentrations
 inpar="glc/1" #set of parameters to start
 oudir="glc"  #output directory
 fstat="glc/statfl"  #statistics on the all sets of parameters
-fcmpr="glc/statfl" #statistics for matching conditions
-manfi=2 #number of files saved
+fcmpr="glc/statfl1" #statistics for matching conditions
+manfi=77 #number of files saved
 FNCKAS="0" #-Fit with Simulated annealing, find -Number of independent parameters,
 tst=yes
 
