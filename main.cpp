@@ -151,7 +151,9 @@ int main( int argc, char *argv[] ){
    Problem.setfnfin(ifn+Nfi);
   if(argv[8][0]=='F') analis.coord(0.03,1.07);
     {
-    if(argv[8][0]=='C') try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){cout<<Nfi<<" files saved!\n"; return 0;}
+    if(argv[8][0]=='C') try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){
+      cout<<Nfi<<" files saved! Statistics: \n";
+    ifn=Problem.setnumofi(); Problem.stat(ifn-1); return 0;}
                 }
  
 //               analis.sensitiv(tmax);
