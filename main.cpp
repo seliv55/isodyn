@@ -145,23 +145,32 @@ int main( int argc, char *argv[] ){
 //          int sys=system(gpl.c_str());//gnuplot -e 'var=value' script.gp
 		srand(time(NULL));
    Problem.setfnfin(ifn+Nfi);
-            switch(argv[8][0]){
-   case 'N':
-           analis.grad();  break;
-   case 'K':
-           analis.desK(1.05,rtk); break;
-   case 'A':
-           analis.desK(1.05,rta); break;
-   case 'F':
-           analis.coord(0.03,1.07); break;
-   case 'C':
-           try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&) {
-        cout<<Nfi<<" files saved!\n statistics:\n"; ifn=Problem.setnumofi();
-        Problem.stat(ifn-1); } break;
-   default: 
-        cout << "single simulation finished\n" ; 
-            }
-                
+//<<<<<<< HEAD
+//            switch(argv[8][0]){
+//   case 'N':
+//           analis.grad();  break;
+//   case 'K':
+//           analis.desK(1.05,rtk); break;
+//   case 'A':
+//           analis.desK(1.05,rta); break;
+//   case 'F':
+//           analis.coord(0.03,1.07); break;
+//   case 'C':
+//           try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&) {
+//        cout<<Nfi<<" files saved!\n statistics:\n"; ifn=Problem.setnumofi();
+//        Problem.stat(ifn-1); } break;
+//   default: 
+//        cout << "single simulation finished\n" ; 
+//            }
+//                
+//=======
+  if(argv[8][0]=='F') analis.coord(0.03,1.07);
+    {
+    if(argv[8][0]=='C') try{ analis.confidence(1.15,1.07);} catch(const invalid_argument&){
+      cout<<Nfi<<" files saved! Statistics: \n";
+    ifn=Problem.setnumofi(); Problem.stat(ifn-1); return 0;}
+                }
+
  
 //               analis.sensitiv(tmax);
 //               analis.swarm(tmax,111);
