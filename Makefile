@@ -1,6 +1,6 @@
-CFLG = -c -O3 -Iinclude -IintegrT
+CFLG = -c -fPIC -O3 -Iinclude -IintegrT
 
-LFLG = -O3 -lgfortran
+LFLG = -fPIC -O3 -lgfortran
 
 SRC = main.cpp
 

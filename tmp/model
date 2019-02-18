@@ -24,7 +24,7 @@ Metab 2  ngae  "gae"
 Metab 3  ndhe  "dhe"
 0 0 n_atp "atp"
 0 0 n_nad "nad"
-intern_var_end 
+intern_var_end
 Metab_data 6  ngl "Gluc"
 Metab_data 3  nlac "Lac"
 Metab_data 5  nglu  "Glutamate2-5"

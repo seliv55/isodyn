@@ -7,10 +7,11 @@
 #include "solvers.h"
 #include "analis.h"
 using namespace std;
+// reactions
 const int hk=0, pfk=hk+1, fbpase=pfk+1, t3pep=fbpase+1, pept3=t3pep+1, pk=pept3+1, pyrlac=pk+1, lacpyr=pyrlac+1, pyrdcm=lacpyr+1, pyrdmc=pyrdcm+1, pdh=pyrdmc+1, citakg=pdh+1, akgfum=citakg+1, fumal=akgfum+1, malfum=fumal+1, maloa=malfum+1, oamal=maloa+1, pc=oamal+1, malicm=pc+1, malicc=malicm+1, ppp=malicc+1, oacd=ppp+1, mald=oacd+1, citdmc=mald+1, citdcm=citdmc+1, akgdmc=citdcm+1, akgdcm=akgdmc+1, coaout=akgdcm+1, citakg1=coaout+1, akgcit1=citakg1+1, gln_in=akgcit1+1, gln_out=gln_in+1, gluin=gln_out+1, gluout=gluin+1, t3ser=gluout+1, serpyr=t3ser+1, asp_o=serpyr+1, asp_i=asp_o+1, ala_o=asp_i+1, ala_i=ala_o+1, r5_o=ala_i+1, r5_i=r5_o+1, glycogin=r5_i+1, glycogout=glycogin+1, cystin=glycogout+1, proin=cystin+1, proout=proin+1, kgin=proout+1, coain=kgin+1, gln_pr=coain+1, ser_pr=gln_pr+1, asp_pr=ser_pr+1, ala_pr=asp_pr+1, pro_pr=ala_pr+1, trpala=pro_pr+1, mthf=trpala+1, thf=mthf+1, sergly=thf+1, glyser=sergly+1, cs0=glyser+1, D=cs0+1, atpase=D+1, resp=atpase+1, rdt=resp+1, rald=rdt+1, rta=rald+1, rtk=rta+1, nrea=rtk+1;
-
+// additional fluxes
 const int aldfl=rald, aldrev=aldfl+1, aldfli=aldrev+1, aldi1=aldfli+1, tafl=aldi1+1, s7f6a=tafl+1, f6g3a=s7f6a+1, s7e4a=f6g3a+1, tkfl=s7e4a+1, s7p5=tkfl+1, f6p5=s7p5+1, p5f6=f6p5+1, f6s7=p5f6+1, s7f6=f6s7+1, p5g3i=s7f6+1, f6e4i=p5g3i+1, s7p5i=f6e4i+1, nflx=s7p5i+1;
-
+// species
 const int nfbp=0, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, ncoa=npyrm+1, ncoac=ncoa+1, nagl=ncoac+1, noa=nagl+1, noac=noa+1, ncit=noac+1, ncitc=ncit+1, nakg=ncitc+1, nakgc=nakg+1, nfum=nakgc+1, nmal=nfum+1, ne4=nmal+1, ns7=ne4+1, nh6=ns7+1, np5=nh6+1, ncthf=np5+1, ngae=ncthf+1, ndhe=ngae+1, n_atp=ndhe+1, n_nad=n_atp+1, ngl=n_nad+1, nlac=ngl+1, nglu=nlac+1, ngln=nglu+1, nala=ngln+1, nasp=nala+1, nser=nasp+1, ngly=nser+1, npro=ngly+1, nrna=npro+1, nglycog=nrna+1, nmet=nglycog+1;
 
 const int numx=ngl;

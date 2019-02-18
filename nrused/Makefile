@@ -1,4 +1,4 @@
-CFLAGS = -static -O3 -c -I../include
+CFLAGS = -c -fPIC -std=c++11  -static -O3 -I../include
 
 SRC = odeint.cpp pythag.cpp pzextr.cpp ludcmp.cpp lubksb.cpp rkqs.cpp rkck.cpp stifbs.cpp stiff.cpp simprsparse.cpp bsstep.cpp mmid.cpp sort2a.cpp sprsin.cpp sprsax.cpp sprstx.cpp asolve.cpp atimes.cpp snrm.cpp linbcg.cpp gaussj.cpp svdcmp.cpp svbksb.cpp \
 hqr.cpp elmhes.cpp balanc.cpp \
