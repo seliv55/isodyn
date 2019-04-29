@@ -41,7 +41,8 @@ double Ldistr::integrbs(){
         dxsav = tm/((double)(KMAX-1));
         for(int k=0;k<10;k++){ tout=t+tm;
     NR::odeint(yy,t,tout,eps,h1,hmin,nok,nbad,derivsl,NR::rkqs);
-  massfr();   show(kinet,tout);  showcon(kicon,tout);
+  massfr();   show(kinet,tout);  showcon(kicon,tout); 
+    t=tout;
     } sklad(i);
 xi += xits(i);
 xi += xicon(i); 
@@ -50,7 +51,7 @@ xi += xicon(i);
 wrikin(foc1,ntime);
 wricon(foc1,ntime);
   for(int j=0;j<nflx;j++) { flxkin<<Problem.fid[j]<<" "; for(int i=0;i<ntime;i++) flxkin<<ppotok[i][j]<<" "; flxkin<<'\n';}
-foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str(); kinc=kicon.str();
+foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str(); kinc=kicon.str();// cout<<kin<<endl;
         delete yp_p;
         delete xp_p;
         delete[] potok;
