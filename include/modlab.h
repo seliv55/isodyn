@@ -76,12 +76,18 @@ void setrav(int nt1,int nt2){
 
 void rex(std::ifstream& ifi, int nt){// reads experimental data
       std::string aaa; double sdd;
-      ifi>>aaa; std::cout<<" rex "<<aaa<<" ";
-    for(int i=0;i<=mi;i++){ ifi>>exper[nt][i].mean; std::cout<<exper[nt][i].mean<<" ";} std::cout<<'\n';
+      ifi>>aaa;
+/*      std::cout<<" rex "<<aaa<<" ";*/
+    for(int i=0;i<=mi;i++){ ifi>>exper[nt][i].mean;
+     std::cout<<exper[nt][i].mean<<" ";
+     }  std::cout<<'\n';
       getline(ifi,aaa);
-      ifi>>aaa; std::cout<<" rex "<<aaa<<" ";
-       for(int i=0;i<=mi;i++){ifi>>sdd; if(sdd<0.01)sdd=0.01; exper[nt][i].sd=sdd; std::cout<<exper[nt][i].sd<<" ";}
-       getline(ifi,aaa); std::cout<<'\n';
+      ifi>>aaa;
+/*      std::cout<<"\n rex "<<aaa<<" ";*/
+       for(int i=0;i<=mi;i++){ifi>>sdd; if(sdd<0.01)sdd=0.01; exper[nt][i].sd=sdd;
+/*        std::cout<<exper[nt][i].sd<<" ";*/
+        } //std::cout<<'\n';
+       getline(ifi,aaa);
 }
 
 double percent(const double *iso,int len){
@@ -446,8 +452,8 @@ class ketose:public Metab {
         };
         
 class Ldistr {
-	int ntime,lmet,lmetb, lmetk, itrac,markis,Nn;
-static Metab fbp, t3, pep, pyr, pyrm, coa, coac, agl, oa, oac, cit, citc, akg, akgc, fum, mal, e4, gl, lac, glu, gln, ala, asp, ser, gly, pro, rna, glycog, cthf, gae, dhe;
+	int ntime,lmet, lmetk, itrac,markis,Nn;
+static Metab fbp, t3, pep, pyr, pyrm, coa, coac, agl, oa, oac, cit, citc, akg, akgc, suc, mal, e4, cthf, gae, dhe, gl, lac, glu, gln, ala, asp, ser, gly, pro, rna, glycog;
 static ketose s7, h6, p5;
   double lacout,coaefl,tca,fpdh,marfrac,dsum;
   std::vector<Iso> result;
@@ -485,14 +491,14 @@ static ketose s7, h6, p5;
    void sklad(int itime);
    int wrim0ex(std::string );
    int wriconex(std::string fn);
-      static Metab *met[];
-      static ketose *metk[];
+       Metab *met[33];
+       ketose *metk[5];
       std::vector<Metab*> expcon, expm0;
       std::vector<ketose*> kexpm0;
        void setmet();
        void setcon();
     void setfige();
-    std::string read_con(std::ifstream& fi, std::string& arg1,int& nfi);
+    std::string read_con(std::ifstream& fi);
 //       double setLacInit(double fact){return lac.setInCon(fact);}
        void read (char *finame, int ndat);
        void flback();

@@ -18,6 +18,7 @@ tuple<double,double,time_t> Fit::read(string fn){
  static int flg=0; tuple<double,double,time_t> sol(1.e12,0.,0);
   if(!fi.good()) {cout<<" bad file! ";return sol;}
     for (i=0;i<nrea;i++) rea[i].read(fi,flg); //cout<<"Nreact="<<nrea<<"; last="<<rea[nrea-1].v()<<'\n';
+        par.clear();
 	for(i=0;;i++) {fi>>ip; if(ip<0) break; par.push_back(ip);} getline(fi,spar);
 	for (i=0;i<nmet;i++) {fi>>aaa>>namex[i]>>xx[i];} //cout<<nmet<<" "<<namex[nmet-1]<<" "<<xx[nmet-1]<<endl;
 		fi >>aaa>> get<0>(sol)>>aaa >> get<2>(sol) >>aaa>> get<1>(sol);// cout<<aaa<<get<1>(sol)<<endl;
@@ -27,12 +28,14 @@ return sol;}
 
 void Fit::write (tuple<double,double,time_t> sol, int& ifn,bool flg)  {
          int i; stringstream fn;
-            if(flg) ifn=setnumofi();  if((ifn>fnfin)&&(ifn<(fnfin+5))) throw(invalid_argument("limit number of iterations reached"));
+            if(flg) ifn=setnumofi();
+            if((ifn>fnfin)&&(ifn<(fnfin+5))) throw(invalid_argument("limit number of iterations reached"));
     fn<<outdir<<'/'<<ifn; //sprintf(fn,"%i",ifn);
   ofstream fi(fn.str().c_str());
     for (i=0;i<nrea;i++) rea[i].write(fi,i); 
-	for (i=0;i<par.size();i++) fi << par[i]<<" "; fi << "-1"<<spar<<"\n";
-  for (i=0;i<nmet;i++) fi<<i<<") "<<setw(9)<<left<<namex[i]<<" "<<xx[i]<<"\n";
+    for (i=0;i<par.size();i++) fi << par[i]<<" "; fi << "-1"<<spar<<"\n";
+    for(int i=0;i<nmet;i++) xx[i]=xinit1[i];                             //take initial values
+ for (i=0;i<nmet;i++) fi<<i<<") "<<setw(9)<<left<<namex[i]<<" "<<xx[i]<<"\n";
 		fi<<"χ= " << get<0>(sol) <<"\n";
 		fi<<"t= " << get<2>(sol) <<"\n";
 		fi<<"C= " << get<1>(sol) <<endl;
@@ -79,7 +82,8 @@ void Fit::readst( int* b){
           fi.open(fn.str().c_str());
 	for (;;) {getline(fi,aaa); if(aaa.find("C= ")+1) break;}
 	
-        for (i=0;i<nflx-2;i++) fi>>aaa>>fid[i]>>mfl[iset][i];
+        for (i=0;i<nflx-2;i++) {fi>>aaa>>fid[i]>>mfl[iset][i];}
+                     if(mfl[iset][50]>0) cout<<" set="<<iset<<" fl="<<mfl[iset][50]<<'\n';
 		fi >> mfl[iset][nflx]>>mfl[iset][nflx+1]>>mfl[iset][nflx+2];
 	fi.close();
  }
@@ -91,7 +95,6 @@ void Fit::stat(const int NP ){ //reorders parameters files ascending with respec
  for ( i=1;i<=NP;i++) {
 	  stringstream fn; fn<<outdir<<'/'<<i; 
        tie(xi[i-1],conc[i-1],t[i-1]) = read(fn.str().c_str());
-       cout<<fn.str().c_str()<<" "<<xi[i-1]<<" "<<conc[i-1]<<" "<<t[i-1]<<'\n';
 //       xi[i-1] = read(t[i-1],conc[i-1],fn.str().c_str());
        b[i-1] = i;
  }

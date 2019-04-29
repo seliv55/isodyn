@@ -40,7 +40,7 @@ const int trac=0, lab=trac+1, abund=lab+1, injec=abund+1, etime=injec+1, emet=et
 
 int Ldistr::sexm0(string nm){ int ind(-1),jj(0);
       for(int i=0;i<lmet;i++)  if(nm.find(met[i]->getdescr())+1){
-       cout<<"-------------\n"<<"sexm0: "<<met[i]->getdescr()<<" i="<<i<<'\n';
+//       cout<<"-------------\n"<<"sexm0: "<<met[i]->getdescr()<<" i="<<i<<'\n';
 //       to form expm0:
        if(vnn.size()==0) {expm0.push_back(met[i]); vnn.push_back(i); ind=0;}
        else {
@@ -52,36 +52,38 @@ return ind;}
 
 void Ldistr::rmid(ifstream& ifi){ string aaa="",nm="";
  int eind(0),niso,lex(0); double ddd;
- while (getline(ifi, aaa,' ')){
-   if (aaa.find("time")+1)  for(int i=0;;i++){ // set incubation times
+ ifi>>aaa; for(int i=0;;i++){ // set incubation times
       ifi>>ddd;  if(ddd<0) {ntime=tex.size();  cout<<"ntime="<<ntime<<'\n'; break;}
-      tex.push_back(ddd*60.);  cout<<tex[i]<<" ";}
-   else if (aaa.find("name")+1) {// find metabolite corresponding to data
+      tex.push_back(ddd*60);  cout<<tex[i]<<" ";}
+      
+ while (getline(ifi, aaa,' ')){
+   if (aaa.find("name")+1) {// find metabolite corresponding to data
           getline(ifi,nm); stringstream ss(nm); string nma[5]; int i(0); 
           while (getline(ss,nma[i],',')) i++; int beg=stoi(nma[1]), mi=stoi(nma[2])-beg+1;
            eind=sexm0(nma[0]);
            if(eind>=0){
-           Exper *ee=new Exper(mi,beg,nma[0]);
+           Exper *ee=new Exper(mi,beg,nma[0]); 
            expm0[eind]->exper.push_back(*ee); lex=expm0[eind]->exper.size(); delete ee;
-           cout<< nma[0]<<" beg="<<beg<<" mi="<<mi <<" met#"<<eind<<" frag#"<<lex<<'\n';
+            cout<<nma[0]<<" "<<expm0[eind]->getdescr()<<'\n';
           ifi>>aaa;
-          if (aaa.find("t=")+1){ int et;
-          ifi>>ddd; cout<<"time: "<<ddd<<'\n'; //incubation time
+          while (aaa.find("t=")+1){ int et;
+          ifi>>ddd; //incubation time
           for(int i=0;i<ntime;i++)if(!((int)(ddd*60)-(int)tex[i])) {
             et=i; break;} //corresponding tex index
-          expm0[eind]->exper[lex-1].rex(ifi,et);} //set labeling measured for given incubation time
+          expm0[eind]->exper[lex-1].rex(ifi,et);
+          ifi>>aaa;} //set labeling measured for given incubation time
            
            }
 
            }
    else if(aaa.find("tracer")+1){ifi>>nm>>markis>>marfrac;
-          cout<<"*** tracer "<< nm<<" iso:"<<markis<<" fract:"<<marfrac<<'\n';
+//          cout<<"*** tracer "<< nm<<" iso:"<<markis<<" fract:"<<marfrac<<'\n';
           for(int i=0;i<lmet;i++)
            if(nm.find(met[i]->getdescr())+1) {itrac=i; break;}
           }
    }
-        cout<<"\tvnn: "; for(int i=0;i<vnn.size();i++) cout<<vnn[i] <<' ';cout<<'\n';
-   shexper(ntime); cout<<"****++****"<<endl;
+//   cout<<"\tvnn: ";for(int i=0;i<vnn.size();i++) cout<<vnn[i] <<' ';cout<<'\n';
+//   shexper(ntime); cout<<"****++****"<<endl;
 }
 
 void Ldistr::defcol(int nucol[],vector<string> vstr){

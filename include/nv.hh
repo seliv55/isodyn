@@ -47,13 +47,14 @@ protected:
 public:
 // static std::string namef[], namex[];
  static std::string fid[],fname[],fschem[], namex[];
-	static Reapar rea[];
-       double sumx();
-       void result() const;
+      static Reapar rea[];
+      double sumx();
+        void result() const;
 	void storeVms(int len,double a[]){for(int i=0;i<len;i++) a[i]=rea[i].v();};
 	void restoreVm(int len,double a[]) {for(int i=0;i<len;i++) rea[i].setVm(a[i]);}
-	 int* getpar(){return &par[0];}
-      bool belong(int ip) const;
+      double sdh(double);
+	int* getpar(){return &par[0];}
+        bool belong(int ip) const;
         void init();
         void fin(double y[]);
         void rnames(std::ifstream& fi);

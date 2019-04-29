@@ -36,7 +36,122 @@ inline void matdisp(Mat_I_DP &ai){
           }
 }
 inline void diff(double da,double dd[],double st[],int nex){for(int i=0;i<nex;i++) {dd[i] -= st[i]; dd[i]  /= da;}}
+
+
+void Analis::sensitivity(double *grd,bool *gsign,vector<int>& par1,const double fac,vector<int>& sens){
+  int ngrd=par1.size(); tuple<double,double,time_t> sol; double x01,pnew;
+   cout<<"\nSensitivity: x00="<<x00<<'\n'; trs=1.05;
+   cout<<"par1: "; for(int i=0;i<par1.size();i++) cout<<par1[i]<<" "; cout<<'\n';
+  for(int i=0;i<ngrd;i++)
+   if(nv1[par1[i]]>1e-7){
+             pnew=nv1[par1[i]]*fac; cout<<par1[i];
+             Problem.rea[par1[i]].setVm(pnew);
+       try{ sol =solve();
+            x01 = get<0>(sol);
+            grd[i]=(x01-x00)/(fac-1.);
+//            grd[i]=x01*suxx/x00/xmin;
+         if(grd[i]<=0.) {
+              gsign[i]=false;
+            }
+         else { pnew=nv1[par1[i]]/fac; Problem.rea[par1[i]].setVm(pnew);
+                sol =solve();
+                gsign[i]=true;
+                x01 = get<0>(sol);
+            grd[i]=(x01-x00)/(fac-1.);
+//                grd[i]=x01*suxx/x00/xmin;
+            } string saa;
+            if(grd[i]<(-trs)) {saa="\t-"; sens.push_back(par1[i]); }
+            else if(grd[i]>trs) {saa="\t+"; sens.push_back(par1[i]); }
+            else if((grd[i]<0)&&(suxx<xmin)&&(tf<tmin)) {saa="\t*"; setx00(x01,tf,suxx); nv1[par1[i]]=pnew;Problem.write(sol,ifn); }
+            else saa="\t";
+          cout<<saa<<"xi="<<x01<<" sux="<<suxx<<" t="<<tf<<saa<<"GRAD="<<grd[i]<<"\t"<<gsign[i]<< "\tpnew="<<pnew<<'\n';
+       }catch( char const* str ){cout << "Analis::sensitivity: "<< str <<endl; Problem.restoreVm(nrea,nv2);
+                 for(int i=0;i<numx;i++) xinit1[i]=xinit2[i]; }
+          Problem.rea[par1[i]].setVm(nv1[par1[i]]);
+  }
+  else grd[i]=0.;
+}
+double Analis::checkgroup(bool* gsign, double* grd,int imi,vector<int>& vpar,vector<int>& vind,double ff){
+        tuple<double,double,time_t> sol; double n_v,xi;
+           cout<<"\n check group, grd_max=:"<<grd[imi]<<'\n';
+    for(int i=0;i<vpar.size();i++) { double fac=(ff-1)*grd[vind[i]]/grd[imi] +1.;
+       n_v=(gsign[vind[i]]) ? nv1[vpar[i]]/fac : nv1[vpar[i]]*fac;
+       Problem.rea[vpar[i]].setVm(n_v);
+    try{ 
+      sol =solve(); xi=get<0>(sol);
+      cout<<"  par["<<vpar[i]<<"]="<<nv1[vpar[i]]<<" - "<<n_v<<"\txi="<<xi<<'\n';
+      if((xi/x00<0.999)&&(suxx/xmin<1.1)&&(tf/tmin<1.3)) {Problem.write(sol,ifn); nv1[vpar[i]]=n_v; setx00(xi,tf,suxx);}
+       else {Problem.rea[vpar[i]].setVm(nv1[vpar[i]]);}
+    }catch( char const* str ){cout << "Analis::checkgroup: "<< str <<endl; Problem.restoreVm(nrea,nv2);
+                 for(int i=0;i<numx;i++) xinit1[i]=xinit2[i];}
+  }  
+ return x00;
+}
+int Analis::select_pars(double *grd,vector<int>&par1,vector<int>& vpar,vector<int>& vind){
+  int imi(-1),ngrd=par1.size(),nvpar(0); double gmin(1.),thr(-2.5); cout<<"Selected parameters: ";
+  for(int i=0;i<ngrd;i++) if(grd[i]<thr) {
+     vpar.push_back(par1[i]); vind.push_back(i); cout<<par1[i]<<" ";
+     if(grd[i]<gmin) {gmin=grd[i]; imi=i;}
+    }
+  if((nvpar=vpar.size())>0){cout<<'\n'<<"par[imin]="<<par1[imi]<<" grd="<<gmin<<" v="<<Problem.rea[par1[imi]].v()<<'\n';
+  for(int i=0;i<nvpar;i++) { cout<<'\n'<<vpar[i]<<" "<<grd[vind[i]];}
+    }
+return imi;}
+
+void Analis::grdesc(const double lambda) { 
+  cout<<"Gradient descent\n";
+  int nex=horse.getmicon();  Problem.storeVms(nrea,nv1);
+  vector<int> par1=Problem.getFitPar(); 
+//  tuple<double,double,time_t> sol=solve(); x00 = get<0>(sol); xmin=suxx; tmin=tf;
+//  steps of reduction of sensitive parameters:
+  for(;;){  int ngrd=par1.size(); double grd[ngrd]; bool gsign[ngrd];
+    vector<int> vpar,vind,sens;
+//  check sensitivity:
+    sensitivity(grd,gsign,par1,lambda,sens);
+//  select pars of max sensitivity
+    int imi=select_pars(grd,par1,vpar,vind);
+   if(imi<0) return;
+   par1=sens;
+//  checking
+    chimin=x00;
+    checkgroup(gsign, grd, imi,vpar,vind,lambda);
+   if(x00>(chimin-0.5)) return;
+    
+   for(;;){ chimin=x00;
+    checkgroup(gsign, grd, imi,vpar,vind,lambda);
+   if(x00>(chimin-1.5)) break;}
+  }
+}
  
+double Analis::checkmax(bool bsig,double& oldv,const double& f1,int& parm){
+ cout<<"\tcheck max:"; tuple<double,double,time_t> sol;
+  double xi, newv1;
+//  initial check of f1
+     newv1= ((bsig) ? oldv/f1 : oldv*f1);
+     Problem.rea[parm].setVm(newv1); 
+     try{ sol =solve(); xi=get<0>(sol);  cout<<" xi="<<xi<<'\n';
+     if((xi/x00<0.999)&&(suxx/xmin<1.1)&&(tf/tmin<1.3)) { Problem.write(sol,ifn); oldv=newv1; x00=xi;}
+         else {Problem.rea[parm].setVm(oldv); }
+     }catch( char const* str ){cout << "Analis::checkmax: "<< str <<endl; Problem.restoreVm(nrea,nv2);
+                 for(int i=0;i<numx;i++) xinit1[i]=xinit2[i];}
+ return x00;}
+
+//double Analis::grdes(bool* gsign, double* grd,int imi,vector<int>& vpar,vector<int>& vind,double ff,double* oval){
+//        tuple<double,double,time_t> sol; double n_v,xi;
+//           cout<<" check grad:"<<'\n'; Problem.storeVms(nrea,nv1);
+//    for(int i=0;i<vpar.size();i++) { double fac=(ff-1)*grd[vind[i]]/grd[imi] +1.;
+//       n_v=(gsign[vind[i]]) ? oval[vind[i]]/fac : oval[vind[i]]*fac;
+//       Problem.rea[vpar[i]].setVm(n_v);
+//  }  
+//    try{ 
+//      sol =solve(); xi=get<0>(sol);
+//    }catch( char const* str ){cout << "Analis::grdes: "<< str <<endl; Problem.restoreVm(nrea,nv2);
+//                 for(int i=0;i<numx;i++) xinit1[i]=xinit2[i];}
+//         if((xi/x00<0.999)&&(suxx/xmin<1.1)&&(tf/tmin<1.3)) {Problem.write(sol,ifn); x00=xi;}
+//       else {Problem.restoreVm(nrea,nv1);}
+// return x00;
+//}
+
 void Analis::hessian(vector<int> par1,int ndim,int np,int nex,double xi0,double st[], Mat_DP& aa, Mat_DP& dex,Vec_DP& b) {
      double fact(1.03),xi1,a,da;
      int i,j,k,l,nex1;

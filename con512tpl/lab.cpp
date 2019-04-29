@@ -59,11 +59,11 @@ int Ldistr::wriconex(string fn) {
 int Ldistr::wrim0ex(string fn) {
 //t=1;  lac=t+1; lacsd=lac+1; glu=lacsd+1; glusd=glu+1; ala=glusd+1; alasd=ala=+1; gly=alasd+1; glysd=gly+1; ser=glysd+1; sersd=ser+1; pro=sersd+1; prosd=pro+1; cit=prosd+1; citsd=cit+1; agl=citsd+1; aglsd=agl+1; asp=aglsd+1; aspsd=asp+1; fum=aspsd+1; fumsd=fum+1; mal=fumsd+1; malsd=mal+1; coa=malsd+1; coasd=coa+1;
   data *b; ofstream fo(fn); int llen=expm0.size();
-fo<<"time "; for(int i=0;i<llen;i++) fo<<expm0[i]->getdescr()<<" sd "; fo<<endl;
-   for(int its=0;its<ntime;its++) {  fo<<tex[its];
+fo<<"time "; for(int i=0;i<llen;i++) fo<<expm0[i]->getdescr()<<" sd "; fo<<'\n';
+   for(int its=0;its<ntime;its++) {  fo<<tex[its]; cout<<"time="<<tex[its];
        for(int i=0;i<llen;i++) for(int j=0;j<expm0[i]->exper.size();j++) {
-          b=expm0[i]->exper[j].getexper(its);   fo<<" "<<b[0].mean<<" "<<b[0].sd; }
-      fo<<"\n";         }
+          b=expm0[i]->exper[j].getexper(its);   fo<<" "<<b[0].mean<<" "<<b[0].sd;  cout<<" "<<b[0].mean<<" "<<b[0].sd; }
+      fo<<'\n'; cout<<'\n';         }
 return llen;}
 
 void Ldistr::show(ostringstream& fo,double xfin) { fo<<setw(5)<<xfin;
@@ -76,14 +76,14 @@ for(int i=0;i<expcon.size();i++) expcon[i]-> showcon(fo); fo<<'\n';}
 void Ldistr::showdescr(ostringstream& fo, vector<Metab*> em0con) { fo<<"time ";
 for(int i=0;i<em0con.size();i++) fo<<em0con[i]-> getdescr()<<" "; fo<<'\n';}
 
-double Ldistr::consum() { double sum(0.), sumex(0.); 
+double Ldistr::consum() { double sum(0.), sumex(0.), sumx(0.); 
 // for(int i=0;i<=lmet;i++) { int j;
 //   for(j=0;j<externcon.size();j++) if(met[i]->getdescr()==externcon[j]->getdescr()) {
 //                                  externcon.erase(externcon.begin()+j); j=-1; break;}
 //     if(j==externcon.size()) sum += met[i]->sumt(); }
- for(int i=0;i<lmet;i++) {sum += met[i]->sumt();}
-  for(int j=0;j<expcon.size();j++) sumex += expcon[j]->sumt(); 
- for(int i=0;i<lmetk;i++) {sum += metk[i]->sumt();}
+ for(int i=0;i<lmet;i++) {sum += met[i]->sumt(); sumx+=xx[i];}
+ for(int i=0;i<lmetk;i++) sum += metk[i]->sumt();
+ for(int j=0;j<expcon.size();j++) sumex += expcon[j]->sumt(); 
 return sum-sumex;}
 
 
