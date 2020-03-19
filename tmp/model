@@ -1,136 +1,47 @@
 //Metabolites
-Metab_data 6  nfbp "fbp"
-Metab_data 3  nt3  "t3"
-Metab_data 3  npep "pep"
-Metab_data 3  npyr  "pyr"
-Metab_data 3  npyrm "Pyr"
-Metab_data 2  ncoa  "CoA"
-Metab_data 2  ncoac "coac"
-Metab_data 3  nagl  "Glycerol"
-Metab_data 4  noa   "Oaa"
-Metab_data 4  noac  "oac"
-Metab_data 6  ncit  "Cit"
-Metab_data 6  ncitc "citc"
-Metab_data 5  nakg  "aKg"
-Metab_data 5  nakgc "akgc"
-Metab_data 4  nfum "Fum"
-Metab_data 4  nmal "Mal"
-Metab_data 4  ne4  "ne4"
-ketose 7  ns7  "s7"
-ketose 6  nh6  "h6"
-ketose 5  np5  "rib"
-Metab 1  ncthf "cthf"
-Metab 2  ngae  "gae"
-Metab 3  ndhe  "dhe"
-0 0 n_atp "atp"
-0 0 n_nad "nad"
+Metab 3  npyrc  "pyr"
+Metab 3  npyr "Pyr"
+Metab 2  ncoa  "CoA"
+Metab 4  noac  "oac"
+Metab 6  ncit  "Cit"
+Metab 5  nakg  "aKg"
+Metab 5  nakgc "akgc"
+Metab 4  nsuc "suc"
+Metab 4  nmal "Mal"
+Metab 3  nlacc "lacc"
 intern_var_end
-Metab_data 6  ngl "Gluc"
-Metab_data 3  nlac "Lac"
-Metab_data 5  nglu  "Glutamate2-5"
-Metab_data 5  ngln "Glutamin"
-Metab_data 3  nala  "Ala"
-Metab_data 4  nasp  "Asp"
-Metab_data 3  nser  "Ser"
-Metab_data 2  ngly  "Gly"
-Metab_data 5  npro  "Pro"
-Metab_data 5  nrna  "Rib"
-Metab_data 6  nglycog  "Glycog"
+Metab 3  ngl "Gluc"
+Metab 3  nlac "Lac"
+Metab 5  ngln "Glutamin"
 fin
-
- hk 2 -n_atp nh6 0 input /gl h6 0         
- pfk 3 -nh6 -n_atp nfbp 0 input h6 fbp  fbpase         
- fbpase 2 -nfbp nh6 0 0 0 0 0         
- t3pep 5 -nt3 -n_nad -a_dp n_atp npep 0 input t3 pep  pept3         
- pept3 5 -npep -n_atp -h_nad n_nad nt3 0 0 0 0 0         
- pk 4 -npep -a_dp n_atp npyr 0 input pep pyr  0         
- pyrlac 3 -npyr -h_nad n_nad  0 input pyr lac  lacpyr         
- lacpyr 3 -n_nad -xx[nlac] npyr  0 0 0 0 0         
- pyrdcm 2 -npyr npyrm 0 input pyr pyrm  pyrdmc         
- pyrdmc 2 -npyrm npyr 0 0 0 0 0         
- pdh 3 -npyrm -n_nad ncoa 0 irr cutfirst pyrm coa
- citakg 3 -ncit -n_nad nakg 1 irr icdh cit akg      
- akgfum 5 -nakg -n_nad -a_dp n_atp nfum 1 irr decarb akg fum      
- fumal 2 -nfum nmal 1 input fum mal  malfum         
- malfum 2 -nmal nfum 1 0 0 0 0         
- maloa 3 -nmal -n_nad noa 0 input mal oa  oamal         
- oamal 4 -noa -h_nad n_nad nmal 0 0 0 0 0         
- pc 3 -npyrm -n_atp noa 0 irr carb pyrm oa 
- malicm 3 -nmal -n_nad npyrm 0 irr decarb mal pyrm
- malicc 3 -noac -n_nad npyr 0 irr decarb oac pyr
- ppp 2 -nh6 np5 0 irr cutfirst h6 p5
- oacd 2 -noac nmal 0 input oac mal  mald         
- mald 2 -nmal noac 0 0 0 0 0         
- citdmc 2 -ncit ncitc 0 input cit citc  citdcm         
- citdcm 2 -ncitc ncit 0 0 0 0 0         
- akgdmc 2 -nakg nakgc 0 input akg akgc  akgdcm         
- akgdcm 2 -nakgc nakg 0 0 0 0 0         
- coaout 3 -ncitc -n_atp noac 0 r3met split citc coac oac fluxes[coaout] 0
- citakg1 3 -ncitc -n_nad nakgc 0 irr icdh citc akgc 
- akgcit1 4 -nakgc -h_nad n_nad ncitc 0 irr icdhr akgc citc
- gln_in 2 -xx[ngln] nakgc  0 input gln akgc  gln_out         
- gln_out 1 -nakgc  0 0 0 0 0         
- gluin 2 -xx[nglu] nakgc  0 input glu akgc  gluout         
- gluout 1 -nakgc  0 0 0 0 0         
- t3ser 1 -nt3  0 input t3 ser  0         
- serpyr 2 -xx[nser] npyrm  0 input ser pyrm  0         
- asp_o 1 -noac  0 input oac asp  asp_i         
- asp_i 1 noac  0 0 0 0 0         
- ala_o 1 -npyr  0 input pyr ala  ala_i         
- ala_i 1 npyr  0 0 0 0 0         
- r5_o 1 -np5  0 input p5 rna  r5_i         
- r5_i 1 np5  0 0 0 0 0
- glycogin 1 -nh6 0 input h6 glycog glycogout
- glycogout 1 nh6 0 0 0 0 0
- cystin 1 npyrm  0 m0inp pyrm
- proin 1 nakgc  0 input pro akgc  proout         
- proout 1 -nakgc  0 0 0 0 0         
- kgin 1 nakg  0 m0inp akg   
- coain 1 ncoa  0 m0inp coa
- gln_pr 1 -xx[ngln] 0 output gln
- ser_pr 1 -xx[nser] 0  output ser
- asp_pr 1 -xx[nasp] 0  output asp
- ala_pr 1 -xx[nala] 0  output ala
- pro_pr 1 -xx[npro] 0  output pro
- trpala 1 - 0  m0inp ala
- mthf 1 -ncthf 0 0 0 0 0
- thf 1 -ncthf 0 0 0 0 0
- sergly 2 -xx[nser] -xthf 0 r3met split ser gly cthf fluxes[sergly]*xthf 0
- glyser 2 -xx[ngly] -ncthf 0 r3met condence ser gly cthf fluxes[glyser] 0 
- cs0 3 -noa -ncoa ncit 1 r3met condence cit oa coa fluxes[cs0] 0
+end_ballance
+ 
+ hk 1  npyrc 0 input /gl pyrc 0
+ pyrclac 1 -npyrc    0 output pyrc
+ lacin  2 -y[nlac] nlacc 0 input lac lacc 0
+ laccpyr 2  -nlacc npyr  0 input lacc pyr 0 
+ pyrclacc 2 -npyrc   nlacc  0 input pyrc lacc  0
+ pyrdcm 2 -npyrc npyr 0 input pyrc pyr  0
+ pdh 2 -npyr  ncoa 0 irr cutfirst pyr coa
+ citakg 2 -ncit  nakg 1 irr icdh cit akg      
+ akgsuc 2 -nakg    nsuc 1 irr decarb akg suc      
+ sucmal 2 -nsuc nmal 1 input suc mal  0
+ pc 2 -npyr  nmal 0 irr carb pyr mal 
+ malicm 2 -nmal  npyr 0 irr decarb mal pyr
+ oacd 2 -noac nmal 0 input oac mal  0
+ akgdcm 2 -nakgc nakg 0 input akgc akg 0
+ liase 2 -ncit  noac 0 r3met split cit oac coa fluxes[liase] 0
+ akgcit1 2 -nakgc   ncit 0 irr icdhr akgc cit
+ gln_in 2 -y[ngln] nakgc  0 input gln akgc  0
+ ala_o 1 -npyrc  0 output pyrc 
+ cs0 3 -nmal -ncoa ncit 1 r3met condence cit mal coa fluxes[cs0] 0
   D 1 - 0 0 0 0 0
  rdt 1 - 0 0 0 0 0
- atpase 1 -n_atp 0 0 0 0 0
- resp 6 -h_nad n_nad -a_dp n_atp n_atp n_atp 0 0 0 0 0
 fin
-//aldolase
-rald fbp t3   splinverse fbp t3 t3 fluxes[rald] rald+1
-//ta    4              
-rta h6 t3 e4 s7              
-  split h6 t3 dhe (fluxes[tafl]+fluxes[tafl+2])/h6.sumt() 0
-  condence s7 e4 dhe (fluxes[tafl]+fluxes[tafl+3])/e4.sumt()/dhe.sumt() 0
-  split s7 e4 dhe (fluxes[tafl+1]+fluxes[tafl+3])/s7.sumt() 0
-  condence h6 t3 dhe (fluxes[tafl+1]+fluxes[tafl+2])/t3.sumt()/dhe.sumt() 0
-//tk 6                 
-rtk t3 p5 e4 h6 p5 s7 
-   split p5 t3 gae (fluxes[tkfl]+fluxes[p5f6]+fluxes[p5g3i])/p5.sumt() 0
-   condence s7 p5 gae (fluxes[tkfl]+fluxes[f6s7]+fluxes[s7p5i])/p5.sumt()/gae.sumt() 0
-   split s7 p5 gae (fluxes[s7p5]+fluxes[s7f6]+fluxes[s7p5i])/s7.sumt() 0
-   condence p5 t3 gae (fluxes[s7p5]+fluxes[f6p5]+fluxes[p5g3i])/t3.sumt()/gae.sumt() 0
-   split h6 e4 gae (fluxes[f6p5]+fluxes[f6s7]+fluxes[f6e4i])/h6.sumt() 0
-   condence h6 e4 gae (fluxes[s7f6]+fluxes[p5f6]+fluxes[f6e4i])/e4.sumt()/gae.sumt() 0
 //extracellular_metabolites
 ngl 1 -hk
-nlac 2 pyrlac -lacpyr
-nglu 2 gluout -gluin
-ngln 3  gln_out -gln_in -gln_pr
-nala 4 ala_o -ala_i trpala -ala_pr
-nasp 3 asp_o -asp_i -asp_pr
-nser 5 t3ser -serpyr -ser_pr glyser -sergly
-ngly 2 sergly -glyser
-npro 3 proout -proin -pro_pr
-nrna 2 r5_o -r5_i
-nglycog 2 glycogin -glycogout
+nlac 1 -lacin
+ngln 1 -gln_in
 fin
 
-                
+       

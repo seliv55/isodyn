@@ -57,19 +57,4 @@ void Ldistr::symm (double *s) {
 		s[io[i]]=x;	s[oi[i]]=x;
 	}
 }
-double Ldistr::ser_gly (double v,double xthf) {
- double x,sum(0.); int i1, i2;
-  for(int i=0;i<8;i++) { i1=(i>>1); i2=(i&1);
-     x=v*ser.iso[i]*xthf;
-       ser.diso[i] -=x; gly.diso[i1]+=x; cthf.diso[i2]+=x; sum+=x; }
-    return sum;
-}
-double Ldistr::gly_ser (const double v) {
- double x,x1,sum(0.); int i1;
- for(int j=0;j<2;j++){x1=v*cthf.iso[j]; 
- for(int i=0;i<4;i++) { i1=((i<<1)|j);
-     x=gly.iso[i]*x1;// cout<<"x="<<x<<endl;
-          gly.diso[i] -=x; cthf.diso[j]-=x; ser.diso[i1]+=x; sum+=x; }}
-    return sum;
-}
 

@@ -1,6 +1,6 @@
 CPP = g++
 
-CFLAGS = -c -fPIC -std=c++11  -static -O3
+CFLAGS = -c -O3
 
 LFLAGS = -lm
 

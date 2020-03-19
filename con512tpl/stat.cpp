@@ -40,12 +40,6 @@ void Fit::write (tuple<double,double,time_t> sol, int& ifn,bool flg)  {
 		fi<<"t= " << get<2>(sol) <<"\n";
 		fi<<"C= " << get<1>(sol) <<endl;
 	for (i=0;i<rdt;i++) fi<<i<<") "<<setw(9)<<left<<rea[i].getname()<< " "<<(flx[i]*1000.*flx[rdt])<<"\n";
-	string *pss=aldolase.flnm();
-	 for (i=aldfl;i<(aldfl+3);i++) fi<<i<<") "<<setw(9)<<left<<pss[i-aldfl]<< " "<<(flx[i]*1000.*flx[rdt])<<"\n";
-	pss=ta.flnm();
-	 for (i=tafl;i<(tafl+4);i++) fi<<i<<") "<<setw(9)<<left<<pss[i-tafl]<< " "<<(flx[i]*1000.*flx[rdt])<<"\n";
-	pss=tk.flnm();
-	 for (i=tkfl;i<(tkfl+9);i++) fi<<i<<") "<<setw(9)<<left<<pss[i-tkfl]<< " "<<(flx[i]*1000.*flx[rdt])<<"\n";
 	fi.close();
 cout <<"File saved: "<<ifn << ": xi=" << get<0>(sol) << "; xm=" << get<1>(sol) <<"; time="<<((float)get<2>(sol)/CLOCKS_PER_SEC)<<endl;	
 }

@@ -26,7 +26,8 @@ class Iso {
     void calmesd(std::vector<Iso>& linj){
        int len=linj.size();
          for(int ic=0;ic<niso;ic++) { mid[ic].mean=0.; mid[ic].sd=0.;
-          for(int i=0;i<len;i++) mid[ic].mean+=linj[i].mid[ic].mean; mid[ic].mean/=(double)len; }
+          for(int i=0;i<len;i++) mid[ic].mean+=linj[i].mid[ic].mean; 
+          mid[ic].mean/=(double)len; }
          if(len>1) for(int ic=0;ic<niso;ic++){ 
         for(int i=0;i<len;i++){ double a=mid[ic].mean-linj[i].mid[ic].mean; mid[ic].sd+=a*a; }
         mid[ic].sd/=(double)(len-1); mid[ic].sd=sqrt(mid[ic].sd); }
@@ -87,7 +88,7 @@ void rex(std::ifstream& ifi, int nt){// reads experimental data
        for(int i=0;i<=mi;i++){ifi>>sdd; if(sdd<0.01)sdd=0.01; exper[nt][i].sd=sdd;
 /*        std::cout<<exper[nt][i].sd<<" ";*/
         } //std::cout<<'\n';
-       getline(ifi,aaa);
+/*       getline(ifi,aaa);*/
 }
 
 double percent(const double *iso,int len){
@@ -108,7 +109,11 @@ data * getexper(int nt){return &exper[nt][0];}
 
 std::string& getdescr(){return descr;} 
 
-void skladm0(int itime){ kinm0[itime]=calc[0]/calc[mi+1]; }
+void skladm0(int itime){ kinm0[itime]=calc[0]/calc[mi+1];
+/*   std::cout<<descr<<" time="<<itime<<" conc="<<calc[mi+1]<<'\n';*/
+/*     for(int i=0;i<=mi;i++) std::cout<<calc[i]/calc[mi+1]<<" ";*/
+/*                        std::cout<<'\n'; */
+                        }
 
 int getmi(){ return mi;}
  
@@ -141,18 +146,20 @@ void wrikinm0(std::ostringstream& so, int nt) {
  }
  void shexper(int nt){ std::cout<<getdescr()<<" ";
    for(int j=0;j<nt;j++){
-     for(int i=0;i<=mi;i++) std::cout<<exper[j][i].mean<<" "; std::cout<<'\n';} std::cout<<'\n';
+     for(int i=0;i<=mi;i++) std::cout<<exper[j][i].mean<<" "; 
+     std::cout<<'\n';} std::cout<<'\n';
 }
 double* getcalc(){return &calc[0];}
 double shkin(int itp){return this->kinm0[itp];}
 
 double dilut( double& dlt,const double *iso,const int len,const int nt) {
-	     unsigned i; double xi(0.0),a(0.0);
+	     int i; double xi(0.0),a(0.0);
 	   this->percent(iso,len);
 	dlt = (exper[nt][0].mean-this->calc[0])/(1.-exper[nt][0].mean);
 		if(dlt>0) {
 		this->calc[0] += dlt;
-		for(i=0;i<=mi;i++) this->calc[i] /= (1.+dlt);this->calc[mi+1] *= (1.+dlt);
+		for(i=0;i<=mi;i++) this->calc[i] /= (1.+dlt);
+		this->calc[mi+1] *= (1.+dlt);
 		}
 		for(i=0;i<(mi+2);i++) {    //          for(int i=1;i<repl;i++)
 			a = (exper[nt][i].mean-this->calc[i])/(exper[nt][i].sd);
@@ -184,10 +191,10 @@ class Metab{
 	int ny;
 
 void wrikin(std::ostringstream& so, int nt){
-   for(int i=0;i<exper.size();i++) exper[i].wrikinm0(so,nt);
+   for(unsigned int i=0;i<exper.size();i++) exper[i].wrikinm0(so,nt);
  }
  
-void percent(){ for(int j=0;j<this->exper.size();j++) tcon=this->exper[j].percent(iso,len);}
+void percent(){ for(unsigned int j=0;j<this->exper.size();j++) tcon=this->exper[j].percent(iso,len);}
 
 void readc(std::ifstream& fi,  int nt){ std::string aaa;
      fi>>aaa;
@@ -198,12 +205,12 @@ void readc(std::ifstream& fi,  int nt){ std::string aaa;
  void showcon(std::ostringstream& fo){ fo<<" "<<std::setw(7)<<this->sumt();}
 
 void showm0(std::ostringstream& fo,double xfin) {
-   for(int j=0;j<exper.size();j++) exper[j].showm0(fo);
+   for(unsigned int j=0;j<exper.size();j++) exper[j].showm0(fo);
 }
 
 void skladc(int itime){ kinc[itime]=tcon; }
 
-void skladm0(int itime){ for(int j=0;j<(exper.size());j++) exper[j].skladm0(itime);}
+void skladm0(int itime){ for(unsigned int j=0;j<(exper.size());j++) exper[j].skladm0(itime);}
 
 void rizeflcon(){flcon=1;}
   
@@ -212,7 +219,8 @@ data * getconc(){return conc;}
 void setconc(double a, int nt=0){ conc[nt].mean=a; conc[nt].sd=a*0.1; }
  
 double xits(int its) { double xi=0;
-for(int j=0;j<exper.size();j++) xi += exper[j].chisq(its);
+/*for(unsigned int j=0;j<exper.size();j++)*/
+ xi += exper[0].chisq(its);
 return xi;}
 
 double chicon(int nt) {
@@ -231,7 +239,7 @@ int getN(){return N;}
 
 std::string getdescr(){return descr;}
  
-double sumt(){	double sum=0.; unsigned i;
+double sumt(){	double sum=0.; int i;
 		for (i=0;i<len;i++) sum += iso[i];
 return tcon=sum;	}
 
@@ -242,7 +250,7 @@ double input(Metab& s2,const double& vi,const double vo=0.){
 		diso[i] -= x; s2.diso[i] += x; sum += x;		}
 return sum;}
 
-void output(const double& vi){	double x, sum=0.;
+void output(const double& vi){	double x;
 	for(int i=0;i<len;i++) {
 		x=vi*iso[i];	diso[i] -= x;}
 }
@@ -262,7 +270,7 @@ void coriso(const double xkin,const double xiso){
 
 double cutfirst(Metab& p,const double& v) {
 	double dx, sum=0.;
-	int i=0,i1;
+	int i1;
 	int lenp=((len>>1)-1);
 	for(int i=0;i<this->len;i++) {i1 = (i & lenp);
 		dx = v*(this->iso[i]);
@@ -321,23 +329,25 @@ void split(Metab& pr1, Metab& pr2,const double v){
     int ip1=(i&l1), ip2=(i>>n1);
     double x=this->iso[i]*v;
     this->diso[i] -= x;
-    pr1.diso[ip1] += x; pr2.diso[ip2] += x;   }
+    pr1.diso[ip1] += x;// pr2.diso[ip2] += x;
+       }
 }
  
 void splinverse(Metab& pr1, Metab& pr2,const double vf,const double vr){
   int l1=pr1.getlen()-1, n1=pr1.getN(), n2=pr2.getN();
    for(int i=0;i<this->len;i++) {
     int ip1(i&l1), ip(i>>n1),ip2(0);
-    for(int i=0;i<n2;i++) if(ip&(1<<i)) ip2=(ip2|(1<<(n2-i-1)));
+    for(int i2=0;i2<n2;i2++) if(ip&(1<<i2)) ip2=(ip2|(1<<(n2-i2-1)));
     double x=this->iso[i]*vf-pr1.iso[ip1]*pr2.iso[ip2]*vr;
     this->diso[i] -= x;
-    pr1.diso[ip1] += x; pr2.diso[ip2] += x;    }
+    pr1.diso[ip1] += x; pr2.diso[ip2] += x;
+        }
 }
  
 void condence(Metab& s1, Metab& s2,const double v){
   int n1=s1.getN(),ip,ip1; double x, dx;
-   for(int i=0;i<s2.getlen();i++) { x=s2.iso[i]*v; ip=(i<<n1); 
-        for(int j=0;j<s1.getlen();j++){dx=x*s1.iso[j]; ip1=(ip|j);
+   for(int i=0;i<s2.getlen();i++) { x=s2.iso[i]*v; ip=(i<<n1); //std::cout<<"i="<<i<<" ip="<<ip;
+        for(int j=0;j<s1.getlen();j++){dx=x*s1.iso[j]; ip1=(ip|j); //std::cout<<"j="<<j<<" ip1="<<ip1<<std::endl;
 //     std::cout<<"ip="<<ip1<<" i="<<i<<" j="<<j<<std::endl;
     this->diso[ip1] += dx;
     s1.diso[j] -= dx; s2.diso[i] -= dx; }}
@@ -453,8 +463,7 @@ class ketose:public Metab {
         
 class Ldistr {
 	int ntime,lmet, lmetk, itrac,markis,Nn;
-static Metab fbp, t3, pep, pyr, pyrm, coa, coac, agl, oa, oac, cit, citc, akg, akgc, suc, mal, e4, cthf, gae, dhe, gl, lac, glu, gln, ala, asp, ser, gly, pro, rna, glycog;
-static ketose s7, h6, p5;
+static Metab pyrc, pyr, coa, oac, cit, akg, akgc, suc, mal, lacc, gl, lac, gln;
   double lacout,coaefl,tca,fpdh,marfrac,dsum;
   std::vector<Iso> result;
       void symm (double *s);
@@ -472,15 +481,16 @@ static ketose s7, h6, p5;
  void splitstrings(std::vector<std::string> segline[],int nstrok,std::vector<std::string> substrok);
  public:
  void wrikin(std::ostringstream& so, int nt){
-   for(int i=0;i<expm0.size();i++) expm0[i]->wrikin(so,nt);
+   for(unsigned int i=0;i<expm0.size();i++) expm0[i]->wrikin(so,nt);
  }
  void shexper( int nt,int nexp=0){
-   for(int i=0;i<expm0.size();i++) expm0[i]->exper[nexp].shexper(nt);
+   for(unsigned int i=0;i<expm0.size();i++) expm0[i]->exper[nexp].shexper(nt);
  }
  
  
  void wricon(std::ostringstream& so, int nt,int nexp=0){ so<<"\n";
-   for(int i=0;i<expcon.size();i++) expcon[i]->wrikinc(so,nt); so<<"\n";
+   for(unsigned int i=0;i<expcon.size();i++) expcon[i]->wrikinc(so,nt);
+   so<<"\n";
  }
 
   std::vector<double> tex, texcon;
@@ -491,8 +501,8 @@ static ketose s7, h6, p5;
    void sklad(int itime);
    int wrim0ex(std::string );
    int wriconex(std::string fn);
-       Metab *met[33];
-       ketose *metk[5];
+   static Metab *met[];
+   static ketose *metk[];
       std::vector<Metab*> expcon, expm0;
       std::vector<ketose*> kexpm0;
        void setmet();

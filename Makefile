@@ -1,10 +1,10 @@
-CFLG = -c -fPIC -O3 -Iinclude -IintegrT
+CFLG = -c -O3 -Iinclude -IintegrT
 
-LFLG = -fPIC -O3 -lgfortran
+LFLG = -O3 -lgfortran
 
 SRC = main.cpp
 
-LIBS = con512tpl/mod.a svd/svd.a nrused/nr.a integrT/integT.a fort/fort.a hompack/homol.a 
+LIBS = con512tpl/mod.a svd/svd.a nrused/nr.a integrT/integT.a fort/fort.a
 
 COBJ = $(SRC:.cpp=.o)
 
@@ -19,7 +19,7 @@ $(CEL): $(COBJ) $(LIBS)
 #	g++ -O3 -lf52 -lf2c -u MAIN__ main.o svd/svd.a con512tpl/mod.a nrused/nr.a integrT/integT.a -o isodyn.out
 
 .cpp.o:
-	g++ -std=c++11 $(CFLG) $< -o $@
+	g++ $(CFLG) $< -o $@
 
 con512tpl/mod.a:
 	make -C con512tpl

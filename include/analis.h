@@ -4,7 +4,6 @@ extern double ystart[];
 class Analis {
  int parlen;
  double chimin, x00, xmin, tmin, trs;
- double descent(double, int ip=(-1)); 
  void rconfint(ifstream& fi, double ami[],double ama[]);
  void stepdown(double oldp, int& i,double fdes);
  double dermax();
@@ -20,6 +19,7 @@ class Analis {
  double checkgroup(bool* gsign, double* grd,int imi,vector<int>& vpar,vector<int>& vind,double ff);
  double grdes(bool* gsign, double* grd,int imi,vector<int>& vpar,vector<int>& vind,double ff,double* oval);
 public:
+ double descent(double, int ip=(-1)); 
  static double nv1[],nv2[];
  double getmax();
  void grdesc(const double lambda);

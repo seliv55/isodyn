@@ -1,4 +1,4 @@
-CFLAGS = -c -fPIC -std=c++11 -static -O3 -I../include
+CFLAGS = -c  -O3 -I../include
 
 SRC = lab.cpp integrator.cpp distr.cpp nv.cpp stat.cpp tk.cpp readexp.cpp enzfn.cpp ssc.cpp sst.cpp
 

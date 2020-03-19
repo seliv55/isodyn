@@ -25,12 +25,15 @@ double Analis::descent(double factor,int ip){
     while (flag<2) { oval = Problem.rea[parcp[i]].v();
      Problem.rea[parcp[i]].chanVm(factor); cout << parcp[i] << ")";
       try{ sol =solve();  xi1 =get<0>(sol);
-     if((xi1-x00)<6.7) {Problem.write(sol,ifn); cout<<" Δ="<<(xi1-x00)<<'\n'; }
-    if(((xi1*tf/chimin/tmin)<1)&&(suxx<(xmin*1.05))) {Problem.write(sol,ifn);
+//     if((xi1-x00)<6.7) {Problem.write(sol,ifn); cout<<" Δ="<<(xi1-x00)<<'\n'; }
+//    if(((xi1*tf/chimin/tmin)<1)&&(suxx<(xmin*1.05)))
+    if((tf<tmin)&&(suxx<(xmin*1.1)))
+      {Problem.write(sol,ifn); cout<<i<<": "<<tf/CLOCKS_PER_SEC<<"s, "<<suxx<<'\n';
        Problem.storeVms(nrea,nv1);
-          chimin=xi1; tmin=tf; xmin=suxx; parstor.push_back(parcp[i]);
+       chimin=xi1; tmin=tf; xmin=suxx; parstor.push_back(parcp[i]);
+       for(int imet=0;imet<nmet;imet++) xinit1[imet]=xx[imet];
           if(xi1<x00) x00=xi1;
-          } 
+          }
      else {factor = 1./factor; ++flag; Problem.rea[parcp[i]].setVm(oval);}
     }  catch( char const* str ){cout << "Analis::descent: "<< str <<endl; Problem.restoreVm(nrea,nv2);
                  for(int i=0;i<numx;i++) xinit1[i]=xinit2[i];}
@@ -220,8 +223,8 @@ cout<< "\nPerturbation+CoordinateDescent:\nPar#\txi2con\txi2iso\tParValue\tdif:"
 //                              for(int i=0;i<numx;i++) xinit1[i]=xx[i];
     }  catch( char const* str ){cout << "Analis::coord: "<< str <<endl;
                  for(int i=0;i<numx;i++) xinit1[i]=xinit2[i];}
-                 if((i>1)&&(suxx<(xmin*1.05))&&(tf<(tmin*1.3))) {setx00(get<0>(sol),tf,suxx); break;}
-                 if(i>11) {Problem.read(spar); i -=9;}
+       if((suxx<=(xmin*1.0))&&(tf<(tmin*1.))) {setx00(get<0>(sol),tf,suxx); break;}
+       if(i>11) {Problem.read(spar); i -=9;}
                  }
 // chimin=xi; dif0=dif;sol
 //   descent(fdes,-2);

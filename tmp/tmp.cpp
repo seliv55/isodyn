@@ -1,11 +1,27 @@
+// clearing vectors
 #include <iostream>
-using namespace std;
+#include <vector>
 
-int main ( int argc, char *argv[] ) {
-//const char* b=a.c_str();
-//x += atoi(y);  // Use the integer equivalent of char / string  y;
-const int b[]={1,2,5,18}, *ii[2]; ii[0]=b;
-cout << ii[0][2] << endl;
-int i(0);i++ ++;
-cout<<i<<endl;
-return 0;}
+int main ()
+{
+  std::vector<std::string> myvector;
+  myvector.push_back ("asd");
+  myvector.push_back ("ert");
+  myvector.push_back ("xcv");
+
+  std::cout << "myvector contains:";
+  for (unsigned i=0; i<myvector.size(); i++)
+    std::cout << ' ' << myvector[i];
+  std::cout << '\n';
+
+  myvector.clear();
+  myvector.push_back ("abcd");
+  myvector.push_back ("efgh");
+
+  std::cout << "myvector contains:";
+  for (unsigned i=0; i<myvector.size(); i++)
+    std::cout << ' ' << myvector[i];
+  std::cout << '\n';
+
+  return 0;
+}

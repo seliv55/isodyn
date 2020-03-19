@@ -21,8 +21,9 @@ tuple<double,double,time_t> solve(){
 //solving the kinetic model:
    ts=clock(); double xi;
  for(int i=0;i<nmet;i++) xx[i]=xinit1[i]; //take initial values
-    tsolve(1400.); //mader=Problem.dermax();
-//    ddsolve(1400.); mader=Problem.dermax();
+//    tsolve(1400.); //mader=Problem.dermax();
+    ddsolve(1400.); //mader=Problem.dermax();
+//    Problem.shownx(nmet,xx);
 //   xi=horse.ddisolve();
     // Problem.jacobian(xx);  tsolve(37000.); for(int i=0;i<numx;i++) xinit1[i]=xx[i];
       xi=horse.integrbs();
@@ -46,22 +47,23 @@ inline void chekxi(char *efi){
     
 string Ldistr::read_con(ifstream& fi){
 // read par-file, output dir, flux conf. inter: main and to compare
- string aaa,gpl="gnuplot  -e \"con=4;m0=4\" xplt.p"; 
+ string aaa,gpl="gnuplot  -e \"con=3;m0=4\" xplt.p"; 
      int isu; 
       fi>>aaa;
       getline(fi,aaa);
       stringstream onel(aaa);  int ii(0);
       while(getline(onel,aaa,' ')) if(aaa.length()){double ta=stod(aaa); texcon.push_back(ta); ii++; cout<<ta<<" ";}
        ntime=ii; 
-      while(!fi.eof()){
+      while(!fi.eof()){ onel.str(std::string());
        fi>>aaa; if(fi.eof()) break; int k;
         for(k=0;k<=lmet;k++) if(aaa.find(met[k]->getdescr())+1) {
            for(int j=0;j<ntime;j++) {
        double cc; fi>>cc; met[k]->setconc(cc,j);
-//       cout<<"t="<<texcon[j]<<" "<<met[k]->getdescr()<<" "<<met[k]->getconc()[j].mean<<'\n';
-       } xx[k]=met[k]->getconc()[0].mean;
+       cout<<"t="<<texcon[j]<<" "<<met[k]->getdescr()<<" "<<met[k]->getconc()[j].mean<<'\n';
+           } getline(fi,aaa);
+//       xx[k]=met[k]->getconc()[0].mean;
              expcon.push_back(met[k]);  break;}
-             if(k==lmet) for(int j=0;j<ntime;j++) fi>>aaa;
+             if(k==lmet) {for(int j=0;j<ntime;j++) fi>>aaa; getline(fi,aaa);}
                 }
       return gpl;}
       
@@ -95,7 +97,9 @@ int main( int argc, char *argv[] ){
   else if ((argc>3)&&(argv[3][0]=='x')) {chekxi(argv[1]); return 0; } // check χ2
    else{
      cout.precision(3);
+        cout<<"** readexp**"<<'\n';
         horse.readExp(argv[1],ntr);            // read experimental data 
+        cout<<"** readexp**"<<'\n';
      string gpl=horse.read_con(fi);  // read concentrations
         horse.setflcon();
       int m0len=horse.wrim0ex("exm0");                // set experimental data for figure
@@ -105,7 +109,8 @@ int main( int argc, char *argv[] ){
        Problem.shownx(nmet,xx);    cout<<'\n';      // print concentrations on screen
   sol0=solve();//horse.integrbs();                 //solve ODEs for isotopomers
        Problem.shownx(nmet,xx);  // print concentrations on screen
-     cout<<" Σxi²="<<get<0>(sol0) <<"\n";        //final results
+       xi0=get<0>(sol0);
+     cout<<" Σxi²="<<xi0 <<"\n";        //final results
      cout<<foc; 
         ofstream kkin("kinGlc"); kkin<<kin<<endl; kkin.close();
          kkin.open("kincon"); kkin<<kinc<<endl; kkin.close();
@@ -123,16 +128,14 @@ int main( int argc, char *argv[] ){
      try{  switch(argv[8][0]){
    case 'N':
            analis.grad();  break;
-   case 'K':
-           analis.desK(1.05,rtk); break;
-   case 'A':
-           analis.desK(1.05,rta); break;
    case 'F':
            for(int i=0;i<5;i++){analis.coord(0.2,1.07,sfpar);
              analis.grdesc(1.05); 
            } break;
    case 'G':
-           analis.grdesc(1.05); break;
+           analis.descent(1.05);
+//           analis.grdesc(1.05);
+           break;
    case 'C':
            analis.confidence(1.15,1.07); break;
    default: 
@@ -140,5 +143,5 @@ int main( int argc, char *argv[] ){
             }
   } catch(const invalid_argument&) { cout<<Nfi<<" files saved!\n"; }
   }
-return 0;}
+return (int)xi0;}
 

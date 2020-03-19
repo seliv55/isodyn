@@ -23,30 +23,33 @@ Mat_DP *d_p;
 double Vt;
 string kin0;
 void res(const double& T, double y[],const double yprime[], double delta[], int& iRes, const double rPar[], const int iPar[]){
-       double f[numx];
+       double f[nmet];
 	Problem.f(y, f);
-	for(unsigned i=0;i<numx;i++) delta[i]=f[i]-yprime[i];
+	for(unsigned i=0;i<nmet;i++) delta[i]=f[i]-yprime[i];
 }
 
 void jac(const double& time,  double y[], const double yPrime[], double **PD, double& CJ, const double rPar[], const int iPar[]){}
 
 void ddsolve(const double tout) {
-        int i,info[15],idid=0,lrw=1700,liw=1700,iwork[1700],ipar[2],ires=0;
-double t=0.,y[numx],yprime[numx],rtol=0.005,atol=1.0e-7, rwork[1700], rpar[2];
-        Problem.init();
-  for(i=0;i<numx;i++) y[i]=xx[i];
-  Problem.f(xx,yprime);
+  int i,info[15],idid=0,lrw=1800,liw=1800,iwork[1800],ipar[2],ires=0;
+  double t=0., t1=7.3, y[nmet], yprime[nmet], rtol=0.0025, atol=1.0e-9, rwork[1800], rpar[2];
+  for(i=0;i<nmet;i++) y[i]=xx[i];
         for(i=0;i<15;i++) info[i]=0;
 //        info[1]=1;
 //        info[2]=1;
 //        info[4]=1;
 //        info[10]=1;
+        Problem.init();
+  Problem.f(y,yprime);
+  ddassl_(res,nmet,t,y,yprime,t1,info,rtol,atol,idid,rwork,lrw,iwork, liw,  rpar, ipar, jac);
+  Problem.f(y,yprime);
 	//	printf("infohere ");
 	//	printf("%i %i %i %i\n",info[0], info[6], info[10],info[14]);
 	//printf("herenow \n");
 
-ddassl_(res,numx,t,xx,yprime,tout,info,rtol,atol,idid,rwork,lrw,iwork, liw,  rpar, ipar, jac);
-         Problem.fin(xx);
+ddassl_(res,nmet,t,y,yprime,tout,info,rtol,atol,idid,rwork,lrw,iwork, liw,  rpar, ipar, jac);
+         Problem.fin(y);
+  for(i=0;i<nmet;i++) xx[i]=y[i];
 }
 
 //void d02nefsv(const double tout) {

@@ -1,6 +1,7 @@
 #!/bin/sh
+fiso="hct-lac" #13C labeling 
 #fiso="hct-gln" #13C labeling 
-fiso="hct-glc" #13C labeling 
+#fiso="hct-glc" #13C labeling 
 fcon=hct-conc #concentrations
 inpar="output/2" #set of parameters to start
 oudir="output"  #output directory

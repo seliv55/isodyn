@@ -10,7 +10,7 @@
        #include <sys/stat.h>
        #include <dirent.h>
 class Reapar{
-   std::string name, *spar;
+   std::string name;
     int npar; double *par;
   public:
 	double v(){return par[0];}
@@ -21,11 +21,12 @@ class Reapar{
 	double vin(double x,double y){return par[0]*x/(par[1]+x)*(par[2]/y+par[3]);}
 	
   void read(std::ifstream& fi,int& flg){fi>>name>>name>>npar;
-   if(!flg) {par=new double[npar]; spar=new std::string[npar];}
-     for(int i=0;i<npar;i++) fi>>this->spar[i]>>this->par[i]; }
+   if(!flg) {par=new double[npar]; }
+     for(int i=0;i<npar;i++) fi>>this->par[i]; }
      
  void write(std::ofstream& fo,int ir){fo<<ir<<std::setw(9)<<name<<std::setw(4)<<npar;
-  for(int i=0;i<npar;i++) fo<<"  "<<this->spar[i]<<" "<<this->par[i]; fo<<"\n";}
+  for(int i=0;i<npar;i++) fo<<" "<<this->par[i]; 
+  fo<<"\n";}
   
 	void setVm(double a,int np=0) {par[np] = a;}
 	double chanVm(double ff,int np=0) {double old=par[np]; par[np] *= ff; return old;}
@@ -33,12 +34,12 @@ class Reapar{
 	std::string& getname(){return name;}
 	int genpar(){return npar;}
 		Reapar() {}
-	virtual ~Reapar(){delete[] par; delete[] spar; }
+	virtual ~Reapar(){delete[] par;}
 };
 
 class Parray {
 protected:
-	double ft3, fh6, xi, tan, tnad, xthf;
+	double ft3, fh6, xi, tan, tnad, tQ;
 	std::vector<int> par;
         TK tk;
         TA ta;
@@ -58,7 +59,7 @@ public:
         void init();
         void fin(double y[]);
         void rnames(std::ifstream& fi);
-  Parray( ): tan(1.1),tnad(1.){ }
+  Parray( ): tan(1.1),tnad(1.),tQ(1.){ }
   virtual ~Parray(){  }
 };
 class Fit: public Parray{
@@ -96,9 +97,9 @@ class Fit: public Parray{
 	 if(!checkfi.good())  return (i);}    }
 
      void getListFit(int list[]) const {  
-	   for (int i=0;i<par.size();i++) list[i] = par[i]; }
+	   for (unsigned int i=0;i<par.size();i++) list[i] = par[i]; }
 	   
-        void shownx(int nx,double dx[]){for(int i=0;i<nx;i++) std::cout<<namex[i]<<":"<<dx[i]<<"; ";
+    void shownx(int nx,double dx[]){for(int i=0;i<nx;i++) {if(dx[i]>1) std::cout<<namex[i]<<":"<<dx[i]<<"; ";}
                                              std::cout<<std::endl;}
         double dermax();
 	  Fit( ): Parray() {}

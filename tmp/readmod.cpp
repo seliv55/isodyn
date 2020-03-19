@@ -9,7 +9,7 @@
 
 //---------------------------------------------------------------------------
 using namespace std;
-string partk="e0tk", parta="e0ta", ssym="fum";
+string partk="e0tk", parta="e0ta", ssym="mal";
 string setk1, seta1, setald1;
 
 inline string mm(string fln, string *sub, int nsub, ostringstream& parsets, bool ff=0){ //cout<<sub[i]<<'\n';
@@ -26,7 +26,7 @@ inline string mm(string fln, string *sub, int nsub, ostringstream& parsets, bool
   if(sub1.at(0)=='-') {if(sub1.size()>1){if(sub1.at(1)=='n') ssub +="dydx["+sub1.erase(0,1)+"] -= "+sfl+";  ";}}
    else ssub +="dydx["+sub1+"] += "+sfl+";  ";
   }
-         while(foo.length()<51) foo +=" "; foo +=ssub+'\n'; 
+         while(foo.length()<51) foo +=" "; foo +=ssub+'\n';
 return foo;}
 
 inline string rinput(ifstream& fi, string flname){string ssub,spr,flrev, rdist,sf="";
@@ -43,7 +43,6 @@ inline string irrev(ifstream& fi, string flname){string rtype, smet, rdist;
 
 inline string r3met(ifstream& fi){string rtype,smet0,smet1, smet2, flrev,flname, rdist;
  fi>>rtype>>smet0>>smet1>>smet2>>flname>>flrev;//read substrates
- cout << flname<<endl;
   rdist=smet0+"."+rtype+"(" + smet1+","+smet2+","+flname;
   if(flrev.length()-1) rdist +=",fluxes["+flrev+"]";
  rdist += ");\n";//read product
@@ -56,20 +55,6 @@ inline string rout(ifstream& fi, string flname){string rtype, smet, rdist;
 inline string rm0in(ifstream& fi, string flname){string rtype, smet, rdist;
  fi>>smet; rdist=smet+".diso[0]+=fluxes["+flname+"];\n";//read substrate
          return rdist;}
-
-inline string ald(ostringstream& parset,string aldfl,string alds,string aldp){ 
-    string sfl="flx["+aldfl+"]"; parset<<"ald   2  V= 0.00693115  K1= 14870\n";
-          setald1 ="aldolase.st1fl(&"+sfl+", y[n"+alds+"], y[n"+aldp+"]);"; string foo=setald1;
-      while(foo.length()<51) foo +=" ";  foo +="dydx[n"+alds+"] -= "+sfl+";";
-      while(foo.length()<80) foo +=" ";  foo +="dydx[n"+aldp+"] += 2.*"+sfl+";\n";     
-return foo;}
-
-inline string ta(ostringstream& parset,string tafl,string tak1,string taa1,string taa2,string tak2){ 
-    string sfl="flx["+tafl+"]"; parset<<"ta   5  v0= 0.000113773  K1= 1.45  K2= 1.6456  K3= 0.010418  K4= 0.544787\n";
-      seta1 ="ta.st1fl(&"+sfl+", y[n"+tak1+"]/fh6, y[n"+taa1+"]/ft3, y[n"+taa2+"], y[n"+tak2+"]);"; string foo=seta1;
-      foo +="\n\t\t\t\tdydx[n"+tak1+"] -= "+sfl+";\t dydx[n"+taa1+"] += "+sfl+";";
-      foo +="\n\t\t\t\tdydx[n"+taa2+"] -= "+sfl+";\t dydx[n"+tak2+"] += "+sfl+";\n";    
-return foo;}
 
 inline string tk(ostringstream& parset,string tkfl,string tka1,string tkk1,string tka2,string tkk2,string tka3,string tkk3){ 
     string sfl="flx["+tkfl+"]", sfl1="flx["+tkfl+"+1]", sfl2="flx["+tkfl+"+2]"; 
@@ -98,21 +83,21 @@ inline string setvals(vector<string> snames, string sval){ string aaa=""; int ne
 int main ( int argc, char *argv[] ) {
    ifstream fi("model");  int  nxin(0); bool bx(0);
      string aaa="", siso,snx;
-     int lmet=0, lmetb=0, lmetk=0;
+     int lmet=0, lmetk=0;
      ostringstream smeta,smetb,smetk;
      ostringstream scona,sconb,sconk;
      ostringstream sdata,sket,sMe;
 // variables of kinetic model   
-       vector<tuple<int, string, string>> mdat, mdatb, mdatk;
+       vector<tuple<int, string, string>> mdat, mdatk;
        vector<string> mname;
          getline(fi,aaa);
-   for(int i=0; ;i++) {
+   for(int i=0; ;i++) {//names of metabolite
     fi>> aaa; if(aaa=="fin") break;
          else if(aaa.find("intern_")+1) {nxin=i; bx=1;}
          else {tuple<int, string, string> namc; int nc; string sss, snm;
           fi>>nc>>sss>>snm; mname.push_back(sss); namc=make_tuple(nc,sss,snm);
                if(bx) {snx="const int numx="+sss+";\n\n"; bx=0;}
-           if(aaa.find("Metab_d")+1) { mdat.push_back(namc);
+           if(aaa.find("Metab")+1) { mdat.push_back(namc);
               smeta <<"met["<<lmet<<"]=&"<<get<1>(namc).substr(1)<<"; ";
               scona <<"met["<<lmet<<"]->setconc(xx["<<get<1>(namc)<<"]); ";
               sdata<<" Ldistr::"<<sss.substr(1)<<"("<<nc<<","<<snm<<"),";
@@ -122,26 +107,28 @@ int main ( int argc, char *argv[] ) {
               sconk <<"metk["<<lmetk<<"]->setconc(xx["<<get<1>(namc)<<"]); ";
               sket<<" Ldistr::"<<sss.substr(1)<<"("<<nc<<","<<snm<<"),";
                   lmetk++; }
-           else if(aaa.find("Metab")+1) { mdatb.push_back(namc);
-              smetb <<"metb["<<lmetb<<"]=&"<<get<1>(namc).substr(1)<<"; ";
-              sconb <<"metb["<<lmetb<<"]->setconc(xx["<<get<1>(namc)<<"]); ";
-              sMe<<" Ldistr::"<<sss.substr(1)<<"("<<nc<<","<<snm<<"),";
-                  lmetb++; }
                 }
-              }//name of metabolite
+              }//names of metabolite
    
      int nmet=mname.size();
     ostringstream parsets;
-    lmet=mdat.size(); lmetb=mdatb.size();  lmetk=mdatk.size(); 
-    smetk<<"\n lmet="<<lmet<<"; lmetb="<<lmetb<<"; lmetk="<<lmetk<<"; ";
+    lmet=mdat.size();   lmetk=mdatk.size(); 
+    smetk<<"\n lmet="<<lmet<<"; lmetk="<<lmetk<<"; ";
    cout<<"variables: "<<nmet<<endl;
 //reding the scheme of the model:
        
-     vector<string> flname, fladd;
+     vector<string> flname, fladd, bal;
+     for(int i=0; ;i++){
+      getline(fi,aaa); if(aaa.find("end_bal")+1) break;
+      bal.push_back(aaa);
+      cout<<bal[i]<<'\n';
+     }
      int numsub, eq;
 //     nv.cpp:
-  string f_ff="void Fit::f(const double *y,double *dydx) {\n\tfor(int i=0;i<numx;i++) dydx[i]=0.;\n\t for(int i=0;i<nflx;i++) flx[i]=0.;\n\t double amp = -(sqrt(4.*xx[n_atp]*tan-3.*xx[n_atp]*xx[n_atp])-2.*tan+xx[n_atp])/2.;\n\t double a_dp = (sqrt(xx[n_atp])*sqrt(4.*tan-3.*xx[n_atp])-xx[n_atp])/2.;\n\t double h_nad = tnad-xx[n_nad];\n\t xthf=thft-xx[ncthf];\n";// functions f & ff
-  string flfor="void Parray::flfor(double *y){\nfor(int i=0;i<nflx;i++) fluxes[i] = flx[i] * flx[rdt]/Vi;\n";// function flfor
+  string f_ff="void Fit::f(const double *y,double *dydx) {\n\tfor(int i=0;i<nmet;i++) dydx[i]=0.;\n\tfor(int i=0;i<nflx;i++) flx[i]=0.;\n";// functions f & ff
+  for(int i=1;i<bal.size();i++) f_ff +="\t double " + bal[i] +"\n";
+   bal.clear();
+  string flfor="void Parray::flfor(double *y){\nfor(int i=0;i<nflx;i++) fluxes[i] = flx[i] * flx[rdt]/Vi;\n";
        string stdist;
     
 // reactions (fluxes)
@@ -168,56 +155,31 @@ int main ( int argc, char *argv[] ) {
       else getline(fi,aaa);
          }
       int kfl=flname.size();  cout<<"fluxes: "<<kfl<<'\n';
-
-     string aldfl, alds, aldp; int nr;
-   fi>>aaa>>aldfl>>alds>>aldp;//aldolase
-   flname.push_back(aldfl);
-   parsets<<kfl<<" ";
-      f_ff += ald(parsets,"aldfl", alds, aldp);
-       stdist+=r3met( fi);
-           fladd.push_back("aldfl"); fladd.push_back("aldrev");
-           fladd.push_back("aldfli");  fladd.push_back("aldi1");
-                 flfor +="fluxes["+aldfl+"] /= xx[n"+ alds+ "];\n";
-                 flfor +="fluxes["+aldfl+"+1] /= (xx[n"+ aldp+ "]*xx[n"+ aldp+ "]);\n";
-                 flfor +="fluxes["+aldfl+"+2] /= xx[n"+ alds+ "];\n";
+      fi>>aaa; 
      string tafl, tak1,taa1,taa2,tak2;
-   fi>>aaa>>nr>>tafl>>tak1>>taa1>>taa2>>tak2;//transaldolase
-   flname.push_back(tafl);
-   parsets<<kfl+1<<" ";
-      f_ff += ta(parsets,"tafl", tak1,taa1,taa2,tak2);
-       for(int i=0;i<nr;i++) stdist+=("//"+r3met( fi));
-       fladd.push_back("tafl"); fladd.push_back("s7f6a");
-       fladd.push_back("f6g3a"); fladd.push_back("s7e4a");
    
      string tkfl, tka1,tkk1,tka2,tkk2,tka3,tkk3;
-   fi>>aaa>>nr>>tkfl>>tka1>>tkk1>>tka2>>tkk2>>tka3>>tkk3;//transketoolase
-   flname.push_back(tkfl);
-   parsets<<kfl+2<<" ";
-      f_ff += tk(parsets,"tkfl", tka1,tkk1,tka2,tkk2,tka3,tkk3); stdist+='\n';
-       for(int i=0;i<nr;i++) stdist+=r3met( fi);
-       fladd.push_back("tkfl"); fladd.push_back("s7p5");
-       fladd.push_back("f6p5"); fladd.push_back("p5f6");
-       fladd.push_back("f6s7"); fladd.push_back("s7f6");
-       fladd.push_back("p5g3i"); fladd.push_back("f6e4i"); fladd.push_back("s7p5i");
-               f_ff+="for(int i=0;i<numx;i++) dydx[i]*=(flx[rdt]/Vi);\n}\n\n"; flfor+="}\n\n";
+      cout<<"parsets="<<parsets.str()<<'\n';
+               f_ff+="for(int i=0;i<nmet;i++) dydx[i]*=(flx[rdt]/Vi);\n}\n\n"; flfor+="}\n\n";
    
-          fi>>aaa;
-          f_ff+="void Fit::ff(const double *y,double *dydx) {\n";
+//          fi>>aaa;
+          f_ff+="void Fit::ff(const double *y,double *dydx) {\n\tf(y,dydx);\n";
           vector<string> smet; int numfl;
        for(int i=0; ;i++) {        fi>>aaa;
-         if(aaa.substr(0,3)=="fin") break; smet.push_back(aaa); f_ff+="\tdydx["+aaa+"] = (";
+cout<<" *** pass ***"<<aaa<<endl;
+         if(aaa.substr(0,3)=="fin") break;
+         smet.push_back(aaa); f_ff+="\tdydx["+aaa+"] = (";
                                   fi>>numfl;
         for(int j=0;j<numfl;j++) {fi>>aaa;
-        if(aaa.at(0)=='-') {f_ff+="- "; aaa.erase(0,1);} else f_ff+="+"; f_ff+="flx["+aaa+"]";}
+        if(aaa.at(0)=='-') {f_ff+="- "; aaa.erase(0,1);}
+        else f_ff+="+";
+        f_ff+="flx["+aaa+"]";}
          f_ff+=")*flx[rdt];\n";
        }  f_ff+="}\n\n";
                   
          fi.close();
-//     cout<<f_ff<<endl;
          
 //setting ODE model, conversion of fluxes for iso model (flfor):
-      
-             
 //declaration of the list of fluxes and variables for "nums.hh"
   ofstream numshh("../include/nums.hh");
   string hlfl=listname(flname,"nrea")+listname(fladd,"nflx") + listname(mname,"numx, nmet");//+listname(smet,"nmet");
@@ -231,79 +193,57 @@ int main ( int argc, char *argv[] ) {
       ofstream param("parameters");
   param<<parsets.str(); param.close(); parsets.str("");
   
-  parsets<<"Metab_data *Ldistr::met["<<lmet<<"];\nMetab *Ldistr::metb["<<lmetb<<"];\n ketose *Ldistr::metk["<<lmetk<<"];\n";
+  parsets<<"Metab *Ldistr::met["<<lmet<<"];\n";
+  if(lmetk>0)  parsets<<" ketose *Ldistr::metk["<<lmetk<<"];\n";
   
     
 string nvcpp="#include <iostream>\n#include \"nr.h\"\n#include \"nums.hh\"\n#include \"tk.hh\"\n#include \"nv.hh\"\n#include \"modlab.h\"\n#include \"solvers.h\"\n#include \"analis.h\"\n";
  nvcpp += "using namespace std;\n";
 //definition of the list of fluxes, parameters and variables for "nv.cpp"
- nvcpp +=listint(flname,"nrea")+listint(fladd,"nflx","rald") + listint(mname,"nmet")+snx;//+listint(smet,"nmet","numx");
-string aa="Metab_data"+sdata.str(); aa.erase(aa.end()-1); aa+=";\nketose"+sket.str(); aa.erase(aa.end()-1);
- aa+=";\nMetab"+sMe.str(); aa.erase(aa.end()-1);
+ nvcpp +=listint(flname,"nrea")+"const int nflx=nrea;\n" + listint(mname,"nmet")+snx;//+listint(smet,"nmet","numx")+listint(fladd,"nflx","rald");
+string aa="Metab"+sdata.str(); aa.erase(aa.end()-1); 
+if(lmetk>0)  {aa+=";\nketose"+sket.str(); aa.erase(aa.end()-1);}
  nvcpp +=aa+";\n";
   nvcpp+=("\tFit Problem;\n\tconst double thft(1.);\n\tdouble xx[nmet],flx[nflx],fluxes[nflx];\n\tdouble xinit1[nmet],xinit2[nmet];\n\t");
-  nvcpp +="string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[numx];\n\tReapar Parray::rea[nrea];\n\tdouble Analis::nv1[nrea], Analis::nv2[nrea];\n"+parsets.str()+"\n void Ldistr::setmet(){";
+  nvcpp +="string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[nmet];\n\tReapar Parray::rea[nrea];\n\tdouble Analis::nv1[nrea], Analis::nv2[nrea];\n"+parsets.str()+"\n void Ldistr::setmet(){";
    parsets.str("");
   nvcpp +=smeta.str()+smetb.str()+smetk.str() + " }\n void Ldistr::setcon(){"+
     scona.str()+sconb.str()+sconk.str()+ " }\n"+ f_ff;
-  nvcpp +="void Parray::init(){ft3=10.; fh6=7.;\n\ttk.setk(rea[rtk].getpar());\n\tta.setk(rea[rta].getpar());\n\taldolase.setk(rea[rald].getpar());}\n";
+  nvcpp +="void Parray::init(){ft3=10.; fh6=7.;}\n";
   nvcpp +="void Parray::fin(double y[]){\n\t"+setald1+"\n\t"+setk1+"\n\t"+seta1+"\n\t";
   setald1[11]='2'; setk1[5]='2'; seta1[5]='2';
-                                    nvcpp +=setald1+"\n\t"+setk1+"\n\t"+seta1+"\nflfor(y);\n}\n"+flfor;
+nvcpp +=setald1+"\n\t"+setk1+"\n\t"+seta1+"\nflfor(y);\n}\n"+flfor;
   ofstream fout("../con512tpl/nv.cpp"); fout<<nvcpp;   fout.close(); nvcpp="";
 
  //distr.cpp - begin   
    string sdist="#include <iostream>\n#include \"nums.hh\"\n#include \"tk.hh\"\n#include \"nv.hh\"\n#include \"modlab.h\"\n";
  sdist += "using namespace std;\nvoid Ldistr::distr(double *py,double *pdydt) {\n\tdouble NOL=0.;\n\tsetiso(py); setdiso(pdydt);\n\t";
  sdist += "for (int i=0;i<Nn;i++) pdydt[i]=0.;\n\t";
-  for(int i=0;i<mdatk.size();i++) sdist+=get<1>(mdatk[i]).substr(1)+".sett(); "; sdist+="t3.sett(); e4.sett();\n"; 
-//     cout<<mname[i]<<endl;
-   sdist += "\tProblem.f(py,pdydt);\n\tProblem.ff(py,pdydt);\n\tProblem.fin(py);/**/\n\tdouble xthf=thft-cthf.sumt();\n";
+  for(int i=0;i<mdatk.size();i++) sdist+=get<1>(mdatk[i]).substr(1)+".sett(); "; sdist+="\n"; 
+   sdist += "\tProblem.ff(py,pdydt);\n\tProblem.fin(py);/**/\n";
     sdist +=stdist;
-//    sdist +="csyn("+ics1[1]+".iso,"+ics1[1]+".diso,"+ics2[1]+".iso,"+ics2[1]+".diso,"+icsp[1]+".diso,fluxes["+csfl[1]+"]);\n";
-//    sdist +="split("+alds+".iso,"+alds+".diso,"+aldp+".iso,"+aldp+".diso,fluxes["+aldfl+"],fluxes["+aldfl+"+1]);\n";
-    sdist +="//spInvsl("+alds+".iso,"+alds+".diso,"+aldp+".iso,"+aldp+".diso,fluxes["+aldfl+"+2],"+aldp+".sumt());\n\t";
-
-    sdist +=tak1+".tka("+taa1+","+taa2+","+tak2+",fluxes[tafl]);\n\t";
-    sdist +=tak2+".tka("+taa2+","+taa1+","+tak1+",fluxes[tafl+1]);\n\t";
-    sdist +=tak1+".invista("+taa1+",fluxes[tafl+2]);\n\t";
-    sdist +=tak2+".invista("+taa2+",fluxes[tafl+3]);\n//";
-    
-    sdist +=tkk1+".tkk("+tka1+","+tka3+","+tkk3+",fluxes[tkfl]);\n//";
-    sdist +=tkk3+".tkk("+tka3+","+tka1+","+tkk1+",fluxes[tkfl+1]);\n//";
-    sdist +=tkk2+".tkk("+tka2+","+tka1+","+tkk1+",fluxes[tkfl+2]);\n//";
-    sdist +=tkk1+".tkk("+tka1+","+tka2+","+tkk2+",fluxes[tkfl+3]);\n//";
-    sdist +=tkk2+".tkk("+tka2+","+tka3+","+tkk3+",fluxes[tkfl+4]);\n//";
-    sdist +=tkk3+".tkk("+tka3+","+tka2+","+tkk2+",fluxes[tkfl+5]);\n//";
-    sdist +=tkk1+".invistk("+tka1+",fluxes[tkfl+6]);\n//";
-    sdist +=tkk2+".invistk("+tka2+",fluxes[tkfl+7]);\n//";
-    sdist +=tkk3+".invistk("+tka3+",fluxes[tkfl+8]);\n\t";
     for(int i= nxin;i<nmet;i++) sdist +=mname[i].substr(1)+".volume(Vt);\n\t";
                      sdist +="symm("+ssym+".getisot());\n//";
     for(int i=0;i<mdat.size();i++) sdist += "xx["+get<1>(mdat[i])+"]="+get<1>(mdat[i]).substr(1)+".sumt(); ";  sdist += "\n//";
     for(int i=0;i<mdatk.size();i++) sdist += "xx["+get<1>(mdatk[i])+"]="+get<1>(mdatk[i]).substr(1)+".sumt(); ";  sdist += "\n//";
-    for(int i=0;i<mdatb.size();i++) sdist += "xx["+get<1>(mdatb[i])+"]="+get<1>(mdatb[i]).substr(1)+".sumt(); ";  sdist += "\n";
     
     for(int i=0;i<nmet;i++) sdist += "xx["+mname[i]+"]=py["+mname[i]+"]; "; 
     sdist += "\n}\n";
  fout.open("../con512tpl/distr.cpp"); fout<<sdist;  fout.close(); sdist="";
  
- string stri= "Metab_data "+get<1>(mdat[0]).substr(1);
+ string stri= "Metab "+get<1>(mdat[0]).substr(1);
  ostringstream stcons;
   stcons<< (get<1>(mdat[0]).substr(1)+"(")<<get<0>(mdat[0])<<(", "+get<2>(mdat[0])+")");
   for(int i=1;i<mdat.size();i++){stri += ", "+get<1>(mdat[i]).substr(1);
   stcons<<(", "+get<1>(mdat[i]).substr(1)+"(")<<get<0>(mdat[i])<<(", "+get<2>(mdat[i])+")");
   }   stri += ";\n";
   
- stri += "ketose "+get<1>(mdatk[0]).substr(1);
+ if(lmetk>0){
+  stri += "ketose "+get<1>(mdatk[0]).substr(1);
   for(int i=1;i<mdatk.size();i++) stri += ", "+get<1>(mdatk[i]).substr(1);  stri += ";\n";
   for(int i=0;i<mdatk.size();i++)
-  stcons<<(", "+get<1>(mdatk[i]).substr(1)+"(")<<get<0>(mdatk[i])<<(", "+get<2>(mdatk[i])+")");  
-  
- stri += "Metab "+get<1>(mdatb[0]).substr(1);
-  for(int i=1;i<mdatb.size();i++) stri += ", "+get<1>(mdatb[i]).substr(1);  stri += ";\n";
-  for(int i=0;i<mdatb.size();i++)
-  stcons<<(", "+get<1>(mdatb[i]).substr(1)+"(")<<get<0>(mdatb[i])<<(", "+get<2>(mdatb[i])+")"); stcons<< "\n";
+  stcons<<(", "+get<1>(mdatk[i]).substr(1)+"(")<<get<0>(mdatk[i])<<(", "+get<2>(mdatk[i])+")");
+ }  
  fout.open("output"); fout<<stri<<stcons.str();  fout.close();
         return 0;}
 

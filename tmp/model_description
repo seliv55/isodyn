@@ -1,0 +1,38 @@
+//intracellular metabolites
+pyruvate cytosolic:        pyrc
+pyruvate mito:             pyr
+Acetyl-CoA:                coa
+Citrate:                   cit
+Oxaloacetate+malate cytosol:    oac
+α-Ketoglutarate mito:      akg
+α-Ketoglutarate citosol:   akgc
+Succinate:                 suc
+Fumarate+malate+oxaloacetate mito: mal
+Lactate cellular:          lacc
+//extracellular metabolites
+Glucose:                   glc
+Lactate:                   lac
+Glutamine                  gln
+
+
+// Reactions 
+Pyruvate kinase, pk: ->pyrc ->123
+Lactate dehydrogenase, ldh: pyrc-> 123->
+ lacin:  ->lacc ->123
+ laccpyr: lacc->pyr 123->123
+ pyrclacc: pyrc->lacc 123->123
+ pyrdcm: pyrc->pyr 123->123
+Pyruvate dehydrogenase, pdh: pyr->coa 123->23
+ citakg: cit->akg 123456->12456
+ akgsuc: akg->suc 12345->1234    
+ sucmal: suc->mal 1234->1234
+Pyruvate carboxylase, pc: pyr->mal 123->1234
+ malic: mal->pyr 1234->123
+ oacd: oac->mal 1234->1234
+ akgdcm: akgc->akg 12345->12345
+ liase: cit->oac 123456->3456
+ akgcit1: akgc->cit 12345->126345
+ gln_in: ->akgc  ->12345
+ ala_o: pyr->     123-> 
+Citrate syntase, cs: coa+mal<->cit 12+3456<->123456
+       

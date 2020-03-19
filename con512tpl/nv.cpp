@@ -7,191 +7,89 @@
 #include "solvers.h"
 #include "analis.h"
 using namespace std;
-const int hk=0, pfk=hk+1, fbpase=pfk+1, t3pep=fbpase+1, pept3=t3pep+1, pk=pept3+1, pyrlac=pk+1, lacpyr=pyrlac+1, pyrdcm=lacpyr+1, pyrdmc=pyrdcm+1, pdh=pyrdmc+1, citakg=pdh+1, akgsuc=citakg+1, sucmal=akgsuc+1, maloa=sucmal+1, oamal=maloa+1, pc=oamal+1, malicm=pc+1, malicc=malicm+1, ppp=malicc+1, oacd=ppp+1, mald=oacd+1, citdmc=mald+1, citdcm=citdmc+1, akgdmc=citdcm+1, akgdcm=akgdmc+1, coaout=akgdcm+1, citakg1=coaout+1, akgcit1=citakg1+1, gln_in=akgcit1+1, gln_out=gln_in+1, gluin=gln_out+1, gluout=gluin+1, t3ser=gluout+1, serpyr=t3ser+1, asp_o=serpyr+1, asp_i=asp_o+1, ala_o=asp_i+1, ala_i=ala_o+1, r5_o=ala_i+1, r5_i=r5_o+1, glycogin=r5_i+1, glycogout=glycogin+1, cystin=glycogout+1, proin=cystin+1, proout=proin+1, kgin=proout+1, coain=kgin+1, gln_pr=coain+1, ser_pr=gln_pr+1, asp_pr=ser_pr+1, ala_pr=asp_pr+1, pro_pr=ala_pr+1, trpala=pro_pr+1, mthf=trpala+1, thf=mthf+1, sergly=thf+1, glyser=sergly+1, cs0=glyser+1, D=cs0+1, atpase=D+1, resp=atpase+1, rdt=resp+1, rald=rdt+1, rta=rald+1, rtk=rta+1, nrea=rtk+1;
+const int hk=0, pyrclac=hk+1, lacin=pyrclac+1, laccpyr=lacin+1, pyrclacc=laccpyr+1, pyrdcm=pyrclacc+1, pdh=pyrdcm+1, citakg=pdh+1, akgsuc=citakg+1, sucmal=akgsuc+1, pc=sucmal+1, malicm=pc+1, oacd=malicm+1, akgdcm=oacd+1, liase=akgdcm+1, akgcit1=liase+1, gln_in=akgcit1+1, ala_o=gln_in+1, cs0=ala_o+1, D=cs0+1, rdt=D+1, nrea=rdt+1;
 
-const int aldfl=rald, aldrev=aldfl+1, aldfli=aldrev+1, aldi1=aldfli+1, tafl=aldi1+1, s7f6a=tafl+1, f6g3a=s7f6a+1, s7e4a=f6g3a+1, tkfl=s7e4a+1, s7p5=tkfl+1, f6p5=s7p5+1, p5f6=f6p5+1, f6s7=p5f6+1, s7f6=f6s7+1, p5g3i=s7f6+1, f6e4i=p5g3i+1, s7p5i=f6e4i+1, nflx=s7p5i+1;
-
-const int nfbp=0, nt3=nfbp+1, npep=nt3+1, npyr=npep+1, npyrm=npyr+1, ncoa=npyrm+1, ncoac=ncoa+1, nagl=ncoac+1, noa=nagl+1, noac=noa+1, ncit=noac+1, ncitc=ncit+1, nakg=ncitc+1, nakgc=nakg+1, nsuc=nakgc+1, nmal=nsuc+1, ne4=nmal+1, ncthf=ne4+1, ngae=ncthf+1, ndhe=ngae+1, ns7=ndhe+1, nh6=ns7+1, np5=nh6+1, n_atp=np5+1, n_nad=n_atp+1, ngl=n_nad+1, nlac=ngl+1, nglu=nlac+1, ngln=nglu+1, nala=ngln+1, nasp=nala+1, nser=nasp+1, ngly=nser+1, npro=ngly+1, nrna=npro+1, nglycog=nrna+1, nmet=nglycog+1;
+const int nflx=nrea;
+const int npyrc=0, npyr=npyrc+1, ncoa=npyr+1, noac=ncoa+1, ncit=noac+1, nakg=ncit+1, nakgc=nakg+1, nsuc=nakgc+1, nmal=nsuc+1, nlacc=nmal+1, ngl=nlacc+1, nlac=ngl+1, ngln=nlac+1, nmet=ngln+1;
 
 const int numx=ngl;
 
-Metab Ldistr::fbp(6,"fbp"), Ldistr::t3(3,"t3"), Ldistr::pep(3,"pep"), Ldistr::pyr(3,"pyr"), Ldistr::pyrm(3,"Pyr"), Ldistr::coa(2,"CoA"), Ldistr::coac(2,"coac"), Ldistr::agl(3,"Glycerol"), Ldistr::oa(4,"Oaa"), Ldistr::oac(4,"oac"), Ldistr::cit(6,"Cit"), Ldistr::citc(6,"citc"), Ldistr::akg(5,"aKg"), Ldistr::akgc(5,"akgc"), Ldistr::suc(4,"Suc"), Ldistr::mal(4,"Mal"), Ldistr::e4(4,"ne4"), Ldistr::cthf(1,"cthf"), Ldistr::gae(2,"gae"), Ldistr::dhe(3,"dhe"), Ldistr::gl(6,"Gluc"), Ldistr::lac(3,"Lac"), Ldistr::glu(5,"Glutamate2-5"), Ldistr::gln(5,"Glutamin"), Ldistr::ala(3,"Ala"), Ldistr::asp(4,"Asp"), Ldistr::ser(3,"Ser"), Ldistr::gly(2,"Gly"), Ldistr::pro(5,"Pro"), Ldistr::rna(5,"Rib"), Ldistr::glycog(6,"Glycog");
-ketose Ldistr::s7(7,"s7"), Ldistr::h6(6,"h6"), Ldistr::p5(5,"rib");
+Metab Ldistr::pyrc(3,"pyr"), Ldistr::pyr(3,"Pyr"), Ldistr::coa(2,"CoA"), Ldistr::oac(4,"oac"), Ldistr::cit(6,"Cit"), Ldistr::akg(5,"aKg"), Ldistr::akgc(5,"akgc"), Ldistr::suc(4,"suc"), Ldistr::mal(4,"Mal"), Ldistr::lacc(3,"lacc"), Ldistr::gl(3,"Gluc"), Ldistr::lac(3,"Lac"), Ldistr::gln(5,"Glutamin");
 	Fit Problem;
 	const double thft(1.);
 	double xx[nmet],flx[nflx],fluxes[nflx];
 	double xinit1[nmet],xinit2[nmet];
-	string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[numx];
+	string Parray::fid[nflx],Parray::fname[nflx],Parray::fschem[nflx], Parray::namex[nmet];
 	Reapar Parray::rea[nrea];
 	double Analis::nv1[nrea], Analis::nv2[nrea];
-//Metab *Ldistr::met[31];
-// ketose *Ldistr::metk[3];
+Metab *Ldistr::met[13];
 
- void Ldistr::setmet(){met[0]=&fbp; met[1]=&t3; met[2]=&pep; met[3]=&pyr; met[4]=&pyrm; met[5]=&coa; met[6]=&coac; met[7]=&agl; met[8]=&oa; met[9]=&oac; met[10]=&cit; met[11]=&citc; met[12]=&akg; met[13]=&akgc; met[14]=&suc; met[15]=&mal; met[16]=&e4; met[17]=&gl; met[18]=&lac; met[19]=&glu; met[20]=&gln; met[21]=&ala; met[22]=&asp; met[23]=&ser; met[24]=&gly; met[25]=&pro; met[26]=&rna; met[27]=&glycog; met[28]=&cthf; met[29]=&gae; met[30]=&dhe; metk[0]=&s7; metk[1]=&h6; metk[2]=&p5; 
- lmet=31; lmetk=3;  }
- void Ldistr::setcon(){fbp.setconc(xx[nfbp]); t3.setconc(xx[nt3]); pep.setconc(xx[npep]); pyr.setconc(xx[npyr]); pyrm.setconc(xx[npyrm]); coa.setconc(xx[ncoa]); coac.setconc(xx[ncoac]); agl.setconc(xx[nagl]); oa.setconc(xx[noa]); oac.setconc(xx[noac]); cit.setconc(xx[ncit]); citc.setconc(xx[ncitc]); akg.setconc(xx[nakg]); akgc.setconc(xx[nakgc]); suc.setconc(xx[nsuc]); mal.setconc(xx[nmal]); e4.setconc(xx[ne4]); cthf.setconc(xx[ncthf]); gae.setconc(xx[ngae]); dhe.setconc(xx[ndhe]); gl.setconc(xx[ngl]); lac.setconc(xx[nlac]); glu.setconc(xx[nglu]); gln.setconc(xx[ngln]); ala.setconc(xx[nala]); asp.setconc(xx[nasp]); ser.setconc(xx[nser]); gly.setconc(xx[ngly]); pro.setconc(xx[npro]); rna.setconc(xx[nrna]); glycog.setconc(xx[nglycog]); s7.setconc(xx[ns7]); h6.setconc(xx[nh6]); p5.setconc(xx[np5]);  }
- double Parray::sdh(double sss){return rea[D].v()*rea[sucmal].v(sss);}
-   void Fit::f(const double *y,double *dydx) {
-	for(int i=0;i<numx;i++) dydx[i]=0.;
-	 for(int i=0;i<nflx;i++) flx[i]=0.;
-	 double amp = -(sqrt(4.*xx[n_atp]*tan-3.*xx[n_atp]*xx[n_atp])-2.*tan+xx[n_atp])/2.;
-	 double a_dp = (sqrt(xx[n_atp])*sqrt(4.*tan-3.*xx[n_atp])-xx[n_atp])/2.;
-	 double h_nad = tnad-xx[n_nad];
-	 xthf=thft-xx[ncthf];
-flx[hk]= rea[hk].v( y[n_atp]);                     dydx[n_atp] -= flx[hk];  dydx[nh6] += flx[hk];  
-flx[pfk]= rea[pfk].v( y[nh6], y[n_atp]);           dydx[nh6] -= flx[pfk];  dydx[n_atp] -= flx[pfk];  dydx[nfbp] += flx[pfk];  
-flx[fbpase]= rea[fbpase].v( y[nfbp]);              dydx[nfbp] -= flx[fbpase];  dydx[nh6] += flx[fbpase];  
-flx[t3pep]= rea[t3pep].v( y[nt3], y[n_nad], a_dp); dydx[nt3] -= flx[t3pep];  dydx[n_nad] -= flx[t3pep];  dydx[n_atp] += flx[t3pep];  dydx[npep] += flx[t3pep];  
-flx[pept3]= rea[pept3].v( y[npep], y[n_atp], h_nad); dydx[npep] -= flx[pept3];  dydx[n_atp] -= flx[pept3];  dydx[n_nad] += flx[pept3];  dydx[nt3] += flx[pept3];  
-flx[pk]= rea[pk].v( y[npep], a_dp);                dydx[npep] -= flx[pk];  dydx[n_atp] += flx[pk];  dydx[npyr] += flx[pk];  
-flx[pyrlac]= rea[pyrlac].v( y[npyr], h_nad);       dydx[npyr] -= flx[pyrlac];  dydx[n_nad] += flx[pyrlac];  
-flx[lacpyr]= rea[lacpyr].v( y[n_nad], xx[nlac]);   dydx[n_nad] -= flx[lacpyr];  dydx[npyr] += flx[lacpyr];  
-flx[pyrdcm]= rea[pyrdcm].v( y[npyr]);              dydx[npyr] -= flx[pyrdcm];  dydx[npyrm] += flx[pyrdcm];  
-flx[pyrdmc]= rea[pyrdmc].v( y[npyrm]);             dydx[npyrm] -= flx[pyrdmc];  dydx[npyr] += flx[pyrdmc];  
-flx[pdh]= rea[pdh].v( y[npyrm], y[n_nad]);         dydx[npyrm] -= flx[pdh];  dydx[n_nad] -= flx[pdh];  dydx[ncoa] += flx[pdh];  
-flx[citakg]= rea[D].v()*rea[citakg].v( y[ncit], y[n_nad]); dydx[ncit] -= flx[citakg];  dydx[n_nad] -= flx[citakg];  dydx[nakg] += flx[citakg];  
-flx[akgsuc]= rea[D].v()*rea[akgsuc].v( y[nakg], y[n_nad], a_dp); dydx[nakg] -= flx[akgsuc];  dydx[n_nad] -= flx[akgsuc];  dydx[n_atp] += flx[akgsuc];  dydx[nsuc] += flx[akgsuc];  
-flx[sucmal]= sdh( y[nsuc]);   dydx[nsuc] -= flx[sucmal];  dydx[nmal] += flx[sucmal];  
-flx[maloa]= rea[maloa].v( y[nmal], y[n_nad]);      dydx[nmal] -= flx[maloa];  dydx[n_nad] -= flx[maloa];  dydx[noa] += flx[maloa];  
-flx[oamal]= rea[oamal].v( y[noa], h_nad);          dydx[noa] -= flx[oamal];  dydx[n_nad] += flx[oamal];  dydx[nmal] += flx[oamal];  
-flx[pc]= rea[pc].v( y[npyrm], y[n_atp]);           dydx[npyrm] -= flx[pc];  dydx[n_atp] -= flx[pc];  dydx[noa] += flx[pc];  
-flx[malicm]= rea[malicm].v( y[nmal], y[n_nad]);    dydx[nmal] -= flx[malicm];  dydx[n_nad] -= flx[malicm];  dydx[npyrm] += flx[malicm];  
-flx[malicc]= rea[malicc].v( y[noac], y[n_nad]);    dydx[noac] -= flx[malicc];  dydx[n_nad] -= flx[malicc];  dydx[npyr] += flx[malicc];  
-flx[ppp]= rea[ppp].v( y[nh6]);                     dydx[nh6] -= flx[ppp];  dydx[np5] += flx[ppp];  
+ void Ldistr::setmet(){met[0]=&pyrc; met[1]=&pyr; met[2]=&coa; met[3]=&oac; met[4]=&cit; met[5]=&akg; met[6]=&akgc; met[7]=&suc; met[8]=&mal; met[9]=&lacc; met[10]=&gl; met[11]=&lac; met[12]=&gln; 
+ lmet=13; lmetk=0;  }
+ void Ldistr::setcon(){met[0]->setconc(xx[npyrc]); met[1]->setconc(xx[npyr]); met[2]->setconc(xx[ncoa]); met[3]->setconc(xx[noac]); met[4]->setconc(xx[ncit]); met[5]->setconc(xx[nakg]); met[6]->setconc(xx[nakgc]); met[7]->setconc(xx[nsuc]); met[8]->setconc(xx[nmal]); met[9]->setconc(xx[nlacc]); met[10]->setconc(xx[ngl]); met[11]->setconc(xx[nlac]); met[12]->setconc(xx[ngln]);  }
+void Fit::f(const double *y,double *dydx) {
+	for(int i=0;i<nmet;i++) dydx[i]=0.;
+	for(int i=0;i<nflx;i++) flx[i]=0.;
+flx[hk]= rea[hk].v();                              dydx[npyrc] += flx[hk];  
+flx[pyrclac]= rea[pyrclac].v( y[npyrc]);           dydx[npyrc] -= flx[pyrclac];  
+flx[lacin]= rea[lacin].v( y[nlac]);                dydx[nlacc] += flx[lacin];  
+flx[laccpyr]= rea[laccpyr].v( y[nlacc]);           dydx[nlacc] -= flx[laccpyr];  dydx[npyr] += flx[laccpyr];  
+flx[pyrclacc]= rea[pyrclacc].v( y[npyrc]);         dydx[npyrc] -= flx[pyrclacc];  dydx[nlacc] += flx[pyrclacc];  
+flx[pyrdcm]= rea[pyrdcm].v( y[npyrc]);             dydx[npyrc] -= flx[pyrdcm];  dydx[npyr] += flx[pyrdcm];  
+flx[pdh]= rea[pdh].v( y[npyr]);                    dydx[npyr] -= flx[pdh];  dydx[ncoa] += flx[pdh];  
+flx[citakg]= rea[D].v()*rea[citakg].v( y[ncit]);   dydx[ncit] -= flx[citakg];  dydx[nakg] += flx[citakg];  
+flx[akgsuc]= rea[D].v()*rea[akgsuc].v( y[nakg]);   dydx[nakg] -= flx[akgsuc];  dydx[nsuc] += flx[akgsuc];  
+flx[sucmal]= rea[D].v()*rea[sucmal].v( y[nsuc]);   dydx[nsuc] -= flx[sucmal];  dydx[nmal] += flx[sucmal];  
+flx[pc]= rea[pc].v( y[npyr]);                      dydx[npyr] -= flx[pc];  dydx[nmal] += flx[pc];  
+flx[malicm]= rea[malicm].v( y[nmal]);              dydx[nmal] -= flx[malicm];  dydx[npyr] += flx[malicm];  
 flx[oacd]= rea[oacd].v( y[noac]);                  dydx[noac] -= flx[oacd];  dydx[nmal] += flx[oacd];  
-flx[mald]= rea[mald].v( y[nmal]);                  dydx[nmal] -= flx[mald];  dydx[noac] += flx[mald];  
-flx[citdmc]= rea[citdmc].v( y[ncit]);              dydx[ncit] -= flx[citdmc];  dydx[ncitc] += flx[citdmc];  
-flx[citdcm]= rea[citdcm].v( y[ncitc]);             dydx[ncitc] -= flx[citdcm];  dydx[ncit] += flx[citdcm];  
-flx[akgdmc]= rea[akgdmc].v( y[nakg]);              dydx[nakg] -= flx[akgdmc];  dydx[nakgc] += flx[akgdmc];  
 flx[akgdcm]= rea[akgdcm].v( y[nakgc]);             dydx[nakgc] -= flx[akgdcm];  dydx[nakg] += flx[akgdcm];  
-flx[coaout]= rea[coaout].v( y[ncitc], y[n_atp]);   dydx[ncitc] -= flx[coaout];  dydx[n_atp] -= flx[coaout];  dydx[noac] += flx[coaout];  
-flx[citakg1]= rea[citakg1].v( y[ncitc], y[n_nad]); dydx[ncitc] -= flx[citakg1];  dydx[n_nad] -= flx[citakg1];  dydx[nakgc] += flx[citakg1];  
-flx[akgcit1]= rea[akgcit1].v( y[nakgc], h_nad);    dydx[nakgc] -= flx[akgcit1];  dydx[n_nad] += flx[akgcit1];  dydx[ncitc] += flx[akgcit1];  
-flx[gln_in]= rea[gln_in].v( xx[ngln]);             dydx[nakgc] += flx[gln_in];  
-flx[gln_out]= rea[gln_out].v( y[nakgc]);           dydx[nakgc] -= flx[gln_out];  
-flx[gluin]= rea[gluin].v( xx[nglu]);               dydx[nakgc] += flx[gluin];  
-flx[gluout]= rea[gluout].v( y[nakgc]);             dydx[nakgc] -= flx[gluout];  
-flx[t3ser]= rea[t3ser].v( y[nt3]);                 dydx[nt3] -= flx[t3ser];  
-flx[serpyr]= rea[serpyr].v( xx[nser]);             dydx[npyrm] += flx[serpyr];  
-flx[asp_o]= rea[asp_o].v( y[noac]);                dydx[noac] -= flx[asp_o];  
-flx[asp_i]= rea[asp_i].v();                        dydx[noac] += flx[asp_i];  
-flx[ala_o]= rea[ala_o].v( y[npyr]);                dydx[npyr] -= flx[ala_o];  
-flx[ala_i]= rea[ala_i].v();                        dydx[npyr] += flx[ala_i];  
-flx[r5_o]= rea[r5_o].v( y[np5]);                   dydx[np5] -= flx[r5_o];  
-flx[r5_i]= rea[r5_i].v();                          dydx[np5] += flx[r5_i];  
-flx[glycogin]= rea[glycogin].v( y[nh6]);           dydx[nh6] -= flx[glycogin];  
-flx[glycogout]= rea[glycogout].v();                dydx[nh6] += flx[glycogout];  
-flx[cystin]= rea[cystin].v();                      dydx[npyrm] += flx[cystin];  
-flx[proin]= rea[proin].v();                        dydx[nakgc] += flx[proin];  
-flx[proout]= rea[proout].v( y[nakgc]);             dydx[nakgc] -= flx[proout];  
-flx[kgin]= rea[kgin].v();                          dydx[nakg] += flx[kgin];  
-flx[coain]= rea[coain].v();                        dydx[ncoa] += flx[coain];  
-flx[gln_pr]= rea[gln_pr].v( xx[ngln]);             
-flx[ser_pr]= rea[ser_pr].v( xx[nser]);             
-flx[asp_pr]= rea[asp_pr].v( xx[nasp]);             
-flx[ala_pr]= rea[ala_pr].v( xx[nala]);             
-flx[pro_pr]= rea[pro_pr].v( xx[npro]);             
-flx[trpala]= rea[trpala].v();                      
-flx[mthf]= rea[mthf].v( y[ncthf]);                 dydx[ncthf] -= flx[mthf];  
-flx[thf]= rea[thf].v( y[ncthf]);                   dydx[ncthf] -= flx[thf];  
-flx[sergly]= rea[sergly].v( xx[nser], xthf);       
-flx[glyser]= rea[glyser].v( xx[ngly], y[ncthf]);   dydx[ncthf] -= flx[glyser];  
-flx[cs0]= rea[D].v()*rea[cs0].v( y[noa], y[ncoa]); dydx[noa] -= flx[cs0];  dydx[ncoa] -= flx[cs0];  dydx[ncit] += flx[cs0];  
+flx[liase]= rea[liase].v( y[ncit]);                dydx[ncit] -= flx[liase];  dydx[noac] += flx[liase];  
+flx[akgcit1]= rea[akgcit1].v( y[nakgc]);           dydx[nakgc] -= flx[akgcit1];  dydx[ncit] += flx[akgcit1];  
+flx[gln_in]= rea[gln_in].v( y[ngln]);              dydx[nakgc] += flx[gln_in];  
+flx[ala_o]= rea[ala_o].v( y[npyrc]);               dydx[npyrc] -= flx[ala_o];  
+flx[cs0]= rea[D].v()*rea[cs0].v( y[nmal], y[ncoa]); dydx[nmal] -= flx[cs0];  dydx[ncoa] -= flx[cs0];  dydx[ncit] += flx[cs0];  
 flx[D]= rea[D].v();                                
-flx[atpase]= rea[atpase].v( y[n_atp]);             dydx[n_atp] -= flx[atpase];  
-flx[resp]= rea[resp].v( h_nad, a_dp);              dydx[n_nad] += flx[resp];  dydx[n_atp] += flx[resp];  dydx[n_atp] += flx[resp];  dydx[n_atp] += flx[resp];  
 flx[rdt]= rea[rdt].v();                            
-aldolase.st1fl(&flx[aldfl], y[nfbp], y[nt3]);      dydx[nfbp] -= flx[aldfl];    dydx[nt3] += 2.*flx[aldfl];
-ta.st1fl(&flx[tafl], y[nh6]/fh6, y[nt3]/ft3, y[ne4], y[ns7]);
-				dydx[nh6] -= flx[tafl];	 dydx[nt3] += flx[tafl];
-				dydx[ne4] -= flx[tafl];	 dydx[ns7] += flx[tafl];
-tk.st1fl(&flx[tkfl], y[nt3]/ft3, y[np5], y[ne4], y[nh6]/fh6, y[np5], y[ns7]);
-				dydx[np5] -= flx[tkfl];	dydx[nt3] += flx[tkfl];
-				dydx[ns7] -= flx[tkfl+1];	dydx[np5] += flx[tkfl+1];
-				dydx[nh6] -= flx[tkfl+2];	dydx[ne4] += flx[tkfl+2];
-for(int i=0;i<numx;i++) dydx[i]*=(flx[rdt]/Vi);
+for(int i=0;i<nmet;i++) dydx[i]*=(flx[rdt]/Vi);
 }
 
 void Fit::ff(const double *y,double *dydx) {
+	f(y,dydx);
 	dydx[ngl] = (- flx[hk])*flx[rdt];
-	dydx[nlac] = (+flx[pyrlac]- flx[lacpyr])*flx[rdt];
-	dydx[nglu] = (+flx[gluout]- flx[gluin])*flx[rdt];
-	dydx[ngln] = (+flx[gln_out]- flx[gln_in]- flx[gln_pr])*flx[rdt];
-	dydx[nala] = (+flx[ala_o]- flx[ala_i]+flx[trpala]- flx[ala_pr])*flx[rdt];
-	dydx[nasp] = (+flx[asp_o]- flx[asp_i]- flx[asp_pr])*flx[rdt];
-	dydx[nser] = (+flx[t3ser]- flx[serpyr]- flx[ser_pr]+flx[glyser]- flx[sergly])*flx[rdt];
-	dydx[ngly] = (+flx[sergly]- flx[glyser])*flx[rdt];
-	dydx[npro] = (+flx[proout]- flx[proin]- flx[pro_pr])*flx[rdt];
-	dydx[nrna] = (+flx[r5_o]- flx[r5_i])*flx[rdt];
-	dydx[nglycog] = (+flx[glycogin]- flx[glycogout])*flx[rdt];
+	dydx[nlac] = (- flx[lacin])*flx[rdt];
+	dydx[ngln] = (- flx[gln_in])*flx[rdt];
 }
 
-void Parray::init(){ft3=10.; fh6=7.;
-	tk.setk(rea[rtk].getpar());
-	ta.setk(rea[rta].getpar());
-	aldolase.setk(rea[rald].getpar());}
+void Parray::init(){ft3=10.; fh6=7.;}
 void Parray::fin(double y[]){
-	aldolase.st1fl(&flx[aldfl], y[nfbp], y[nt3]);
-	tk.st1fl(&flx[tkfl], y[nt3]/ft3, y[np5], y[ne4], y[nh6]/fh6, y[np5], y[ns7]);
-	ta.st1fl(&flx[tafl], y[nh6]/fh6, y[nt3]/ft3, y[ne4], y[ns7]);
-	aldolase.st2fl(&flx[aldfl], y[nfbp], y[nt3]);
-	tk.st2fl(&flx[tkfl], y[nt3]/ft3, y[np5], y[ne4], y[nh6]/fh6, y[np5], y[ns7]);
-	ta.st2fl(&flx[tafl], y[nh6]/fh6, y[nt3]/ft3, y[ne4], y[ns7]);
+	
+	
+	
+	
+	
+	
 flfor(y);
 }
 void Parray::flfor(double *y){
 for(int i=0;i<nflx;i++) fluxes[i] = flx[i] * flx[rdt]/Vi;
-fluxes[pfk] /= y[nh6];
-fluxes[fbpase] /= y[nfbp];
-fluxes[t3pep] /= y[nt3];
-fluxes[pept3] /= y[npep];
-fluxes[pk] /= y[npep];
-fluxes[pyrlac] /= y[npyr];
-fluxes[lacpyr] /= xx[nlac];
-fluxes[pyrdcm] /= y[npyr];
-fluxes[pyrdmc] /= y[npyrm];
-fluxes[pdh] /= y[npyrm];
+fluxes[pyrclac] /= y[npyrc];
+fluxes[lacin] /= y[nlac];
+fluxes[laccpyr] /= y[nlacc];
+fluxes[pyrclacc] /= y[npyrc];
+fluxes[pyrdcm] /= y[npyrc];
+fluxes[pdh] /= y[npyr];
 fluxes[citakg] /= y[ncit];
 fluxes[akgsuc] /= y[nakg];
 fluxes[sucmal] /= y[nsuc];
-fluxes[maloa] /= y[nmal];
-fluxes[oamal] /= y[noa];
-fluxes[pc] /= y[npyrm];
+fluxes[pc] /= y[npyr];
 fluxes[malicm] /= y[nmal];
-fluxes[malicc] /= y[noac];
-fluxes[ppp] /= y[nh6];
 fluxes[oacd] /= y[noac];
-fluxes[mald] /= y[nmal];
-fluxes[citdmc] /= y[ncit];
-fluxes[citdcm] /= y[ncitc];
-fluxes[akgdmc] /= y[nakg];
 fluxes[akgdcm] /= y[nakgc];
-fluxes[coaout] /= y[ncitc];
-fluxes[citakg1] /= y[ncitc];
+fluxes[liase] /= y[ncit];
 fluxes[akgcit1] /= y[nakgc];
-fluxes[gln_in] /= xx[ngln];
-fluxes[gln_out] /= y[nakgc];
-fluxes[gluin] /= xx[nglu];
-fluxes[gluout] /= y[nakgc];
-fluxes[t3ser] /= y[nt3];
-fluxes[serpyr] /= xx[nser];
-fluxes[asp_o] /= y[noac];
-fluxes[ala_o] /= y[npyr];
-fluxes[r5_o] /= y[np5];
-fluxes[glycogin] /= y[nh6];
-fluxes[proout] /= y[nakgc];
-fluxes[gln_pr] /= xx[ngln];
-fluxes[ser_pr] /= xx[nser];
-fluxes[asp_pr] /= xx[nasp];
-fluxes[ala_pr] /= xx[nala];
-fluxes[pro_pr] /= xx[npro];
-fluxes[mthf] /= y[ncthf];
-fluxes[thf] /= y[ncthf];
-fluxes[sergly] /= xx[nser]*xthf;
-fluxes[glyser] /= xx[ngly]*y[ncthf];
-fluxes[cs0] /= y[noa]*y[ncoa];
-fluxes[rald] /= xx[nfbp];
-fluxes[rald+1] /= (xx[nt3]*xx[nt3]);
-fluxes[rald+2] /= xx[nfbp];
+fluxes[gln_in] /= y[ngln];
+fluxes[ala_o] /= y[npyrc];
+fluxes[cs0] /= y[nmal]*y[ncoa];
 }
 

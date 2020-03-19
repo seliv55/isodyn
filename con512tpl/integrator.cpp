@@ -41,7 +41,8 @@ double Ldistr::integrbs(){
         dxsav = tm/((double)(KMAX-1));
         for(int k=0;k<10;k++){ tout=t+tm;
     NR::odeint(yy,t,tout,eps,h1,hmin,nok,nbad,derivsl,NR::rkqs);
-  massfr();   show(kinet,tout);  showcon(kicon,tout); 
+  massfr();   show(kinet,tout);
+    showcon(kicon,tout); 
     t=tout;
     } sklad(i);
 xi += xits(i);

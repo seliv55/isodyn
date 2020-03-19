@@ -1,171 +1,56 @@
-0 hk 2 v0= 0.01 K0= 0.01 
-1 pfk 3 v0= 0.01 K0= 0.01 K1= 0.01 
-2 fbpase 2 v0= 0.01 K0= 0.01 
-3 t3pep 4 v0= 0.01 K0= 0.01 K1= 0.01 K2= 0.01 
-4 pept3 4 v0= 0.01 K0= 0.01 K1= 0.01 K2= 0.01 
-5 pk 3 v0= 0.01 K0= 0.01 K1= 0.01 
-6 pyrlac 3 v0= 0.01 K0= 0.01 K1= 0.01 
-7 lacpyr 3 v0= 0.01 K0= 0.01 K1= 0.01 
-8 pyrdcm 2 v0= 0.01 K0= 0.01 
-9 pyrdmc 2 v0= 0.01 K0= 0.01 
-10 pdh 3 v0= 0.01 K0= 0.01 K1= 0.01 
-11 citakg 3 v0= 0.01 K0= 0.01 K1= 0.01 
-12 akgfum 4 v0= 0.01 K0= 0.01 K1= 0.01 K2= 0.01 
-13 fumal 2 v0= 0.01 K0= 0.01 
-14 malfum 2 v0= 0.01 K0= 0.01 
-15 maloa 3 v0= 0.01 K0= 0.01 K1= 0.01 
-16 oamal 3 v0= 0.01 K0= 0.01 K1= 0.01 
-17 pc 3 v0= 0.01 K0= 0.01 K1= 0.01 
-18 malicm 3 v0= 0.01 K0= 0.01 K1= 0.01 
-19 malicc 3 v0= 0.01 K0= 0.01 K1= 0.01 
-20 ppp 2 v0= 0.01 K0= 0.01 
-21 oacd 2 v0= 0.01 K0= 0.01 
-22 mald 2 v0= 0.01 K0= 0.01 
-23 citdmc 2 v0= 0.01 K0= 0.01 
-24 citdcm 2 v0= 0.01 K0= 0.01 
-25 akgdmc 2 v0= 0.01 K0= 0.01 
-26 akgdcm 2 v0= 0.01 K0= 0.01 
-27 coaout 3 v0= 0.01 K0= 0.01 K1= 0.01 
-28 citakg1 3 v0= 0.01 K0= 0.01 K1= 0.01 
-29 akgcit1 3 v0= 0.01 K0= 0.01 K1= 0.01 
-30 gln_in 2 v0= 0.01 K0= 0.01 
-31 gln_out 2 v0= 0.01 K0= 0.01 
-32 gluin 2 v0= 0.01 K0= 0.01 
-33 gluout 2 v0= 0.01 K0= 0.01 
-34 t3ser 2 v0= 0.01 K0= 0.01 
-35 serpyr 2 v0= 0.01 K0= 0.01 
-36 asp_o 2 v0= 0.01 K0= 0.01 
-37 asp_i 1 v0= 0.01 
-38 ala_o 2 v0= 0.01 K0= 0.01 
-39 ala_i 1 v0= 0.01 
-40 r5_o 2 v0= 0.01 K0= 0.01 
-41 r5_i 1 v0= 0.01 
-42 glycogin 2 v0= 0.01 K0= 0.01 
-43 glycogout 1 v0= 0.01 
-44 cystin 1 v0= 0.01 
-45 proin 1 v0= 0.01 
-46 proout 2 v0= 0.01 K0= 0.01 
-47 kgin 1 v0= 0.01 
-48 coain 1 v0= 0.01 
-49 gln_pr 2 v0= 0.01 K0= 0.01 
-50 ser_pr 2 v0= 0.01 K0= 0.01 
-51 asp_pr 2 v0= 0.01 K0= 0.01 
-52 ala_pr 2 v0= 0.01 K0= 0.01 
-53 pro_pr 2 v0= 0.01 K0= 0.01 
-54 trpala 1 v0= 0.01 
-55 mthf 2 v0= 0.01 K0= 0.01 
-56 thf 2 v0= 0.01 K0= 0.01 
-57 sergly 3 v0= 0.01 K0= 0.01 K1= 0.01 
-58 glyser 3 v0= 0.01 K0= 0.01 K1= 0.01 
-59 cs0 3 v0= 0.01 K0= 0.01 K1= 0.01 
-60 D 1 v0= 0.01 
-61 rdt 1 v0= 0.01 
-62 atpase 2 v0= 0.01 K0= 0.01 
-63 resp 3 v0= 0.01 K0= 0.01 K1= 0.01 
-64 ald   2  V= 0.00693115  K1= 14870
-65 ta   5  v0= 0.000113773  K1= 1.45  K2= 1.6456  K3= 0.010418  K4= 0.544787
-66 tk   7  V= 1.29301e-07  K1= 0.03  K2= 2  K3= 3  K4= 1.63335  K5= 3  K6= 11
+0 hk 1 v0= 0.01 
+1 pyrclac 2 v0= 0.01 K0= 0.01 
+2 lacin 2 v0= 0.01 K0= 0.01 
+3 laccpyr 2 v0= 0.01 K0= 0.01 
+4 pyrclacc 2 v0= 0.01 K0= 0.01 
+5 pyrdcm 2 v0= 0.01 K0= 0.01 
+6 pdh 2 v0= 0.01 K0= 0.01 
+7 citakg 2 v0= 0.01 K0= 0.01 
+8 akgsuc 2 v0= 0.01 K0= 0.01 
+9 sucmal 2 v0= 0.01 K0= 0.01 
+10 pc 2 v0= 0.01 K0= 0.01 
+11 malicm 2 v0= 0.01 K0= 0.01 
+12 oacd 2 v0= 0.01 K0= 0.01 
+13 akgdcm 2 v0= 0.01 K0= 0.01 
+14 liase 2 v0= 0.01 K0= 0.01 
+15 akgcit1 2 v0= 0.01 K0= 0.01 
+16 gln_in 2 v0= 0.01 K0= 0.01 
+17 ala_o 2 v0= 0.01 K0= 0.01 
+18 cs0 3 v0= 0.01 K0= 0.01 K1= 0.01 
+19 D 1 v0= 0.01 
+20 rdt 1 v0= 0.01 
 1 3 5 7 9 11 -1
-0) nfbp	0.01
-1) nt3	0.01
-2) npep	0.01
-3) npyr	0.01
-4) npyrm	0.01
-5) ncoa	0.01
-6) ncoac	0.01
-7) nagl	0.01
-8) noa	0.01
-9) noac	0.01
-10) ncit	0.01
-11) ncitc	0.01
-12) nakg	0.01
-13) nakgc	0.01
-14) nfum	0.01
-15) nmal	0.01
-16) ne4	0.01
-17) ns7	0.01
-18) nh6	0.01
-19) np5	0.01
-20) ncthf	0.01
-21) ngae	0.01
-22) ndhe	0.01
-23) n_atp	0.01
-24) n_nad	0.01
-25) ngl	0.01
-26) nlac	0.01
-27) nglu	0.01
-28) ngln	0.01
-29) nala	0.01
-30) nasp	0.01
-31) nser	0.01
-32) ngly	0.01
-33) npro	0.01
-34) nrna	0.01
-35) nglycog	0.01
+0) npyrc	0.01
+1) npyr	0.01
+2) ncoa	0.01
+3) noac	0.01
+4) ncit	0.01
+5) nakg	0.01
+6) nakgc	0.01
+7) nsuc	0.01
+8) nmal	0.01
+9) nlacc	0.01
+10) ngl	0.01
+11) nlac	0.01
+12) ngln	0.01
 0) hk	0.001
-1) pfk	0.001
-2) fbpase	0.001
-3) t3pep	0.001
-4) pept3	0.001
-5) pk	0.001
-6) pyrlac	0.001
-7) lacpyr	0.001
-8) pyrdcm	0.001
-9) pyrdmc	0.001
-10) pdh	0.001
-11) citakg	0.001
-12) akgfum	0.001
-13) fumal	0.001
-14) malfum	0.001
-15) maloa	0.001
-16) oamal	0.001
-17) pc	0.001
-18) malicm	0.001
-19) malicc	0.001
-20) ppp	0.001
-21) oacd	0.001
-22) mald	0.001
-23) citdmc	0.001
-24) citdcm	0.001
-25) akgdmc	0.001
-26) akgdcm	0.001
-27) coaout	0.001
-28) citakg1	0.001
-29) akgcit1	0.001
-30) gln_in	0.001
-31) gln_out	0.001
-32) gluin	0.001
-33) gluout	0.001
-34) t3ser	0.001
-35) serpyr	0.001
-36) asp_o	0.001
-37) asp_i	0.001
-38) ala_o	0.001
-39) ala_i	0.001
-40) r5_o	0.001
-41) r5_i	0.001
-42) glycogin	0.001
-43) glycogout	0.001
-44) cystin	0.001
-45) proin	0.001
-46) proout	0.001
-47) kgin	0.001
-48) coain	0.001
-49) gln_pr	0.001
-50) ser_pr	0.001
-51) asp_pr	0.001
-52) ala_pr	0.001
-53) pro_pr	0.001
-54) trpala	0.001
-55) mthf	0.001
-56) thf	0.001
-57) sergly	0.001
-58) glyser	0.001
-59) cs0	0.001
-60) D	0.001
-61) rdt	0.001
-62) atpase	0.001
-63) resp	0.001
-64) rald	0.001
-65) rta	0.001
-66) rtk	0.001
+1) pyrclac	0.001
+2) lacin	0.001
+3) laccpyr	0.001
+4) pyrclacc	0.001
+5) pyrdcm	0.001
+6) pdh	0.001
+7) citakg	0.001
+8) akgsuc	0.001
+9) sucmal	0.001
+10) pc	0.001
+11) malicm	0.001
+12) oacd	0.001
+13) akgdcm	0.001
+14) liase	0.001
+15) akgcit1	0.001
+16) gln_in	0.001
+17) ala_o	0.001
+18) cs0	0.001
+19) D	0.001
+20) rdt	0.001
