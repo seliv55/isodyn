@@ -1,2 +1,0 @@
-Metab pyrc, pyr, coa, oac, cit, akg, akgc, suc, mal, lacc, gl, lac, gln;
-pyrc(3, "pyr"), pyr(3, "Pyr"), coa(2, "CoA"), oac(4, "oac"), cit(6, "Cit"), akg(5, "aKg"), akgc(5, "akgc"), suc(4, "suc"), mal(4, "Mal"), lacc(3, "lacc"), gl(3, "Gluc"), lac(3, "Lac"), gln(5, "Glutamin")

@@ -1,4 +1,4 @@
-extern const int hk, pyrclac, lacin, laccpyr, pyrclacc, pyrdcm, pdh, citakg, akgsuc, sucmal, pc, malicm, oacd, akgdcm, liase, akgcit1, gln_in, ala_o, cs0, D, rdt, nrea, nflx;
+extern const int hk, pyrclac, lacin, laccpyr, pyrclacc, pyrdcm, pdh, citakg, akgsuc, sucmal, pc, malicm, oacd, akgdcm, liase, akgcit1, gln_in, ala_o, cs0, D, rdt, nrea;
 
 extern const int npyrc, npyr, ncoa, noac, ncit, nakg, nakgc, nsuc, nmal, nlacc, ngl, nlac, ngln, numx, nmet;
 

@@ -14,7 +14,7 @@ const int npyrc=0, npyr=npyrc+1, ncoa=npyr+1, noac=ncoa+1, ncit=noac+1, nakg=nci
 
 const int numx=ngl;
 
-Metab Ldistr::pyrc(3,"pyr"), Ldistr::pyr(3,"Pyr"), Ldistr::coa(2,"CoA"), Ldistr::oac(4,"oac"), Ldistr::cit(6,"Cit"), Ldistr::akg(5,"aKg"), Ldistr::akgc(5,"akgc"), Ldistr::suc(4,"suc"), Ldistr::mal(4,"Mal"), Ldistr::lacc(3,"lacc"), Ldistr::gl(3,"Gluc"), Ldistr::lac(3,"Lac"), Ldistr::gln(5,"Glutamin");
+Metab Ldistr::npyrc(3,"pyr"), Ldistr::npyr(3,"Pyr"), Ldistr::ncoa(2,"CoA"), Ldistr::noac(4,"oac"), Ldistr::ncit(6,"Cit"), Ldistr::nakg(5,"aKg"), Ldistr::nakgc(5,"akgc"), Ldistr::nsuc(4,"suc"), Ldistr::nmal(4,"Mal"), Ldistr::nlacc(3,"lacc"), Ldistr::ngl(3,"Gluc"), Ldistr::nlac(3,"Lac"), Ldistr::ngln(5,"Glutamin");
 	Fit Problem;
 	const double thft(1.);
 	double xx[nmet],flx[nflx],fluxes[nflx];
@@ -32,7 +32,7 @@ void Fit::f(const double *y,double *dydx) {
 	for(int i=0;i<nflx;i++) flx[i]=0.;
 flx[hk]= rea[hk].v(); 	dydx[npyrc] += flx[hk];  
 flx[pyrclac]= rea[pyrclac].v(y[npyrc]); 	dydx[npyrc] -= flx[pyrclac];  
-flx[lacin]= rea[lacin].v(y[nlac]); 	dydx[nlacc] += flx[lacin];  
+flx[lacin]= rea[lacin].v(y[nlac]); 	dydx[y[nlac]] -= flx[lacin];  dydx[nlacc] += flx[lacin];  
 flx[laccpyr]= rea[laccpyr].v(y[nlacc]); 	dydx[nlacc] -= flx[laccpyr];  dydx[npyr] += flx[laccpyr];  
 flx[pyrclacc]= rea[pyrclacc].v(y[npyrc]); 	dydx[npyrc] -= flx[pyrclacc];  dydx[nlacc] += flx[pyrclacc];  
 flx[pyrdcm]= rea[pyrdcm].v(y[npyrc]); 	dydx[npyrc] -= flx[pyrdcm];  dydx[npyr] += flx[pyrdcm];  
@@ -46,7 +46,7 @@ flx[oacd]= rea[oacd].v(y[noac]); 	dydx[noac] -= flx[oacd];  dydx[nmal] += flx[oa
 flx[akgdcm]= rea[akgdcm].v(y[nakgc]); 	dydx[nakgc] -= flx[akgdcm];  dydx[nakg] += flx[akgdcm];  
 flx[liase]= rea[liase].v(y[ncit]); 	dydx[ncit] -= flx[liase];  dydx[noac] += flx[liase];  
 flx[akgcit1]= rea[akgcit1].v(y[nakgc]); 	dydx[nakgc] -= flx[akgcit1];  dydx[ncit] += flx[akgcit1];  
-flx[gln_in]= rea[gln_in].v(y[ngln]); 	dydx[nakgc] += flx[gln_in];  
+flx[gln_in]= rea[gln_in].v(y[ngln]); 	dydx[y[ngln]] -= flx[gln_in];  dydx[nakgc] += flx[gln_in];  
 flx[ala_o]= rea[ala_o].v(y[npyrc]); 	dydx[npyrc] -= flx[ala_o];  
 flx[cs0]= rea[D].v()*rea[cs0].v(y[nmal], y[nmal]); 	dydx[nmal] -= flx[cs0];  dydx[ncoa] -= flx[cs0];  dydx[ncit] += flx[cs0];  
 flx[D]= rea[D].v(); 	

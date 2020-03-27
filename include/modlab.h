@@ -462,7 +462,7 @@ class ketose:public Metab {
         };
         
 class Ldistr {
-	int ntime,lmet, lmetk, itrac,markis,Nn;
+int ntime,lmet, lmetk, itrac,markis,Nn;
 static Metab pyrc, pyr, coa, oac, cit, akg, akgc, suc, mal, lacc, gl, lac, gln;
   double lacout,coaefl,tca,fpdh,marfrac,dsum;
   std::vector<Iso> result;

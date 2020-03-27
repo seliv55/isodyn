@@ -1,0 +1,5 @@
+ hk  -> npyrc $ 0 input /gl pyrc 0
+ pyrclac npyrc -> $   0 output pyrc
+ lacin  y[nlac] -> nlacc $ 0 input lac lacc 0
+fin
+       

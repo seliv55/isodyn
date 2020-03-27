@@ -95,7 +95,8 @@ int main ( int argc, char *argv[] ) {
     fi>> aaa; if(aaa=="fin") break;
          else if(aaa.find("intern_")+1) {nxin=i; bx=1;}
          else {tuple<int, string, string> namc; int nc; string sss, snm;
-          fi>>nc>>sss>>snm; mname.push_back(sss); namc=make_tuple(nc,sss,snm);
+          fi>>nc>>sss>>snm; mname.push_back(sss);
+           namc=make_tuple(nc,sss,snm);
                if(bx) {snx="const int numx="+sss+";\n\n"; bx=0;}
            if(aaa.find("Metab")+1) { mdat.push_back(namc);
               smeta <<"met["<<lmet<<"]=&"<<get<1>(namc).substr(1)<<"; ";
@@ -132,12 +133,15 @@ int main ( int argc, char *argv[] ) {
        string stdist;
     
 // reactions (fluxes)
-   for(int i=0; ;i++){ fi>>aaa; if(aaa.substr(0,3)=="fin") break;
+ for(int i=0; ;i++){ fi>>aaa; if(aaa.substr(0,3)=="fin") break;
                        flname.push_back(aaa);
                        fi>>numsub; string subst[numsub]; //substrates
            string s_fl ="fluxes["+aaa+"] /= "; string sy=""; int is(0);
-     for(int i1=0;i1<numsub;i1++){  fi>>subst[i1];                            //read substrates
-      if(subst[i1].at(0)=='-')if(subst[i1].size()>2)if(subst[i1].at(2)!='_') {
+           
+   for(int i1=0;i1<numsub;i1++) {
+     fi>>subst[i1]; //read substrates
+     if(subst[i1].at(0)=='-')
+       if(subst[i1].size()>2)if(subst[i1].at(2)!='_') {
            is++;  if(is>1) s_fl +="*";
            sy=subst[i1];
            sy.erase(0,1);
