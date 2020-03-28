@@ -1,2 +1,1 @@
-Metab npyrc, npyr, ncoa, noac, ncit, nakg, nakgc, nsuc, nmal, nlacc, ngl, nlac, ngln;
-
+static Metab pyrc, pyr, coa, oac, cit, akg, akgc, suc, mal, lacc, gl, lac, gln;

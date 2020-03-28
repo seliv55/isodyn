@@ -2,7 +2,8 @@ def mm( x):
    subend=x.index('->'); prend=x.index('$')
    sfl="flx["+x[0]+"]"; foo =sfl+"= "
    sub1="";ssub=""; sdx=""; parsets=''
-   if int(x[prend+1]): foo += "rea[D].v()*"
+   if int(x[prend+1]):
+    foo += "rea[D].v()*"
    parsets= x[0]+' '+str(subend)+' v0 '
    if subend>1:
     if x[1][0]=='n':
@@ -19,7 +20,6 @@ def mm( x):
    ssub=""
    for s in x[1:subend]:
      if s[0]=='n': ssub +="dydx["+s+"] -= "+sfl+";  "
-
    for s in x[(subend+1):prend]: ssub +="dydx["+s+"] += "+sfl+";  "
    foo +='; \t'+ssub+'\n';
    return foo, parsets
@@ -123,7 +123,7 @@ rend=lines_list.index('rend')
 react=lines_list[(rstar+1):rend]
 splir=[x.split() for x in react]
 flname=[x[0] for x in splir]
-a1=''; a2=''; pars=''; s_fl=''
+a1=''; a2=''; pars=''; s_fl=''; i=0
 for x in splir:
    if x.index('->') > 1:
      s_fl ="fluxes["+x[0]+"] /= "
@@ -135,7 +135,8 @@ for x in splir:
        flfor +=s_fl+";\n"
    a1,a2 = mm(x)
    f_ff += a1
-   pars += a2
+   pars += str(i)+') '+ a2
+   i+=1
    prend=x.index('$')
    if x[prend+2]=="input":
      aaa=rinput( x)
@@ -154,10 +155,22 @@ for x in splir:
      stdist+=aaa
 
 flfor += '}\n'
-print(flfor)
 kfl=len(react)
-print("fluxes: "+str(kfl))
-print(pars.split('\n'))
+a=pars.split('\n'); pars=''
+a.remove('')
+fipar=open('../output/1').read().splitlines()
+rind=[fipar.index(y) for y in fipar if 'rdt' in y][0]
+reapar=fipar[0:(rind+1)]
+i=0
+for x in splir:
+  ind=[reapar.index(y) for y in reapar if x[0] in y]
+  if len(ind)>0:
+     a[i]=fipar[ind[0]]
+  i+=1
+
+for x in a:
+  pars += x+'\n'
+
 f_ff+="for(int i=0;i<nmet;i++) dydx[i]*=(flx[rdt]/Vi);\n}\n\n"
 f_ff+="void Fit::ff(const double *y,double *dydx) {\n\tf(y,dydx);\n";
 fin=lines_list[rend:].index('fin')
@@ -165,17 +178,31 @@ splir=[x.split() for x in lines_list[(rend+2):(rend+fin)]]
 for x in splir: f_ff += dextern(x)
 
 f_ff+="}\n\n"
-
-numshh=open("../include/nums.hh",'w')
 hlfl=listname('extern const int ',flname,"nrea, nflx")
 hlfl+=listname('extern const int ',mname,"numx, nmet");
 hlfl+="\nextern const double thft;\n";
 hlfl+="extern double mader, dif,dif0, suxx, Vi,Vt, mu, xx[], fluxes[], flx[];\n";
 hlfl+="extern double nv1[],nv2[],xinit1[],xinit2[];\nextern time_t ts,tf,tcal;\n";
 hlfl+="extern std::string foc, kin, kinc;\nextern char *fex1, *fex2;\nextern int ifn;\n";
+numshh=open("../include/nums.hh",'w')
 numshh.write(hlfl); numshh.close(); hlfl=""
 
-pars += "1 3 5 7 9 11 -1\n"+setvals(mname, "0.01")+setvals(flname, "0.001")
+metind=[fipar.index(y) for y in fipar if 't=' in y][0]-1
+metpar=fipar[(rind+2):metind]
+meti=setvals(mname, "0.01").split('\n')
+meti.remove('')
+i=0
+for x in mname:
+  ind=[metpar.index(y) for y in metpar if x in y]
+  if len(ind)>0:
+     meti[i]=metpar[ind[0]]
+  i+=1
+
+ini=''
+for x in meti:
+  ini += x+'\n'
+
+pars += fipar[rind+1]+"\n"+ini+setvals(flname, "0.001")
 param=open("parameters",'w')
 param.write(pars); param.close(); pars=""
 
@@ -214,6 +241,17 @@ for x in mname: sdist += "xx["+x+"]=py["+x+"]; ";
 sdist += "\n}\n";
 fout=open("../con512tpl/distr.cpp",'w'); fout.write(sdist);  fout.close()
 
-stri= listname("static Metab ", mname)
-fout=open("output",'w'); fout.write(stri);  fout.close();
- 
+mn=[x[1:] for x in mname]
+stri= listname("static Metab ", mn)
+stri= stri[0:(len(stri)-2)]
+fout=open("output",'w'); fout.write(stri);  fout.close()
+
+lines_list = open('../include/modlab.h').read().splitlines()
+nvar=lines_list.index('class Ldistr {')
+lines_list[nvar+2]=stri
+aa=''
+for x in lines_list:
+  aa+=x+'\n' 
+
+fout=open("../include/modlab.h",'w'); fout.write(aa);  fout.close()
+
