@@ -3,7 +3,7 @@ set output "figs/sconc.png";
 set multiplot layout 2,5
 set border 3;
 set xrange [0:500]
-set xtics 200 nomirror;
+set xtics  nomirror;
 set ytics nomirror;
 fkey=0.985;
 

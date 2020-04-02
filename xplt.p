@@ -4,7 +4,7 @@ set multiplot layout 3,m0
 set border 3;
 #set xrange [0:1500]
 set yrange [0:100]
-set xtics 500 nomirror;
+set xtics 2000 nomirror;
 set ytics nomirror;
 fkey=0.985;
 #set autoscale;

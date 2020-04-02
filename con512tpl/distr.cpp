@@ -12,7 +12,7 @@ void Ldistr::distr(double *py,double *pdydt) {
 	Problem.fin(py);/**/
 gl.input(pyrc,fluxes[hk]/gl.sumt());
 pyrc.output(fluxes[pyrclac]);
-lac.input(lacc,fluxes[lacin]);
+lac.input(lacc,fluxes[lacin]/lac.sumt());
 lacc.input(pyr,fluxes[laccpyr]);
 pyrc.input(lacc,fluxes[pyrclacc]);
 pyrc.input(pyr,fluxes[pyrdcm]);
@@ -26,7 +26,7 @@ oac.input(mal,fluxes[oacd]);
 akgc.input(akg,fluxes[akgdcm]);
 cit.split(oac,coa,fluxes[liase]);
 akgc.icdhr(cit,fluxes[akgcit1]);
-gln.input(akgc,fluxes[gln_in]);
+gln.input(akgc,fluxes[gln_in]/gln.sumt());
 pyrc.output(fluxes[ala_o]);
 cit.condence(mal,coa,fluxes[cs0]);
 gl.volume(Vt);

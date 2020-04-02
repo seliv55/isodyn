@@ -13,7 +13,7 @@ def mm( x):
        ssub += x[1]
        parsets += ' k1 '
     if subend>2:
-       ssub += ', y[' +x[1]+']'
+       ssub += ', y[' +x[2]+']'
        parsets += ' k2 '
    parsets+='\n'
    foo +="rea["+x[0]+"].v("+ssub+")"
@@ -129,6 +129,9 @@ for x in splir:
      s_fl ="fluxes["+x[0]+"] /= "
      if (x[1][0]=='n') & (x.index('->') == 2):
        s_fl += 'y[' +x[1]+']'
+       flfor +=s_fl+";\n"
+     if (x[1][0]=='y') & (x.index('->') == 2):
+       s_fl += x[1]
        flfor +=s_fl+";\n"
      if x.index('->') == 3:
        s_fl += 'y['+x[1]+']*y['+x[2]+']'

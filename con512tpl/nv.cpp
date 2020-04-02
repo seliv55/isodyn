@@ -48,7 +48,7 @@ flx[liase]= rea[liase].v(y[ncit]); 	dydx[ncit] -= flx[liase];  dydx[noac] += flx
 flx[akgcit1]= rea[akgcit1].v(y[nakgc]); 	dydx[nakgc] -= flx[akgcit1];  dydx[ncit] += flx[akgcit1];  
 flx[gln_in]= rea[gln_in].v(y[ngln]); 	dydx[nakgc] += flx[gln_in];  
 flx[ala_o]= rea[ala_o].v(y[npyrc]); 	dydx[npyrc] -= flx[ala_o];  
-flx[cs0]= rea[D].v()*rea[cs0].v(y[nmal], y[nmal]); 	dydx[nmal] -= flx[cs0];  dydx[ncoa] -= flx[cs0];  dydx[ncit] += flx[cs0];  
+flx[cs0]= rea[D].v()*rea[cs0].v(y[nmal], y[ncoa]); 	dydx[nmal] -= flx[cs0];  dydx[ncoa] -= flx[cs0];  dydx[ncit] += flx[cs0];  
 flx[D]= rea[D].v(); 	
 flx[rdt]= rea[rdt].v(); 	
 for(int i=0;i<nmet;i++) dydx[i]*=(flx[rdt]/Vi);
@@ -69,6 +69,7 @@ flfor(y);
 void Parray::flfor(double *y){
 for(int i=0;i<nflx;i++) fluxes[i] = flx[i] * flx[rdt]/Vi;
 fluxes[pyrclac] /= y[npyrc];
+fluxes[lacin] /= y[nlac];
 fluxes[laccpyr] /= y[nlacc];
 fluxes[pyrclacc] /= y[npyrc];
 fluxes[pyrdcm] /= y[npyrc];
@@ -82,6 +83,7 @@ fluxes[oacd] /= y[noac];
 fluxes[akgdcm] /= y[nakgc];
 fluxes[liase] /= y[ncit];
 fluxes[akgcit1] /= y[nakgc];
+fluxes[gln_in] /= y[ngln];
 fluxes[ala_o] /= y[npyrc];
 fluxes[cs0] /= y[nmal]*y[ncoa];
 }

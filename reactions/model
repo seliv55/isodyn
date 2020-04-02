@@ -18,7 +18,7 @@ end_ballance
 reactions:
 hk       -> npyrc $ 0 input /gl pyrc 0  (123>123)
 pyrclac  npyrc ->  $     0 output pyrc  (123>)
-lacin    y[nlac] ->  nlacc $  0 input lac lacc 0     (123>123)
+lacin    y[nlac] ->  nlacc $  0 input /lac lacc 0     (123>123)
 laccpyr  nlacc ->    npyr $   0 input lacc pyr 0     (123>123)
 pyrclacc npyrc ->    nlacc $   0 input pyrc lacc  0  (123>123)
 pyrdcm   npyrc ->    npyr $  0 input pyrc pyr  0     (123>123)
@@ -32,7 +32,7 @@ oacd     noac ->  nmal $  0 input oac mal  0         (1234>1234)
 akgdcm   nakgc ->  nakg $  0 input akgc akg 0        (12345>12345)
 liase    ncit  ->  noac $  0 r3met split cit oac coa 0 (123456>3456)
 akgcit1  nakgc ->    ncit $  0 irr icdhr akgc cit    (12345>126345)
-gln_in   y[ngln] ->  nakgc $   0 input gln akgc  0   (12345>12345)
+gln_in   y[ngln] ->  nakgc $   0 input /gln akgc  0   (12345>12345)
 ala_o    npyrc ->   $  0 output pyrc                 (123>)
 cs0      nmal ncoa ->  ncit $  1 r3met condence cit mal coa 0 (12+3456>123456)
 D       ->   $ 0 0 0 0 0 0
