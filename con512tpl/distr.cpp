@@ -28,11 +28,11 @@ cit.split(oac,coa,fluxes[liase]);
 akgc.icdhr(cit,fluxes[akgcit1]);
 gln.input(akgc,fluxes[gln_in]/gln.sumt());
 pyrc.output(fluxes[ala_o]);
-cit.condence(mal,coa,fluxes[cs0]);
+cit.condence(coa,mal,fluxes[cs0]);
 gl.volume(Vt);
 	lac.volume(Vt);
 	gln.volume(Vt);
-	symm(mal.getisot());
+//	symm(mal.getisot());
 xx[npyrc]=pyrc.sumt(); xx[npyr]=pyr.sumt(); xx[ncoa]=coa.sumt(); xx[noac]=oac.sumt(); xx[ncit]=cit.sumt(); xx[nakg]=akg.sumt(); xx[nakgc]=akgc.sumt(); xx[nsuc]=suc.sumt(); xx[nmal]=mal.sumt(); xx[nlacc]=lacc.sumt(); xx[ngl]=gl.sumt(); xx[nlac]=lac.sumt(); xx[ngln]=gln.sumt(); 
 //xx[npyrc]=py[npyrc]; xx[npyr]=py[npyr]; xx[ncoa]=py[ncoa]; xx[noac]=py[noac]; xx[ncit]=py[ncit]; xx[nakg]=py[nakg]; xx[nakgc]=py[nakgc]; xx[nsuc]=py[nsuc]; xx[nmal]=py[nmal]; xx[nlacc]=py[nlacc]; xx[ngl]=py[ngl]; xx[nlac]=py[nlac]; xx[ngln]=py[ngln]; 
 }

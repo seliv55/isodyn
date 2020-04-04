@@ -345,12 +345,12 @@ void splinverse(Metab& pr1, Metab& pr2,const double vf,const double vr){
 }
  
 void condence(Metab& s1, Metab& s2,const double v){
-  int n1=s1.getN(),ip,ip1; double x, dx;
-   for(int i=0;i<s2.getlen();i++) { x=s2.iso[i]*v; ip=(i<<n1); //std::cout<<"i="<<i<<" ip="<<ip;
-        for(int j=0;j<s1.getlen();j++){dx=x*s1.iso[j]; ip1=(ip|j); //std::cout<<"j="<<j<<" ip1="<<ip1<<std::endl;
+  int n1=s2.getN(),ip,ip1; double x, dx;
+   for(int i=0;i<s1.getlen();i++) { x=s1.iso[i]*v; ip=(i<<n1); //std::cout<<"i="<<i<<" ip="<<ip;
+        for(int j=0;j<s2.getlen();j++){dx=x*s2.iso[j]; ip1=(ip|j); //std::cout<<"j="<<j<<" ip1="<<ip1<<std::endl;
 //     std::cout<<"ip="<<ip1<<" i="<<i<<" j="<<j<<std::endl;
     this->diso[ip1] += dx;
-    s1.diso[j] -= dx; s2.diso[i] -= dx; }}
+    s2.diso[j] -= dx; s1.diso[i] -= dx; }}
 }
 
 	Metab(int n,std::string simya=""): N(n), len(1<<n), descr(simya) { } //

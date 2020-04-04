@@ -63,13 +63,14 @@ void Fit::ff(const double *y,double *dydx) {
 
 void Parray::init(){ft3=10.; fh6=7.;}
 void Parray::fin(double y[]){
+flx[lacin] /= y[nlac];
+flx[gln_in] /= y[ngln];
 	
 flfor(y);
 }
 void Parray::flfor(double *y){
 for(int i=0;i<nflx;i++) fluxes[i] = flx[i] * flx[rdt]/Vi;
 fluxes[pyrclac] /= y[npyrc];
-fluxes[lacin] /= y[nlac];
 fluxes[laccpyr] /= y[nlacc];
 fluxes[pyrclacc] /= y[npyrc];
 fluxes[pyrdcm] /= y[npyrc];
@@ -83,7 +84,6 @@ fluxes[oacd] /= y[noac];
 fluxes[akgdcm] /= y[nakgc];
 fluxes[liase] /= y[ncit];
 fluxes[akgcit1] /= y[nakgc];
-fluxes[gln_in] /= y[ngln];
 fluxes[ala_o] /= y[npyrc];
 fluxes[cs0] /= y[nmal]*y[ncoa];
 }

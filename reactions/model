@@ -34,7 +34,7 @@ liase    ncit  ->  noac $  0 r3met split cit oac coa 0 (123456>3456)
 akgcit1  nakgc ->    ncit $  0 irr icdhr akgc cit    (12345>126345)
 gln_in   y[ngln] ->  nakgc $   0 input /gln akgc  0   (12345>12345)
 ala_o    npyrc ->   $  0 output pyrc                 (123>)
-cs0      nmal ncoa ->  ncit $  1 r3met condence cit mal coa 0 (12+3456>123456)
+cs0      nmal ncoa ->  ncit $  1 r3met condence cit coa mal 0 (12+3456>123456)
 D       ->   $ 0 0 0 0 0 0
 rdt      ->   $ 0 0 0 0 0 0
 rend
