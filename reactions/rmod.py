@@ -236,7 +236,7 @@ sdist +=stdist;
 for x in sploumet: sdist += x[2][1:]+".volume(Vt);\n\t";
 
 sdist +="symm(mal.getisot());\n";
-for x in mname: sdist += "xx["+x+"]="+x[1:]+".sumt(); "
+for x in mname: sdist += "py["+x+"]="+x[1:]+".sumt(); "
 
 sdist += "\n//";
 for x in mname: sdist += "xx["+x+"]=py["+x+"]; ";

@@ -1,8 +1,8 @@
 0       hk   2 0.0059 0.01
-1   pyrclac   2 1.2 0.5
+1) pyrclac 2 v0  k1 
 2    lacin   2 0.07e-05 0.01
 3 laccpyrm   3 0.0001 1 0.56094
-4  pyrclacc   3 0.0001 0.01 0.01
+4) pyrclacc 2 v0  k1 
 5   pyrdcm   2 0.02 0.7
 6      pdh   3 0.00025 0.02 0.0217826
 7   citakg   3 0.649994 1 0.564972
