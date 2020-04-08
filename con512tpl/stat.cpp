@@ -32,6 +32,7 @@ void Fit::write (tuple<double,double,time_t> sol, int& ifn,bool flg)  {
             if((ifn>fnfin)&&(ifn<(fnfin+5))) throw(invalid_argument("limit number of iterations reached"));
     fn<<outdir<<'/'<<ifn; //sprintf(fn,"%i",ifn);
   ofstream fi(fn.str().c_str());
+  fi.precision(12);
     for (i=0;i<nrea;i++) rea[i].write(fi,i); 
     for (i=0;i<par.size();i++) fi << par[i]<<" "; fi << "-1"<<spar<<"\n";
     for(int i=0;i<nmet;i++) xx[i]=xinit1[i];                             //take initial values

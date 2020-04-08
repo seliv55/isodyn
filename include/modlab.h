@@ -110,9 +110,9 @@ data * getexper(int nt){return &exper[nt][0];}
 std::string& getdescr(){return descr;} 
 
 void skladm0(int itime){ kinm0[itime]=calc[0]/calc[mi+1];
-/*   std::cout<<descr<<" time="<<itime<<" conc="<<calc[mi+1]<<'\n';*/
-/*     for(int i=0;i<=mi;i++) std::cout<<calc[i]/calc[mi+1]<<" ";*/
-/*                        std::cout<<'\n'; */
+   std::cout<<descr<<" time="<<itime<<" conc="<<calc[mi+1]<<'\n';
+     for(int i=0;i<=mi;i++) std::cout<<calc[i]/calc[mi+1]<<" ";
+                        std::cout<<'\n'; 
                         }
 
 int getmi(){ return mi;}
