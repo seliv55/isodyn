@@ -9,9 +9,9 @@ def mm( x):
     if x[1][0]=='n':
        ssub += 'y[' +x[1]+']'
        parsets += ' k1 '
-    else: 
-       ssub += x[1]
-       parsets += ' k1 '
+#    else: 
+#       ssub += x[1]
+#       parsets += ' k1 '
     if subend>2:
        ssub += ', y[' +x[2]+']'
        parsets += ' k2 '
@@ -20,28 +20,28 @@ def mm( x):
    ssub=""
    for s in x[1:subend]:
      if s[0]=='n': ssub +="dydx["+s+"] -= "+sfl+";  "
-   for s in x[(subend+1):prend]: ssub +="dydx["+s+"] += "+sfl+";  "
+   for s in x[(subend+1):prend]:
+     if s[0]=='n': ssub +="dydx["+s+"] += "+sfl+";  "
    foo +='; \t'+ssub+'\n';
    return foo, parsets
 
 def rinput(x):
-   prend=x.index('$'); sf=''
-   ssub=x[prend+3]; spr=x[prend+4]; flrev=x[prend+5]
+   sf=''
+   ssub=x[1][1:]; spr=x[3][1:]; #lrev=x[prend+5]
    if ssub[0]=='/': sf=ssub+".sumt()"; ssub=ssub[1:]
    rdist=ssub+".input("+ spr+",fluxes["+x[0]+"]"+sf
-   if len(flrev)-1: rdist += ",fluxes["+flrev+"]"
+#   if len(flrev)-1: rdist += ",fluxes["+flrev+"]"
    rdist += ");\n"
    return rdist
 
-def r3met(x):
-   prend=x.index('$')
-   rtype=x[prend+3]
-   smet0=x[prend+4]
-   smet1=x[prend+5]
-   smet2=x[prend+6]
-   flrev=x[prend+7]
-   rdist=smet0+"."+rtype+"(" + smet1+","+smet2+",fluxes["+x[0]+"]"
-   if len(flrev)-1: rdist +=",fluxes["+flrev+"]"
+def r3met(x,a):
+   if a[1].find('+')>0:
+     rtype='split'
+     rdist=x[1][1:]+"."+rtype+"(" + x[3][1:]+","+x[4][1:]+",fluxes["+x[0]+"]"
+   if a[0].find('+')>0:
+     rtype='condence'
+     rdist=x[4][1:]+"."+rtype+"(" + x[2][1:]+","+x[1][1:]+",fluxes["+x[0]+"]"
+#   if len(flrev)-1: rdist +=",fluxes["+flrev+"]"
    rdist += ");\n"
    return rdist
 
@@ -52,16 +52,23 @@ def rm0in(x):
    return rdist
 
 def rout(x):
-   prend=x.index('$')
-   smet=x[prend+3]
+   smet=x[1][1:]
    rdist=smet+".output(fluxes["+x[0]+"]);\n"
    return rdist
 
-def irrev(x):
-   prend=x.index('$')
-   rtype=x[prend+3]; smet=x[prend+4]
-   rdist=smet+"."+rtype+"("
-   smet=x[prend+5]; rdist += smet+",fluxes["+x[0]+"]);\n"
+def irrev(x,a):
+   if a[0].find(a[1])>0:
+     rtype='cutfirst'
+   elif a[0].find(a[1])==0:
+     rtype='decarb'
+   elif a[1].find(a[0])==0:
+     rtype='carb';
+   elif a[0].find(a[1][2:])==3:
+     rtype='icdh';
+   elif a[0].find(a[1][3:])==2:
+     rtype='icdhr';
+   smet=x[1][1:]; pmet=x[3][1:]
+   rdist=smet+"."+rtype+"("+pmet+",fluxes["+x[0]+"]);\n"
    return rdist
 
 def dextern(x):
@@ -117,15 +124,15 @@ for x in sploumet:
 smeta += "\n lmet="+str(lmet)+"; "
 f_ff="void Fit::f(const double *y,double *dydx) {\n\tfor(int i=0;i<nmet;i++) dydx[i]=0.;\n\tfor(int i=0;i<nflx;i++) flx[i]=0.;\n";
 flfor="void Parray::flfor(double *y){\nfor(int i=0;i<nflx;i++) fluxes[i] = flx[i] * flx[rdt]/Vi;\n"
-stdist=""
 rstar=lines_list.index('reactions:')
 rend=lines_list.index('rend')
 react=lines_list[(rstar+1):rend]
 splir=[x.split() for x in react]
 flname=[x[0] for x in splir]
 a1=''; a2=''; pars=''; s_fl=''; i=0
+stdist=""
 for x in splir:
-   if x.index('->') > 1:
+   if x[1][0] != '/':
      s_fl ="fluxes["+x[0]+"] /= "
      if (x[1][0]=='n') & (x.index('->') == 2):
        s_fl += 'y[' +x[1]+']'
@@ -141,21 +148,20 @@ for x in splir:
    pars += str(i)+') '+ a2
    i+=1
    prend=x.index('$')
-   if x[prend+2]=="input":
-     aaa=rinput( x)
-     stdist += aaa
-   elif x[prend+2]=="irr":
-     aaa=irrev(x)
-     stdist += aaa
-   elif x[prend+2]=="output":
-     aaa=rout(x)
-     stdist+=aaa
-   elif x[prend+2]=="m0inp":
-     aaa=rm0in(x) 
-     stdist+=aaa
-   elif x[prend+2]=="r3met":
-     aaa=r3met(x)
-     stdist+=aaa
+   atr=x[prend+2].split('>')
+   if len(atr)==2:
+     if atr[0]==atr[1]:
+       aaa=rinput( x)
+       stdist += aaa
+     elif atr[1]=='':
+       aaa=rout(x)
+       stdist+=aaa
+     elif prend<5:
+       aaa=irrev(x,atr)
+       stdist += aaa
+     elif prend==5:
+       aaa=r3met(x,atr)
+       stdist+=aaa
 
 flfor += '}\n'
 kfl=len(react)
