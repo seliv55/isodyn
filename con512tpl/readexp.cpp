@@ -51,8 +51,8 @@ void Ldistr::rmid(ifstream& ifi){
       while (getline(ss,nma[i],',')) i++; int beg=stoi(nma[1]), mi=stoi(nma[2])-beg+1;
       eind=sexm0(nma[0]);
       if(eind>=0){
-         Exper *ee=new Exper(mi,beg,nma[0]); 
-         expm0[eind]->exper.push_back(*ee); lex=expm0[eind]->exper.size(); delete ee;
+         Exper ee(mi,beg,nma[0]); 
+         expm0[eind]->exper.push_back(ee); lex=expm0[eind]->exper.size();
          cout<<"-------------\n"<<nma[0]<<" : "<<expm0[eind]->getdescr()<<'\n';
          ifi>>aaa;
          while (aaa.find("t=")+1){ int et;

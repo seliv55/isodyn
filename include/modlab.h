@@ -59,7 +59,7 @@ class Tracer:public Iso {
 };
 
 class Exper{
-        int mi, frbeg;
+        int mi, frbeg, frend;
         data *exper[tt];
         double *calc,*calstor[tt],xi[tt], xicon[tt],kinm0[tt],time[tt];
         std::string descr;
@@ -80,8 +80,8 @@ void rex(std::ifstream& ifi, int nt){// reads experimental data
       ifi>>aaa;
 /*      std::cout<<" rex "<<aaa<<" ";*/
     for(int i=0;i<=mi;i++){ ifi>>exper[nt][i].mean;
-     std::cout<<exper[nt][i].mean<<" ";
-     }  std::cout<<'\n';
+/*     std::cout<<exper[nt][i].mean<<" ";*/
+     }  //std::cout<<'\n';
       getline(ifi,aaa);
       ifi>>aaa;
 /*      std::cout<<"\n rex "<<aaa<<" ";*/
@@ -91,10 +91,10 @@ void rex(std::ifstream& ifi, int nt){// reads experimental data
 /*       getline(ifi,aaa);*/
 }
 
-double percent(const double *iso,int len){
-		double tot=0.; int nc,sum;
+double percent(const double *iso,int nn){
+		double tot=0.; int nc,sum, len=(1<<nn);
 		for(int i=0;i<mi+2;i++) calc[i]=0.;
-   for(nc=0;nc<len;nc++) { int i=((nc>>frbeg)&((1<<mi)-1)); sum=0;
+   for(nc=0;nc<len;nc++) { int i=((nc>>(nn-frbeg-mi))&((1<<mi)-1)); sum=0;
 	while(i>0){sum += (i & 1);i = (i >> 1);}     calc[sum] += iso[nc];
 		          }//end for
 	for(int i=0;i<=mi;i++) tot += calc[i];
@@ -152,9 +152,9 @@ void wrikinm0(std::ostringstream& so, int nt) {
 double* getcalc(){return &calc[0];}
 double shkin(int itp){return this->kinm0[itp];}
 
-double dilut( double& dlt,const double *iso,const int len,const int nt) {
+double dilut( double& dlt,const double *iso,const int nn,const int nt) {
 	     int i; double xi(0.0),a(0.0);
-	   this->percent(iso,len);
+	   this->percent(iso,nn);
 	dlt = (exper[nt][0].mean-this->calc[0])/(1.-exper[nt][0].mean);
 		if(dlt>0) {
 		this->calc[0] += dlt;
@@ -168,7 +168,7 @@ double dilut( double& dlt,const double *iso,const int len,const int nt) {
 		return xi;
 }
 
-   Exper(int n,int beg,std::string simya=""): mi(n), frbeg(beg), descr(simya) { for(int i=0;i<tt;i++) {
+   Exper(int n,int beg,std::string simya=""): mi(n), frbeg(beg), descr(simya)  { for(int i=0;i<tt;i++) {
       exper[i]=new data[mi+1]; calstor[i]=new double[mi+1];} exper[0][0].mean=1.; calc=new double[mi+2]; } //
    Exper(const Exper &obj) = default; //{//
 //   for(int i=0;i<tt;i++) {      exper[i]=new data[mi+1]; calstor[i]=new double[mi+1];
@@ -194,7 +194,7 @@ void wrikin(std::ostringstream& so, int nt){
    for(unsigned int i=0;i<exper.size();i++) exper[i].wrikinm0(so,nt);
  }
  
-void percent(){ for(unsigned int j=0;j<this->exper.size();j++) tcon=this->exper[j].percent(iso,len);}
+void percent(){ for(unsigned int j=0;j<this->exper.size();j++) tcon=this->exper[j].percent(iso,N);}
 
 void readc(std::ifstream& fi,  int nt){ std::string aaa;
      fi>>aaa;

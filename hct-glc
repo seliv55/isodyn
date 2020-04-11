@@ -87,7 +87,7 @@ mean:
 sd:
 0.01184 0 0 0.01184
 fin
-name: *PyrAl_C2C3,1,2
+name: *Pyr_C2C3,1,2
 t= 0.5
 mean:
 0.8441 0.0706 0.0790

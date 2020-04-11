@@ -32,7 +32,7 @@ cit.condence(coa,mal,fluxes[cs0]);
 gl.volume(Vt);
 	lac.volume(Vt);
 	gln.volume(Vt);
-//	symm(mal.getisot());
+	symm(mal.getisot());
 py[npyrc]=pyrc.sumt(); py[npyr]=pyr.sumt(); py[ncoa]=coa.sumt(); py[noac]=oac.sumt(); py[ncit]=cit.sumt(); py[nakg]=akg.sumt(); py[nakgc]=akgc.sumt(); py[nsuc]=suc.sumt(); py[nmal]=mal.sumt(); py[nlacc]=lacc.sumt(); py[ngl]=gl.sumt(); py[nlac]=lac.sumt(); py[ngln]=gln.sumt(); 
 //xx[npyrc]=py[npyrc]; xx[npyr]=py[npyr]; xx[ncoa]=py[ncoa]; xx[noac]=py[noac]; xx[ncit]=py[ncit]; xx[nakg]=py[nakg]; xx[nakgc]=py[nakgc]; xx[nsuc]=py[nsuc]; xx[nmal]=py[nmal]; xx[nlacc]=py[nlacc]; xx[ngl]=py[ngl]; xx[nlac]=py[nlac]; xx[ngln]=py[ngln]; 
 }

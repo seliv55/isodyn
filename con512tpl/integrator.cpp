@@ -51,6 +51,9 @@ xi += xicon(i);
     }
 wrikin(foc1,ntime);
 wricon(foc1,ntime);
+double dx[nmet];
+Problem.ff(pyinit,dx);
+for(int i=0;i<nmet;i++) cout<<met[i]->getdescr()<<" "<<dx[i]<<"; "; cout<<'\n';
   for(int j=0;j<nflx;j++) { flxkin<<Problem.fid[j]<<" "; for(int i=0;i<ntime;i++) flxkin<<ppotok[i][j]<<" "; flxkin<<'\n';}
 foc=foc1.str(); kin=kinet.str(); kinflx=flxkin.str(); kinc=kicon.str();// cout<<kin<<endl;
         delete yp_p;
