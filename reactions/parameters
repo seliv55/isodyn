@@ -3,7 +3,6 @@
 2    lacin   2 0.07e-05 0.01
 3 laccpyrm   3 0.0001 1 0.56094
 4) pyrclacc 2 v0  k1 
-5   pyrdcm   2 0.02 0.7
 6      pdh   3 0.00025 0.02 0.0217826
 7   citakg   3 0.649994 1 0.564972
 8   akgsuc   4 1.68996 0.0696334 0.564972 0.564972
@@ -38,19 +37,18 @@
 2) lacin	0.001
 3) laccpyr	0.001
 4) pyrclacc	0.001
-5) pyrdcm	0.001
-6) pdh	0.001
-7) citakg	0.001
-8) akgsuc	0.001
-9) sucmal	0.001
-10) pc	0.001
-11) malicm	0.001
-12) oacd	0.001
-13) akgdcm	0.001
-14) liase	0.001
-15) akgcit1	0.001
-16) gln_in	0.001
-17) ala_o	0.001
-18) cs0	0.001
-19) D	0.001
-20) rdt	0.001
+5) pdh	0.001
+6) citakg	0.001
+7) akgsuc	0.001
+8) sucmal	0.001
+9) pc	0.001
+10) malicm	0.001
+11) oacd	0.001
+12) akgdcm	0.001
+13) liase	0.001
+14) akgcit1	0.001
+15) gln_in	0.001
+16) ala_o	0.001
+17) cs0	0.001
+18) D	0.001
+19) rdt	0.001

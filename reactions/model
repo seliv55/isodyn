@@ -21,7 +21,6 @@ pyrclac  npyrc ->    $     0 123>
 lacin    ./lac -> nlacc $  0 123>123
 laccpyr  nlacc ->  npyr $  0 123>123
 pyrclacc npyrc -> nlacc $  0 123>123
-pyrdcm   npyrc ->  npyr $  0 123>123
 pdh      npyr ->   ncoa $  0 123>23
 citakg   ncit ->   nakg $  1 123456>12456
 akgsuc   nakg ->   nsuc $  1 12345>1234
