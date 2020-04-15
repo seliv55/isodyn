@@ -2,7 +2,7 @@
 #fiso="hct-gln" #13C labeling 
 fiso="hct-glc" #13C labeling 
 fcon=hct-conc #concentrations
-inpar="output/2" #set of parameters to start
+inpar="output/1" #set of parameters to start
 oudir="output"  #output directory
 fstat="glc/statfl"  #statistics on the all sets of parameters
 fcmpr="glc/statfl1" #statistics for matching conditions

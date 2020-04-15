@@ -7,7 +7,7 @@
 #include "solvers.h"
 #include "analis.h"
 using namespace std;
-const int hk=0, pyrclac=hk+1, lacin=pyrclac+1, laccpyr=lacin+1, pyrclacc=laccpyr+1, pdh=pyrclacc+1, citakg=pdh+1, akgsuc=citakg+1, sucmal=akgsuc+1, pc=sucmal+1, malicm=pc+1, oacd=malicm+1, akgdcm=oacd+1, liase=akgdcm+1, akgcit1=liase+1, gln_in=akgcit1+1, ala_o=gln_in+1, cs0=ala_o+1, D=cs0+1, rdt=D+1, nrea=rdt+1;
+const int hk=0, pyrclac=hk+1, lacin=pyrclac+1, laccpyr=lacin+1, pyrclacc=laccpyr+1, pyrdcm=pyrclacc+1, pdh=pyrdcm+1, citakg=pdh+1, akgsuc=citakg+1, sucmal=akgsuc+1, pc=sucmal+1, malicm=pc+1, oacd=malicm+1, akgdcm=oacd+1, liase=akgdcm+1, akgcit1=liase+1, gln_in=akgcit1+1, ala_o=gln_in+1, cs0=ala_o+1, D=cs0+1, rdt=D+1, nrea=rdt+1;
 
 const int nflx=nrea;
 const int npyrc=0, npyr=npyrc+1, ncoa=npyr+1, noac=ncoa+1, ncit=noac+1, nakg=ncit+1, nakgc=nakg+1, nsuc=nakgc+1, nmal=nsuc+1, nlacc=nmal+1, ngl=nlacc+1, nlac=ngl+1, ngln=nlac+1, nmet=ngln+1;
@@ -35,6 +35,7 @@ flx[pyrclac]= rea[pyrclac].v(y[npyrc]); 	dydx[npyrc] -= flx[pyrclac];
 flx[lacin]= rea[lacin].v(); 	dydx[nlacc] += flx[lacin];  
 flx[laccpyr]= rea[laccpyr].v(y[nlacc]); 	dydx[nlacc] -= flx[laccpyr];  dydx[npyr] += flx[laccpyr];  
 flx[pyrclacc]= rea[pyrclacc].v(y[npyrc]); 	dydx[npyrc] -= flx[pyrclacc];  dydx[nlacc] += flx[pyrclacc];  
+flx[pyrdcm]= rea[pyrdcm].v(y[npyrc]); 	dydx[npyrc] -= flx[pyrdcm];  dydx[npyr] += flx[pyrdcm];  
 flx[pdh]= rea[pdh].v(y[npyr]); 	dydx[npyr] -= flx[pdh];  dydx[ncoa] += flx[pdh];  
 flx[citakg]= rea[D].v()*rea[citakg].v(y[ncit]); 	dydx[ncit] -= flx[citakg];  dydx[nakg] += flx[citakg];  
 flx[akgsuc]= rea[D].v()*rea[akgsuc].v(y[nakg]); 	dydx[nakg] -= flx[akgsuc];  dydx[nsuc] += flx[akgsuc];  
@@ -70,6 +71,7 @@ for(int i=0;i<nflx;i++) fluxes[i] = flx[i] * flx[rdt]/Vi;
 fluxes[pyrclac] /= y[npyrc];
 fluxes[laccpyr] /= y[nlacc];
 fluxes[pyrclacc] /= y[npyrc];
+fluxes[pyrdcm] /= y[npyrc];
 fluxes[pdh] /= y[npyr];
 fluxes[citakg] /= y[ncit];
 fluxes[akgsuc] /= y[nakg];

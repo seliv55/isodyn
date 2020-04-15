@@ -15,6 +15,7 @@ pyrc.output(fluxes[pyrclac]);
 lac.input(lacc,fluxes[lacin]/lac.sumt());
 lacc.input(pyr,fluxes[laccpyr]);
 pyrc.input(lacc,fluxes[pyrclacc]);
+pyrc.input(pyr,fluxes[pyrdcm]);
 pyr.cutfirst(coa,fluxes[pdh]);
 cit.icdh(akg,fluxes[citakg]);
 akg.decarb(suc,fluxes[akgsuc]);
